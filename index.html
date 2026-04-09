@@ -85,36 +85,29 @@
         <p class="text-white font-black text-xl tracking-tight mt-6" id="loader-text">CARGANDO FR4FINANCE...</p>
     </div>
 
-    <!-- PANTALLA 1: LANDING PAGE (SÓLO SE VE CUANDO NO HAY SESIÓN) -->
+    <!-- PANTALLA 1: LANDING PAGE -->
     <div id="landing-page" class="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden bg-slate-50 dark:bg-slate-900" style="display: none;">
-        
-        <!-- Elementos decorativos de fondo -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full pointer-events-none opacity-50 dark:opacity-20 flex justify-center items-center">
             <div class="w-96 h-96 bg-frteal rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob"></div>
             <div class="w-96 h-96 bg-frcyan rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000 -ml-20"></div>
         </div>
 
         <div class="z-10 w-full max-w-5xl flex flex-col items-center text-center">
-            <!-- Logo con fondo transparente, adaptado para modo claro y oscuro -->
-            <img src="logo.png" alt="fr4finance Logo" class="h-28 sm:h-36 lg:h-44 w-auto object-contain mb-10 transition-all hover:scale-105 drop-shadow-2xl dark:bg-white/95 dark:p-5 dark:rounded-[2rem]">
+            <img src="Logo.png" alt="fr4finance Logo" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%230f766e%22 rx=%2220%22/%3E%3Ctext x=%2250%22 y=%2267%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-size=%2245%22 font-weight=%22bold%22%3EF4%3C/text%3E%3C/svg%3E';" class="w-64 sm:w-80 lg:w-[28rem] h-auto object-contain mb-10 transition-all hover:scale-105 drop-shadow-2xl dark:bg-white/95 dark:p-5 dark:rounded-[2rem]">
 
-            <!-- Título Principal -->
             <h1 class="text-5xl sm:text-7xl font-black text-slate-900 dark:text-white tracking-tighter mb-6 leading-tight">
                 Logra tu <span class="text-transparent bg-clip-text bg-gradient-to-r from-frteal to-frcyan">libertad financiera</span>
             </h1>
             
-            <!-- Subtítulo -->
             <p class="text-lg sm:text-xl text-slate-500 dark:text-slate-400 mb-12 max-w-2xl font-medium">
                 La plataforma inteligente para administrar tu dinero. Conoce y domina tus finanzas personales a través de 4 simples pasos.
             </p>
 
-            <!-- Botón Central de Google -->
             <button id="login-btn-main" class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 px-8 py-4 rounded-2xl font-black shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex items-center gap-4 text-lg mb-24 group">
                 <svg class="w-6 h-6 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Iniciar sesión con Google
             </button>
 
-            <!-- Tarjetas de los 4 Pilares -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-5xl">
                 <div class="bg-white/70 dark:bg-slate-800/80 backdrop-blur-lg p-6 rounded-3xl shadow-sm border border-slate-200/50 dark:border-slate-700 text-left hover:-translate-y-2 transition-transform duration-300">
                     <div class="text-3xl mb-4 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 w-14 h-14 flex items-center justify-center rounded-2xl shadow-inner">🔋</div>
@@ -140,7 +133,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2: DASHBOARD (SÓLO SE VE CUANDO ESTÁS LOGUEADO) -->
+    <!-- PANTALLA 2: DASHBOARD -->
     <div id="dashboard-page" class="p-4 sm:p-6 md:p-8 lg:p-12" style="display: none;">
         
         <div class="fixed bottom-6 right-6 z-50">
@@ -153,6 +146,102 @@
         <div class="fixed bottom-6 left-6 z-50 flex gap-3">
             <button id="help-btn" class="bg-frnavy text-white rounded-full w-12 h-12 hover:bg-slate-800 transition-all shadow-2xl font-black text-lg">?</button>
             <button id="dark-mode-btn" class="bg-frnavy text-white rounded-full w-12 h-12 hover:bg-slate-800 transition-all shadow-2xl font-black text-lg">🌙</button>
+            <button id="settings-btn" class="bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 rounded-full w-12 h-12 hover:bg-slate-300 dark:hover:bg-slate-600 transition-all shadow-2xl font-black text-lg">⚙️</button>
+        </div>
+
+        <!-- MODAL: SETTINGS -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <h3 class="text-3xl font-black mb-8 text-slate-900 dark:text-white tracking-tighter">Configuración ⚙️</h3>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Moneda Principal</label>
+                        <select id="settings-currency" class="budget-input bg-slate-50 dark:bg-slate-800 font-bold cursor-pointer">
+                            <option value="MXN">Peso Mexicano (MXN)</option>
+                            <option value="USD">Dólar Estadounidense (USD)</option>
+                            <option value="EUR">Euro (EUR)</option>
+                            <option value="COP">Peso Colombiano (COP)</option>
+                            <option value="ARS">Peso Argentino (ARS)</option>
+                            <option value="CLP">Peso Chileno (CLP)</option>
+                            <option value="PEN">Sol Peruano (PEN)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Idioma</label>
+                        <select id="settings-language" class="budget-input bg-slate-100 dark:bg-slate-700 text-slate-400 font-bold cursor-not-allowed" disabled>
+                            <option value="es">Español (Disponible)</option>
+                            <option value="en" disabled>English (Próximamente)</option>
+                        </select>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+                            <span>Google Gemini API Key (Opcional)</span>
+                        </label>
+                        <p class="text-xs text-slate-500 mb-2">Si la IA predeterminada marca error por límites de uso, puedes pegar tu propia llave gratuita obtenida en Google AI Studio.</p>
+                        <input type="password" id="settings-gemini" class="budget-input" placeholder="AIzaSy...">
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-col gap-3">
+                    <button id="settings-save-btn" class="w-full bg-frnavy text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest text-xs">Guardar y Actualizar</button>
+                    <button onclick="closeModal('settings-modal')" class="w-full text-slate-400 font-bold py-2 uppercase text-xs">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: BIENVENIDA / ONBOARDING WIZARD -->
+        <div id="welcome-modal" class="modal">
+            <div class="modal-content !max-w-2xl text-center relative overflow-hidden">
+                <!-- PASO 1: Intro -->
+                <div id="onboard-step-1" class="transition-all duration-500">
+                    <div class="flex justify-center mb-6">
+                        <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-full">
+                            <img src="Logo.png" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%230f766e%22 rx=%2220%22/%3E%3Ctext x=%2250%22 y=%2267%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-size=%2245%22 font-weight=%22bold%22%3EF4%3C/text%3E%3C/svg%3E';" alt="fr4finance" class="h-10 object-contain drop-shadow-md">
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">¡Bienvenido a tu Hub Financiero! 🎉</h2>
+                    <p class="text-slate-500 mb-8 text-sm font-medium">Tu camino a la libertad financiera se basa en 4 pilares editables y personalizables:</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-10 text-left">
+                        <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800"><p class="text-xs font-bold text-emerald-700 dark:text-emerald-400">🔋 1. Ahorro</p></div>
+                        <div class="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl border border-cyan-100 dark:border-cyan-800"><p class="text-xs font-bold text-cyan-700 dark:text-cyan-400">📈 2. Inversión</p></div>
+                        <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-xl border border-rose-100 dark:border-rose-800"><p class="text-xs font-bold text-rose-700 dark:text-rose-400">⚖️ 3. Control</p></div>
+                        <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800"><p class="text-xs font-bold text-purple-700 dark:text-purple-400">🧠 4. Educación AI</p></div>
+                    </div>
+                    <button id="onboard-next-btn" class="bg-frteal hover:bg-teal-700 text-white px-8 py-3.5 rounded-xl font-black w-full text-sm uppercase tracking-widest shadow-lg transition-all">Configurar mi cuenta ➡️</button>
+                </div>
+
+                <!-- PASO 2: Encuesta Inicial -->
+                <div id="onboard-step-2" class="hidden transition-all duration-500">
+                    <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">Paso final: Tus datos base 🚀</h2>
+                    <p class="text-slate-500 mb-8 text-sm font-medium">Pre-llenemos el panel para no empezar en blanco.</p>
+                    
+                    <div class="space-y-5 text-left mb-10">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">¿Cuál es tu Moneda Local?</label>
+                            <select id="onboard-currency-input" class="budget-input bg-slate-50 dark:bg-slate-800 font-bold">
+                                <option value="MXN">Peso Mexicano (MXN)</option>
+                                <option value="USD">Dólar Estadounidense (USD)</option>
+                                <option value="EUR">Euro (EUR)</option>
+                                <option value="COP">Peso Colombiano (COP)</option>
+                                <option value="ARS">Peso Argentino (ARS)</option>
+                                <option value="CLP">Peso Chileno (CLP)</option>
+                                <option value="PEN">Sol Peruano (PEN)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Tu Sueldo Neto (Por Quincena / Cada 15 días)</label>
+                            <input type="number" id="onboard-sueldo-input" class="budget-input" placeholder="Ej: 5000">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Meta Inicial: Fondo de Emergencia</label>
+                            <input type="number" id="onboard-meta-input" class="budget-input" value="50000" placeholder="Ej: 50000">
+                            <p class="text-[9px] text-slate-400 mt-1">Se recomienda que sea al menos 3 meses de tus gastos fijos.</p>
+                        </div>
+                    </div>
+
+                    <button id="onboard-finish-btn" class="bg-frnavy hover:bg-slate-800 text-white px-8 py-3.5 rounded-xl font-black w-full text-sm uppercase tracking-widest shadow-lg transition-all">¡Ir a mi Dashboard!</button>
+                </div>
+            </div>
         </div>
 
         <!-- MODALES DE EDICIÓN -->
@@ -188,20 +277,32 @@
 
         <div id="debt-modal" class="modal">
             <div class="modal-content">
-                <h3 class="text-3xl font-black mb-8 text-slate-900 dark:text-white tracking-tighter" id="debt-modal-title">Gestión de Deuda</h3>
+                <h3 class="text-3xl font-black mb-6 text-slate-900 dark:text-white tracking-tighter" id="debt-modal-title">Gestión de Deuda</h3>
                 <input type="hidden" id="edit-debt-key">
-                <div class="space-y-5">
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Acreedor</label><input type="text" id="debt-name" class="budget-input"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Saldo Total</label><input type="number" id="debt-total" class="budget-input"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Pago Mínimo</label><input type="number" id="debt-min-payment" class="budget-input"></div>
-                    <div class="flex items-center gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-800">
-                        <input type="checkbox" id="debt-priority" class="w-6 h-6 text-red-600 rounded-lg">
-                        <label for="debt-priority" class="text-xs font-black text-red-800 dark:text-red-300 uppercase tracking-wider">Activar Avalancha</label>
+                <div class="space-y-4">
+                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Acreedor</label><input type="text" id="debt-name" class="budget-input" placeholder="Ej: Tarjeta Crédito"></div>
+                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Saldo Total Actual</label><input type="number" id="debt-total" class="budget-input" placeholder="0.00"></div>
+                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Pago Mínimo Mensual</label><input type="number" id="debt-min-payment" class="budget-input" placeholder="0.00"></div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5" title="Día del mes (1 al 31)">Día de Corte</label>
+                            <input type="number" min="1" max="31" id="debt-cut-day" class="budget-input" placeholder="Ej: 15">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5" title="Día del mes (1 al 31)">Día Límite</label>
+                            <input type="number" min="1" max="31" id="debt-due-day" class="budget-input" placeholder="Ej: 5">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-800 mt-2">
+                        <input type="checkbox" id="debt-priority" class="w-6 h-6 text-red-600 rounded-lg cursor-pointer">
+                        <label for="debt-priority" class="text-xs font-black text-red-800 dark:text-red-300 uppercase tracking-wider cursor-pointer">Activar Avalancha (Prioridad)</label>
                     </div>
                 </div>
-                <div class="mt-10 flex flex-col gap-3">
+                <div class="mt-8 flex flex-col gap-3">
                     <button id="debt-save-btn" class="w-full bg-frnavy text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest text-xs">Guardar Cambios</button>
-                    <button id="debt-delete-btn" class="w-full text-red-500 font-black py-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all text-[10px] uppercase tracking-widest border border-transparent hover:border-red-100">Eliminar</button>
+                    <button id="debt-delete-btn" class="w-full text-red-500 font-black py-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all text-[10px] uppercase tracking-widest border border-transparent hover:border-red-100">Eliminar Deuda</button>
                     <button onclick="closeModal('debt-modal')" class="w-full text-slate-400 font-bold py-2 uppercase text-xs">Cerrar</button>
                 </div>
             </div>
@@ -229,8 +330,8 @@
                 <h3 class="text-3xl font-black mb-8 text-slate-900 dark:text-white tracking-tighter" id="fixed-modal-title">Gasto Fijo</h3>
                 <input type="hidden" id="edit-fixed-key">
                 <div class="space-y-5">
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Concepto</label><input type="text" id="fixed-name" class="budget-input"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Monto mensual</label><input type="number" id="fixed-amount" class="budget-input"></div>
+                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Concepto</label><input type="text" id="fixed-name" class="budget-input" placeholder="Ej: Renta, Colegiatura"></div>
+                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Monto mensual</label><input type="number" id="fixed-amount" class="budget-input" placeholder="0.00"></div>
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Distribución</label>
                         <select id="fixed-distribution" class="budget-input bg-slate-50 dark:bg-slate-700 font-bold">
@@ -264,6 +365,23 @@
             </div>
         </div>
 
+        <!-- MODAL: GASTOS VARIABLES DINÁMICOS -->
+        <div id="variable-modal" class="modal">
+            <div class="modal-content">
+                <h3 class="text-3xl font-black mb-8 text-slate-900 dark:text-white tracking-tighter" id="variable-modal-title">Gasto Variable Aprox.</h3>
+                <input type="hidden" id="edit-variable-key">
+                <div class="space-y-5">
+                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Categoría / Concepto</label><input type="text" id="variable-name" class="budget-input" placeholder="Ej: Despensa, Gasolina, Ocio..."></div>
+                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Monto Aproximado al mes</label><input type="number" id="variable-amount" class="budget-input" placeholder="0.00"></div>
+                </div>
+                <div class="mt-10 flex flex-col gap-3">
+                    <button id="variable-save-btn" class="w-full bg-slate-800 dark:bg-slate-700 text-white font-black py-4 rounded-xl shadow-lg uppercase tracking-widest text-xs hover:bg-slate-900 transition-colors">Guardar Categoría</button>
+                    <button id="variable-delete-btn" class="w-full text-red-500 font-black py-2 uppercase text-[10px] tracking-widest">Eliminar Categoría</button>
+                    <button onclick="closeModal('variable-modal')" class="w-full text-slate-400 font-bold py-2 uppercase text-xs">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
         <!-- MODAL AI -->
         <div id="ai-modal" class="modal">
             <div class="modal-content !max-w-2xl">
@@ -286,9 +404,8 @@
         <header class="max-w-7xl mx-auto mb-12 text-center lg:text-left flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
                 <div class="flex items-center justify-center lg:justify-start mb-4">
-                    <!-- Logo transparente del Dashboard adaptado al modo oscuro -->
                     <div class="inline-block">
-                        <img src="logo.png" alt="fr4finance Logo" class="h-12 sm:h-16 w-auto object-contain transition-transform hover:scale-105 drop-shadow-md dark:bg-white/95 dark:px-3 dark:py-1.5 dark:rounded-2xl">
+                        <img src="Logo.png" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%230f766e%22 rx=%2220%22/%3E%3Ctext x=%2250%22 y=%2267%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-size=%2245%22 font-weight=%22bold%22%3EF4%3C/text%3E%3C/svg%3E';" alt="fr4finance Logo" class="h-12 sm:h-16 w-auto object-contain transition-transform hover:scale-105 drop-shadow-md dark:bg-white/95 dark:px-3 dark:py-1.5 dark:rounded-2xl">
                     </div>
                 </div>
                 <p class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400 mb-6 tracking-tight">Logra tu libertad financiera en 4 pasos 🚀</p>
@@ -334,7 +451,12 @@
                     <div>
                         <div class="flex justify-between items-start mb-8">
                             <h2 class="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Estado del Flujo Mensual</h2>
-                            <button id="ai-advisor-btn" class="bg-gradient-to-r from-frteal via-frcyan to-frnavy text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2"><span>🧠</span> Pilar 4: Educación AI</button>
+                            <div class="flex flex-col items-end gap-2">
+                                <button id="ai-advisor-btn" class="bg-gradient-to-r from-frteal via-frcyan to-frnavy text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2"><span>🧠</span> Pilar 4: Educación AI</button>
+                                <div class="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-widest pr-1" title="Análisis basado en tus 4 pilares">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_#10b981] animate-pulse"></span> IA Lista
+                                </div>
+                            </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-8">
                             <div class="kpi"><p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1.5">Ingreso Fijo Neto</p><p id="ingresoFijoMensual" class="text-4xl font-black text-slate-900 dark:text-white"></p></div>
@@ -377,7 +499,7 @@
             <!-- PILAR 3: CONTROL -->
             <div class="mb-12 border-b-4 border-frteal pb-2">
                 <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">⚖️ Pilar 3: Control Total</h2>
-                <p class="text-sm text-slate-500 font-bold">Domina tus deudas, ingresos y gastos.</p>
+                <p class="text-sm text-slate-500 font-bold">Domina y personaliza tus deudas, ingresos y gastos.</p>
             </div>
 
             <!-- Seguimiento Deudas -->
@@ -412,7 +534,7 @@
                     <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Gastos Fijos Exactos</h2>
                     <button id="add-fixed-btn" class="bg-slate-50 dark:bg-slate-800 text-slate-500 text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-widest hover:bg-slate-100 transition-all border border-slate-200">➕ Concepto</button>
                 </div>
-                <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8"></div>
+                <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-4"></div>
             </div>
 
             <!-- Gastos Hormiga -->
@@ -424,12 +546,27 @@
                 <div id="hormiga-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
             </div>
 
-            <!-- Registro de Ingresos -->
-            <div class="card shadow-xl mb-12 border-slate-200 dark:border-slate-700">
+            <!-- Gastos Variables Dinámicos -->
+            <div class="card shadow-xl mb-12 border-blue-100 dark:border-blue-900/20">
+                <div class="flex justify-between items-center mb-8 border-b border-slate-100 dark:border-slate-700 pb-4">
+                    <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">🛒 Gastos Variables Aprox.</h2>
+                    <button id="add-variable-btn" class="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-widest hover:bg-blue-100 transition-all border border-blue-200 dark:border-blue-800">➕ Categoría</button>
+                </div>
+                <div id="variables-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+
+                <div class="mt-16 p-12 rounded-[2.5rem] bg-gradient-to-br from-frteal to-frnavy text-center shadow-3xl border-none relative overflow-hidden">
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-white opacity-5 rounded-full"></div>
+                    <p class="text-cyan-100 font-bold uppercase tracking-[0.3em] mb-4 text-sm">Poder de Pago para la Avalancha</p>
+                    <p id="sobranteReal" class="text-7xl font-black text-white tracking-tighter leading-none"></p>
+                </div>
+            </div>
+
+            <!-- Registro de Ingresos (Única sección semi-fija) -->
+            <div class="card shadow-xl mb-20 border-slate-200 dark:border-slate-700">
                 <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-8 text-center tracking-tight">Registro de Ingresos</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                     <div class="bg-frteal/10 dark:bg-frteal/20 p-8 rounded-[2rem] border border-frteal/20 text-center shadow-inner relative">
-                        <p class="text-[10px] font-black text-frteal uppercase tracking-[0.4em] mb-4">Sueldo Fijo (Quincenal)</p>
+                        <p class="text-[10px] font-black text-frteal uppercase tracking-[0.4em] mb-4">Sueldo Fijo Neto (Quincenal)</p>
                         <div class="relative max-w-sm mx-auto">
                             <span class="absolute left-6 top-1/2 -translate-y-1/2 font-black text-frteal/50 text-3xl">$</span>
                             <input type="number" id="sueldoQuincenalInput" class="budget-input border-frteal/30 text-4xl font-black text-center py-5 pl-12 pr-6 text-frteal bg-white rounded-3xl shadow-2xl shadow-teal-200/50" placeholder="0.00">
@@ -446,26 +583,6 @@
                 <div id="weeks-container" class="space-y-6"></div>
             </div>
 
-            <!-- Gastos Variables Aproximados -->
-            <div class="card shadow-xl mb-20 border-slate-200 dark:border-slate-700">
-                <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-8 border-b border-slate-100 dark:border-slate-700 pb-4">Gastos Variables Aprox.</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-8">
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Internet/TV</label><input type="number" id="gastoInternet" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Despensa</label><input type="number" id="gastoDespensa" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Gas</label><input type="number" id="gastoGas" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Luz CFE</label><input type="number" id="gastoLuz" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Pasajes</label><input type="number" id="gastoPasajes" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Imprevistos</label><input type="number" id="gastoImprevistos" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Ocio/Salidas</label><input type="number" id="gastoOcio" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                    <div><label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Otros</label><input type="number" id="gastoOtros" class="budget-input bg-slate-50 dark:bg-slate-800 border-transparent shadow-inner" placeholder="0.00"></div>
-                </div>
-
-                <div class="mt-16 p-12 rounded-[2.5rem] bg-gradient-to-br from-frteal to-frnavy text-center shadow-3xl border-none relative overflow-hidden">
-                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-white opacity-5 rounded-full"></div>
-                    <p class="text-cyan-100 font-bold uppercase tracking-[0.3em] mb-4 text-sm">Poder de Pago para la Avalancha</p>
-                    <p id="sobranteReal" class="text-7xl font-black text-white tracking-tighter leading-none"></p>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -501,14 +618,16 @@
         let currentUser = null;
 
         const defaultFinancialData = {
+            "hasSeenTutorial": false,
+            "settings": { "currency": "MXN", "locale": "es-MX", "geminiApiKey": "" },
             "sueldoQuincenal": 0,
             "metas": { "fondoEmergencia": {"objetivo": 50000, "actual": 0}, "retiro": {"objetivo": 1000000, "actual": 0} },
             "deudas": {},
             "otrosFijos": {},
             "gastosHormiga": {},
+            "gastosVariables": {},
             "gbm": {},
             "ingresosVariables": { "bonoFijoQuincena": 0 },
-            "gastosVariables": { "gastoInternet": 0, "gastoDespensa": 0, "gastoGas": 0, "gastoLuz": 0, "gastoPasajes": 0, "gastoImprevistos": 0, "gastoOcio": 0, "gastoOtros": 0 },
             "seguimientoMensual": { "mes": new Date().getMonth() + 1, "anio": new Date().getFullYear(), "deudas": {}, "checklist": {} },
             "estadisticas": { "totalAbonado": 0, "deudasPagadas": 0, "ultimoCierre": null }
         };
@@ -549,7 +668,17 @@
 
         window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; };
 
-        function formatCurrency(v) { return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(v); }
+        function formatCurrency(v) { 
+            const cur = financialData.settings?.currency || 'MXN';
+            let loc = 'es-MX'; // default
+            if(cur === 'USD') loc = 'en-US';
+            if(cur === 'EUR') loc = 'es-ES';
+            if(cur === 'COP') loc = 'es-CO';
+            if(cur === 'ARS') loc = 'es-AR';
+            if(cur === 'CLP') loc = 'es-CL';
+            if(cur === 'PEN') loc = 'es-PE';
+            return new Intl.NumberFormat(loc, { style: 'currency', currency: cur }).format(v); 
+        }
 
         async function loadUserData(userId) {
             showLoader('CARGANDO DATOS...');
@@ -559,27 +688,55 @@
                 
                 if (docSnap.exists()) {
                     financialData = docSnap.data();
+                    
+                    // Reparación de datos
+                    if (financialData.hasSeenTutorial === undefined) financialData.hasSeenTutorial = true; 
+                    if (!financialData.settings) financialData.settings = { currency: "MXN", locale: "es-MX", geminiApiKey: "" };
                     if (!financialData.metas) financialData.metas = { fondoEmergencia: {objetivo: 50000, actual: 0} };
                     if (!financialData.metas.fondoEmergencia) financialData.metas.fondoEmergencia = {objetivo: 50000, actual: 0};
+                    if (!financialData.gastosVariables) financialData.gastosVariables = {};
                     
+                    let needsMigration = false;
+
+                    // Migración Gastos Variables Antiguos
+                    const oldVars = [ "gastoInternet", "gastoDespensa", "gastoGas", "gastoLuz", "gastoPasajes", "gastoImprevistos", "gastoOcio", "gastoOtros" ];
+                    const labels = { "gastoInternet": "Internet/TV", "gastoDespensa": "Despensa", "gastoGas": "Gas", "gastoLuz": "Luz CFE", "gastoPasajes": "Pasajes", "gastoImprevistos": "Imprevistos", "gastoOcio": "Ocio/Salidas", "gastoOtros": "Otros" };
+                    for (let oldKey of oldVars) {
+                        if (typeof financialData.gastosVariables[oldKey] === 'number') {
+                            if (financialData.gastosVariables[oldKey] > 0) {
+                                const newKey = oldKey.replace('gasto', '').toLowerCase();
+                                financialData.gastosVariables[newKey] = { nombre: labels[oldKey], monto: financialData.gastosVariables[oldKey] };
+                            }
+                            delete financialData.gastosVariables[oldKey];
+                            needsMigration = true;
+                        }
+                    }
+
                     if (financialData.ingresosVariables) {
-                        let migrated = false;
                         for (let i = 1; i <= 6; i++) {
                             if (financialData.ingresosVariables[`keny_w${i}`] !== undefined) {
                                 financialData.ingresosVariables[`ventas_w${i}`] = financialData.ingresosVariables[`keny_w${i}`];
                                 delete financialData.ingresosVariables[`keny_w${i}`];
-                                migrated = true;
+                                needsMigration = true;
                             }
                         }
-                        if (migrated) await saveData();
                     }
+                    if (needsMigration) await saveData();
+
                 } else {
+                    // Usuario 100% Nuevo
                     financialData = JSON.parse(JSON.stringify(defaultFinancialData));
                     await setDoc(userDocRef, financialData);
                 }
                 
                 renderizarUI(financialData);
                 hideLoader();
+
+                // Mostrar modal de bienvenida si es nuevo
+                if (!financialData.hasSeenTutorial) {
+                    document.getElementById('welcome-modal').style.display = 'block';
+                }
+
             } catch (error) {
                 console.error('Error loading data:', error);
                 showToast('Error al cargar datos', 'error');
@@ -612,7 +769,6 @@
             const authContainer = document.getElementById('auth-container');
 
             if (user) {
-                // Usuario LOGUEADO
                 landingPage.style.display = 'none';
                 dashboardPage.style.display = 'block';
                 
@@ -627,7 +783,6 @@
                 currentUser = user;
                 loadUserData(user.uid);
             } else {
-                // Usuario DESLOGUEADO
                 authContainer.innerHTML = '';
                 landingPage.style.display = 'flex';
                 dashboardPage.style.display = 'none';
@@ -636,23 +791,32 @@
             }
         }
 
+        function getEmptyStateHTML(message) {
+            return `<div class="col-span-full py-8 text-center bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                        <p class="text-slate-400 font-bold text-sm">${message}</p>
+                    </div>`;
+        }
+
         function renderizarUI(data) {
-            renderizarChecklist(data.otrosFijos, data.seguimientoMensual.checklist || {});
+            renderizarChecklist(data.otrosFijos || {}, data.seguimientoMensual.checklist || {});
             renderizarTablaDeudas(data);
-            renderizarGBM(data.gbm);
+            renderizarGBM(data.gbm || {});
             renderizarHormiga(data.gastosHormiga || {});
+            renderizarVariables(data.gastosVariables || {});
             setWeekLabels(data.ingresosVariables || {});
             actualizarPilarAhorro();
             
             const mN = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             document.getElementById('mes-gestion').textContent = `${mN[(data.seguimientoMensual?.mes || 3) - 1]} ${data.seguimientoMensual?.anio || 2026}`;
 
-            for (const k in data.gastosVariables) {
-                const el = document.getElementById(k);
-                if (el) el.value = data.gastosVariables[k];
-            }
             if (data.ingresosVariables.bonoFijoQuincena !== undefined) document.getElementById('bonoFijoQuincena').value = data.ingresosVariables.bonoFijoQuincena;
             if (document.getElementById('sueldoQuincenalInput')) document.getElementById('sueldoQuincenalInput').value = data.sueldoQuincenal || 0;
+
+            // Actualizar Settings inputs si están abiertos
+            if (data.settings) {
+                document.getElementById('settings-currency').value = data.settings.currency || 'MXN';
+                document.getElementById('settings-gemini').value = data.settings.geminiApiKey || '';
+            }
 
             calcularYActualizarTodo();
             cargarEstadisticasLocales();
@@ -675,6 +839,11 @@
             if (!container) return;
             container.innerHTML = '';
             
+            if (Object.keys(gbmData).length === 0) {
+                container.innerHTML = getEmptyStateHTML('Aún no tienes activos en tu portafolio. Presiona ➕ Activo.');
+                return;
+            }
+
             window.editGBM = (k) => {
                 const g = gbmData[k];
                 document.getElementById('edit-gbm-key').value = k;
@@ -720,6 +889,11 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             
+            if (Object.keys(data.deudas || {}).length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5">${getEmptyStateHTML('No tienes deudas registradas. ¡Excelente! 🙌 o presiona ➕ Acreedor.')}</td></tr>`;
+                return;
+            }
+
             window.addP = (k, n) => { 
                 currentDebtKey = k; 
                 document.getElementById('modal-title').innerText = `Abonar a ${n}`;
@@ -737,6 +911,8 @@
                 document.getElementById('debt-name').value = d.nombre;
                 document.getElementById('debt-total').value = d.total;
                 document.getElementById('debt-min-payment').value = d.pagoMensual;
+                document.getElementById('debt-cut-day').value = d.diaCorte || '';
+                document.getElementById('debt-due-day').value = d.diaPago || '';
                 document.getElementById('debt-priority').checked = d.esPrioridad;
                 document.getElementById('debt-delete-btn').classList.remove('hidden');
                 document.getElementById('debt-modal').style.display = 'block';
@@ -756,8 +932,21 @@
                 const ab = (s.pagos || []).reduce((sum, p) => sum + p.monto, 0);
                 const tr = document.createElement('tr');
                 if (d.esPrioridad) tr.className = 'bg-red-50/70 dark:bg-red-900/20';
+                
+                let fechasText = '';
+                if(d.diaCorte || d.diaPago) {
+                    fechasText = `<div class="text-[9px] text-slate-400 mt-1 uppercase tracking-widest font-black">Corte: Día ${d.diaCorte || '--'} | Pago: Día ${d.diaPago || '--'}</div>`;
+                }
+
                 tr.innerHTML = `
-                    <td class="px-6 py-6 text-sm"><div class="flex items-center gap-3"><div class="font-black text-slate-800 dark:text-white">${d.nombre}</div><button onclick="window.editD('${k}')" class="text-slate-300 hover:text-frteal transition-colors">✏️</button></div><button onclick="window.addP('${k}', '${d.nombre}')" class="text-frteal text-[10px] font-black uppercase mt-1.5 hover:underline tracking-widest">+ Abono Extra</button></td>
+                    <td class="px-6 py-6 text-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="font-black text-slate-800 dark:text-white">${d.nombre}</div>
+                            <button onclick="window.editD('${k}')" class="text-slate-300 hover:text-frteal transition-colors">✏️</button>
+                        </div>
+                        ${fechasText}
+                        <button onclick="window.addP('${k}', '${d.nombre}')" class="text-frteal text-[10px] font-black uppercase mt-1.5 hover:underline tracking-widest">+ Abono Extra</button>
+                    </td>
                     <td class="px-6 py-6 text-sm font-bold text-slate-700 dark:text-slate-300 font-mono">${formatCurrency(d.total)}</td>
                     <td class="px-6 py-6 text-xs text-slate-400 font-mono italic">${formatCurrency(d.pagoMensual)}</td>
                     <td class="px-6 py-6 text-sm font-black text-emerald-600 font-mono">${formatCurrency(ab)}</td>
@@ -769,8 +958,14 @@
         function renderizarChecklist(o, c) {
             const container = document.getElementById('checklist-container');
             if (!container) return;
-            let q1 = '<div class="space-y-5"><p class="text-[11px] font-black uppercase text-frnavy dark:text-frcyan tracking-[0.4em] border-b border-blue-100 dark:border-blue-800 pb-3 mb-6">Primera Quincena</p>', 
-                q2 = '<div class="space-y-5"><p class="text-[11px] font-black uppercase text-frnavy dark:text-frcyan tracking-[0.4em] border-b border-blue-100 dark:border-blue-800 pb-3 mb-6">Segunda Quincena</p>';
+
+            if (Object.keys(o).length === 0) {
+                container.innerHTML = getEmptyStateHTML('Aún no hay gastos fijos configurados. Presiona ➕ Concepto.');
+                return;
+            }
+
+            let q1 = '<div class="space-y-4"><p class="text-[11px] font-black uppercase text-frnavy dark:text-frcyan tracking-[0.4em] border-b border-blue-100 dark:border-blue-800 pb-2 mb-4">Primera Quincena</p>', 
+                q2 = '<div class="space-y-4"><p class="text-[11px] font-black uppercase text-frnavy dark:text-frcyan tracking-[0.4em] border-b border-blue-100 dark:border-blue-800 pb-2 mb-4">Segunda Quincena</p>';
             
             window.editF = (k) => {
                 const f = o[k];
@@ -808,6 +1003,11 @@
             if (!container) return;
             container.innerHTML = '';
             
+            if (Object.keys(hormigas).length === 0) {
+                container.innerHTML = getEmptyStateHTML('Aún no has registrado gastos hormiga ni suscripciones.');
+                return;
+            }
+
             window.editH = (k) => {
                 const h = hormigas[k];
                 document.getElementById('edit-hormiga-key').value = k;
@@ -829,6 +1029,42 @@
                         <span class="text-[10px] font-mono text-slate-400 mt-1">${formatCurrency(h.monto)}</span>
                     </div>
                     <button class="text-slate-300 hover:text-orange-500 opacity-0 group-hover:opacity-100 transition-all">✏️</button>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function renderizarVariables(variables) {
+            const container = document.getElementById('variables-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            if (Object.keys(variables).length === 0) {
+                container.innerHTML = getEmptyStateHTML('Aún no has configurado categorías de gasto variable.');
+                return;
+            }
+
+            window.editV = (k) => {
+                const v = variables[k];
+                document.getElementById('edit-variable-key').value = k;
+                document.getElementById('variable-modal-title').innerText = `Editar ${v.nombre}`;
+                document.getElementById('variable-name').value = v.nombre;
+                document.getElementById('variable-amount').value = v.monto;
+                document.getElementById('variable-delete-btn').classList.remove('hidden');
+                document.getElementById('variable-modal').style.display = 'block';
+            };
+
+            for (const k in variables) {
+                const v = variables[k];
+                const div = document.createElement('div');
+                div.className = 'bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 flex justify-between items-center group shadow-sm hover:shadow-md hover:border-blue-300 transition-all cursor-pointer';
+                div.onclick = () => window.editV(k);
+                div.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${v.nombre}</span>
+                        <span class="text-[10px] font-mono text-blue-500 font-bold mt-1">${formatCurrency(v.monto)}</span>
+                    </div>
+                    <button class="text-slate-300 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-all">✏️</button>
                 `;
                 container.appendChild(div);
             }
@@ -860,15 +1096,16 @@
         }
 
         function calcularYActualizarTodo() {
-            if (!financialData.sueldoQuincenal) return;
-            const fij = financialData.sueldoQuincenal * 2;
-            let dMin = Object.values(financialData.deudas).reduce((s, d) => s + (Number(d.pagoMensual) || 0), 0);
-            let oFij = Object.values(financialData.otrosFijos).reduce((s, p) => s + (Number(p.monto) || 0), 0);
+            const fij = (financialData.sueldoQuincenal || 0) * 2;
+            
+            let dMin = Object.values(financialData.deudas || {}).reduce((s, d) => s + (Number(d.pagoMensual) || 0), 0);
+            let oFij = Object.values(financialData.otrosFijos || {}).reduce((s, p) => s + (Number(p.monto) || 0), 0);
             let hrmg = Object.values(financialData.gastosHormiga || {}).reduce((s, p) => s + (Number(p.monto) || 0), 0);
+            let vrs = Object.values(financialData.gastosVariables || {}).reduce((s, p) => s + (Number(p.monto) || 0), 0);
+            
             let ext = 0; 
             document.querySelectorAll('.extra-income-input').forEach(i => { const v = Number(i.value); ext += isNaN(v) ? 0 : v; });
-            let vrs = 0; 
-            document.querySelectorAll('#app-content .budget-input:not(.extra-income-input):not(.gbm-input):not(#sueldoQuincenalInput):not(#ahorro-meta):not(#ahorro-abono)').forEach(i => { const v = Number(i.value); vrs += isNaN(v) ? 0 : v; });
+            
             const totalG = dMin + oFij + hrmg + vrs; 
             const sob = (fij + ext) - totalG;
 
@@ -918,6 +1155,13 @@
             });
         }
 
+        function getCurrencySymbol(currency) {
+            const symbols = {
+                'MXN': '$', 'USD': '$', 'EUR': '€', 'COP': '$', 'ARS': '$', 'CLP': '$', 'PEN': 'S/'
+            };
+            return symbols[currency] || '$';
+        }
+
         async function recalculateDebts() {
             const mN = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             const mesActual = financialData.seguimientoMensual.mes || 3;
@@ -929,10 +1173,12 @@
                 await addDoc(historialCollRef, { ...financialData, guardadoEn: new Date().toISOString() });
                 
                 let liquidadas = 0;
+                let totalReducido = 0;
                 const seg = financialData.seguimientoMensual.deudas || {};
                 for (const k in seg) {
                     if (seg[k].pagado && financialData.deudas[k]) {
                         const totalA = (seg[k].pagos || []).reduce((s, p) => s + p.monto, 0);
+                        totalReducido += totalA;
                         const ant = financialData.deudas[k].total;
                         financialData.deudas[k].total = Math.max(0, ant - totalA);
                         if (ant > 0 && financialData.deudas[k].total <= 0) liquidadas++;
@@ -947,7 +1193,7 @@
                 financialData.ingresosVariables = { bonoFijoQuincena: 0 };
                 await saveData(); 
                 renderizarUI(financialData);
-                showToast('✅ Mes cerrado exitosamente');
+                showToast(`✅ Mes cerrado. Deuda reducida: ${formatCurrency(totalReducido)}`, 'success');
             } catch (error) {
                 console.error('Error closing month:', error);
                 showToast('Error al cerrar el mes', 'error');
@@ -966,80 +1212,233 @@
             content.classList.add('hidden');
             content.innerHTML = '';
 
-            const fij = financialData.sueldoQuincenal * 2;
+            // Obtener datos financieros actualizados
+            const fij = (financialData.sueldoQuincenal || 0) * 2;
             let ext = 0; 
             document.querySelectorAll('.extra-income-input').forEach(i => ext += (Number(i.value) || 0));
-            let dMin = Object.values(financialData.deudas).reduce((s, d) => s + (Number(d.pagoMensual) || 0), 0);
-            let totalDeuda = Object.values(financialData.deudas).reduce((s, d) => s + (Number(d.total) || 0), 0);
-            let oFij = Object.values(financialData.otrosFijos).reduce((s, p) => s + (Number(p.monto) || 0), 0);
+            let dMin = Object.values(financialData.deudas || {}).reduce((s, d) => s + (Number(d.pagoMensual) || 0), 0);
+            let totalDeuda = Object.values(financialData.deudas || {}).reduce((s, d) => s + (Number(d.total) || 0), 0);
+            let oFij = Object.values(financialData.otrosFijos || {}).reduce((s, p) => s + (Number(p.monto) || 0), 0);
             let hrmg = Object.values(financialData.gastosHormiga || {}).reduce((s, p) => s + (Number(p.monto) || 0), 0);
-            let vrs = 0; 
-            document.querySelectorAll('#app-content .budget-input:not(.extra-income-input):not(.gbm-input):not(#sueldoQuincenalInput):not(#ahorro-meta):not(#ahorro-abono)').forEach(i => vrs += (Number(i.value) || 0));
+            let vrs = Object.values(financialData.gastosVariables || {}).reduce((s, p) => s + (Number(p.monto) || 0), 0);
             
             const ingresosTotales = fij + ext;
             const gastosTotales = dMin + oFij + hrmg + vrs;
             const sobrante = ingresosTotales - gastosTotales;
+            const ahorroActual = financialData.metas?.fondoEmergencia?.actual || 0;
+            const ahorroMeta = financialData.metas?.fondoEmergencia?.objetivo || 50000;
+            const moneda = financialData.settings?.currency || 'MXN';
+            const simboloMoneda = getCurrencySymbol(moneda);
+            
+            // Calcular deudas con prioridad (avalancha)
+            const deudasPrioritarias = Object.values(financialData.deudas || {}).filter(d => d.esPrioridad);
+            const tieneDeudasPrioritarias = deudasPrioritarias.length > 0;
+            const deudaPrioritariaMasAlta = deudasPrioritarias.sort((a,b) => a.total - b.total)[0];
 
+            // Prompt mejorado con más contexto y moneda
             const promptText = `
-                Actúa como el asesor de educación financiera de la app "fr4finance" (que basa el éxito en 4 pilares: Ahorro, Inversión, Control y Educación).
-                Aquí están mis datos del mes actual:
-                - Ingresos Totales: $${ingresosTotales}
-                - Gastos Totales: $${gastosTotales}
-                - De ese gasto total, mis Gastos Hormiga y suscripciones representan: $${hrmg}
-                - Sobrante (Poder de Inversión/Avalancha): $${sobrante}
-                - Deuda Total Pendiente: $${totalDeuda}
-                
-                Instrucciones:
-                1. Analiza brevemente mi situación basándote en los 4 pilares de fr4finance.
-                2. Dame 3 consejos concretos para lograr mi libertad financiera.
-                3. Usa un tono empático, moderno y motivador.
-                4. Formatea la respuesta usando etiquetas HTML simples (usa <b>, <ul>, <li>, <br>). NO uses markdown.
+                Actúa como "FinAI", el asesor de educación financiera experto de la app "fr4finance". 
+                fr4finance se basa en 4 pilares: 🔋 Ahorro, 📈 Inversión, ⚖️ Control Deuda, 🧠 Educación.
+
+                **DATOS FINANCIEROS DEL USUARIO (Moneda: ${moneda} | ${simboloMoneda}):**
+                - Ingresos Totales del mes: ${formatCurrency(ingresosTotales)}
+                - Gastos Totales del mes: ${formatCurrency(gastosTotales)}
+                - Gastos Hormiga + Variables: ${formatCurrency(hrmg + vrs)}
+                - Sobrante (Poder de Avalancha/Inversión): ${formatCurrency(sobrante)}
+                - Deuda Total Pendiente: ${formatCurrency(totalDeuda)}
+                - ¿Tiene deudas marcadas como "Prioridad Avalancha"? ${tieneDeudasPrioritarias ? 'SÍ' : 'NO'}
+                ${tieneDeudasPrioritarias ? `- Deuda prioritaria más pequeña: ${formatCurrency(deudaPrioritariaMasAlta.total)} (${deudaPrioritariaMasAlta.nombre})` : ''}
+                - Fondo de Emergencia Actual: ${formatCurrency(ahorroActual)}
+                - Meta del Fondo de Emergencia: ${formatCurrency(ahorroMeta)}
+                - Porcentaje de Fondo Completado: ${ahorroMeta > 0 ? ((ahorroActual / ahorroMeta) * 100).toFixed(1) : 0}%
+
+                **INSTRUCCIONES PARA EL ANÁLISIS:**
+                1. Analiza su situación financiera basándote ESTRICTAMENTE en los 4 pilares de fr4finance.
+                2. Si el sobrante es negativo, enfócate en reducir gastos urgentemente.
+                3. Si tiene deudas prioritarias, recomienda la estrategia avalancha.
+                4. Si el fondo de emergencia está por debajo del 50%, prioriza el ahorro.
+                5. Da 3 consejos ACCIONABLES y ESPECÍFICOS (no genéricos).
+                6. Usa un tono EMPÁTICO, MODERNO y MOTIVADOR, como un amigo experto.
+                7. Formatea la respuesta usando SOLO HTML simple: <b>, <ul>, <li>, <br>, <p>, <strong>. 
+                8. NO uses markdown, NO uses \`\`\`, NO uses títulos gigantes.
+                9. Al final, agrega una frase motivadora corta.
+
+                **ESTRUCTURA SUGERIDA DE RESPUESTA:**
+                <p><strong>📊 Análisis rápido:</strong> [2 líneas de análisis]</p>
+                <ul>
+                    <li><strong>1. [Pilar relacionado]:</strong> [Consejo específico]</li>
+                    <li><strong>2. [Pilar relacionado]:</strong> [Consejo específico]</li>
+                    <li><strong>3. [Pilar relacionado]:</strong> [Consejo específico]</li>
+                </ul>
+                <p>💪 <em>[Frase motivadora de cierre]</em></p>
             `;
 
-            // Mantener la llave directa de momento al usar un archivo estático
-            const apiKey = "AIzaSyCKfi2oYy_rhacf5_repHxNWo7IacVEig4";
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+            // Intentar con la API key del usuario primero, luego con la default
+            const userApiKey = financialData.settings?.geminiApiKey?.trim();
+            const defaultApiKey = "AIzaSyCKfi2oYy_rhacf5_repHxNWo7IacVEig4";
+            
+            // Lista de modelos en orden de preferencia
+            const modelos = [
+                "gemini-1.5-flash",
+                "gemini-1.5-pro",
+                "gemini-1.0-pro"
+            ];
+            
+            let aiText = null;
+            let ultimoError = null;
 
-            try {
-                let response;
-                let retries = 5;
-                let delay = 1000;
-                
+            // Función para intentar con una API key y modelo
+            async function intentarConAPI(apiKey, modelo) {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent?key=${apiKey}`;
                 const payload = { 
                     contents: [{ parts: [{ text: promptText }] }],
-                    systemInstruction: { parts: [{ text: "Eres un asesor experto de la plataforma fr4finance." }] }
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 800,
+                        topP: 0.9
+                    }
                 };
-
-                while (retries > 0) {
-                    response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    if (response.ok) break;
-                    retries--;
-                    await new Promise(r => setTimeout(r, delay));
-                    delay *= 2;
+                
+                const response = await fetch(url, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(payload) 
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Modelo ${modelo}: ${response.status} - ${errorText.substring(0, 100)}`);
                 }
-
-                if (!response.ok) throw new Error('Fallo al contactar a la IA');
-
+                
                 const result = await response.json();
-                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "No pude generar un consejo en este momento.";
+                return result.candidates?.[0]?.content?.parts?.[0]?.text || null;
+            }
+
+            try {
+                // Estrategia: Probar keys y modelos
+                const claves = [];
+                if (userApiKey && userApiKey.length > 10) claves.push(userApiKey);
+                claves.push(defaultApiKey);
+                
+                for (const apiKey of claves) {
+                    for (const modelo of modelos) {
+                        try {
+                            console.log(`Intentando con modelo: ${modelo}...`);
+                            const texto = await intentarConAPI(apiKey, modelo);
+                            if (texto && texto.length > 50) {
+                                aiText = texto;
+                                console.log(`✅ Éxito con ${modelo}`);
+                                break; // Romper loop de modelos
+                            }
+                        } catch (err) {
+                            console.warn(`Falló ${modelo}:`, err.message);
+                            ultimoError = err;
+                            continue; // Intentar siguiente modelo
+                        }
+                    }
+                    if (aiText) break; // Romper loop de keys si hubo éxito
+                }
                 
                 loading.classList.add('hidden');
                 content.classList.remove('hidden');
-                content.innerHTML = aiText.replace(new RegExp('```html', 'g'), '').replace(new RegExp('```', 'g'), '');
+                
+                if (aiText) {
+                    // Limpiar y formatear la respuesta
+                    let respuestaLimpia = aiText
+                        .replace(/```html/g, '')
+                        .replace(/```/g, '')
+                        .replace(/\*\*/g, '<strong>')
+                        .replace(/\*/g, '');
+                        
+                    // Si la respuesta no tiene formato HTML básico, envolverla
+                    if (!respuestaLimpia.includes('<')) {
+                        respuestaLimpia = `<p>${respuestaLimpia.replace(/\n/g, '<br>')}</p>`;
+                    }
+                        
+                    content.innerHTML = respuestaLimpia;
+                } else {
+                    throw new Error('No se pudo obtener respuesta de la IA');
+                }
+                
             } catch (error) {
-                console.error("AI Error:", error);
+                console.error("AI Error detallado:", error);
                 loading.classList.add('hidden');
                 content.classList.remove('hidden');
-                content.innerHTML = '<p class="text-red-500 font-bold">Ocurrió un error al conectar con la Educación AI. Reintenta más tarde.</p>';
+                
+                // Mensajes de error más amigables
+                let errorMsg = '';
+                if (ultimoError?.message?.includes('429')) {
+                    errorMsg = '📊 El servicio de IA está muy solicitado ahora mismo.';
+                } else if (ultimoError?.message?.includes('403') || ultimoError?.message?.includes('quota')) {
+                    errorMsg = '🔑 La API key de Gemini ha alcanzado su límite diario.';
+                } else if (ultimoError?.message?.includes('404')) {
+                    errorMsg = '🔧 Estamos actualizando el servicio de IA.';
+                } else {
+                    errorMsg = '🌐 No pudimos conectar con el Asesor IA en este momento.';
+                }
+                
+                content.innerHTML = `
+                    <div class="text-center p-6 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-800/50 shadow-sm">
+                        <p class="text-amber-600 dark:text-amber-400 font-bold text-lg mb-3">🧠 Asesor IA Temporalmente No Disponible</p>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4">${errorMsg}</p>
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl text-left text-xs text-slate-500 shadow-sm border border-slate-100 dark:border-slate-700">
+                            <p class="font-bold mb-2">💡 Mientras tanto, sigue estos consejos:</p>
+                            <ul class="list-disc pl-4 space-y-1">
+                                <li>Revisa si tus gastos hormiga superan el 10% de tus ingresos.</li>
+                                <li>Prioriza pagar la deuda con la tasa de interés más alta (Estrategia Avalancha).</li>
+                                <li>Intenta ahorrar al menos el 20% de tu sobrante mensual.</li>
+                            </ul>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-4 uppercase tracking-widest">Puedes agregar tu propia <strong>API Key de Gemini</strong> en ⚙️ Configuración para mayor disponibilidad.</p>
+                    </div>
+                `;
             }
         }
 
         function setupEventListeners() {
-            // Conecta el botón gigante central a Firebase Google Auth
-            document.getElementById('login-btn-main')?.addEventListener('click', () => signInWithPopup(auth, provider));
+            document.getElementById('login-btn-main')?.addEventListener('click', async () => {
+                const btn = document.getElementById('login-btn-main');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<div class="w-5 h-5 border-2 border-slate-500 dark:border-white border-t-transparent rounded-full animate-spin"></div> Conectando...';
+                btn.disabled = true;
+                try {
+                    await signInWithPopup(auth, provider);
+                } catch (error) {
+                    console.error("Login error:", error);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
 
+            // Lógica Onboarding
+            document.getElementById('onboard-next-btn')?.addEventListener('click', () => {
+                document.getElementById('onboard-step-1').classList.add('hidden');
+                document.getElementById('onboard-step-2').classList.remove('hidden');
+            });
+            
+            document.getElementById('onboard-finish-btn')?.addEventListener('click', async () => {
+                const cur = document.getElementById('onboard-currency-input').value;
+                const s = parseFloat(document.getElementById('onboard-sueldo-input').value) || 0;
+                const m = parseFloat(document.getElementById('onboard-meta-input').value) || 50000;
+                
+                if (financialData) {
+                    financialData.hasSeenTutorial = true;
+                    if(!financialData.settings) financialData.settings = {};
+                    financialData.settings.currency = cur;
+                    financialData.sueldoQuincenal = s;
+                    if(!financialData.metas) financialData.metas = { fondoEmergencia: {} };
+                    financialData.metas.fondoEmergencia.objetivo = m;
+                    
+                    await saveData();
+                    renderizarUI(financialData);
+                }
+                closeModal('welcome-modal');
+                showToast('¡Configuración completada! 🎉');
+            });
+
+            // Input reactivo
             document.addEventListener('input', (e) => {
-                if (e.target.classList.contains('budget-input')) {
+                if (e.target.classList.contains('budget-input') && !e.target.id.includes('onboard') && !e.target.id.includes('settings')) {
                     if (e.target.id === 'sueldoQuincenalInput') {
                         financialData.sueldoQuincenal = Number(e.target.value) || 0;
                     }
@@ -1049,9 +1448,6 @@
                     document.querySelectorAll('.extra-income-input').forEach(i => { 
                         if(i.id !== 'bonoFijoQuincena') financialData.ingresosVariables[i.id] = Number(i.value) || 0; 
                     });
-                    document.querySelectorAll('#app-content .budget-input:not(.extra-income-input):not(.gbm-input):not(#sueldoQuincenalInput):not(#ahorro-meta):not(#ahorro-abono)').forEach(i => { 
-                        if(financialData.gastosVariables[i.id] !== undefined) financialData.gastosVariables[i.id] = Number(i.value) || 0; 
-                    });
                     calcularYActualizarTodo(); 
                     saveData();
                 }
@@ -1059,6 +1455,7 @@
             
             document.getElementById('recalculate-btn')?.addEventListener('click', recalculateDebts);
             document.getElementById('ai-advisor-btn')?.addEventListener('click', callGeminiAI);
+            
             document.getElementById('export-btn')?.addEventListener('click', () => {
                 const dataStr = JSON.stringify(financialData, null, 2);
                 const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
@@ -1069,10 +1466,33 @@
                 showToast('📥 Backup descargado');
             });
             
+            // Botones de Cabecera
             document.getElementById('help-btn')?.addEventListener('click', () => {
-                alert('💡 fr4finance - Los 4 Pilares:\n\n1. Ahorro: Visualiza tu fondo de emergencia.\n2. Inversión: Controla tu portafolio.\n3. Control: Domina tus deudas y gastos hormiga.\n4. Educación: Usa el botón AI para recibir consejos.\n\nTus datos son privados y seguros con tu cuenta de Google.');
+                document.getElementById('onboard-step-1').classList.remove('hidden');
+                document.getElementById('onboard-step-2').classList.add('hidden');
+                document.getElementById('welcome-modal').style.display = 'block';
             });
             
+            document.getElementById('settings-btn')?.addEventListener('click', () => {
+                if(financialData.settings) {
+                    document.getElementById('settings-currency').value = financialData.settings.currency || 'MXN';
+                    document.getElementById('settings-gemini').value = financialData.settings.geminiApiKey || '';
+                }
+                document.getElementById('settings-modal').style.display = 'block';
+            });
+            
+            document.getElementById('settings-save-btn')?.addEventListener('click', async () => {
+                const cur = document.getElementById('settings-currency').value;
+                const gkey = document.getElementById('settings-gemini').value.trim();
+                if(!financialData.settings) financialData.settings = {};
+                financialData.settings.currency = cur;
+                financialData.settings.geminiApiKey = gkey;
+                await saveData();
+                renderizarUI(financialData);
+                closeModal('settings-modal');
+                showToast('Configuración guardada y moneda actualizada');
+            });
+
             document.getElementById('dark-mode-btn')?.addEventListener('click', () => {
                 document.documentElement.classList.toggle('dark');
                 const isDark = document.documentElement.classList.contains('dark');
@@ -1084,6 +1504,15 @@
                 document.documentElement.classList.add('dark');
                 document.getElementById('dark-mode-btn').textContent = '☀️';
             }
+
+            // Cierre con Esc
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    ['welcome-modal', 'settings-modal', 'ai-modal', 'ahorro-modal', 'payment-modal', 'debt-modal', 'gbm-modal', 'fixed-expense-modal', 'hormiga-modal', 'variable-modal'].forEach(id => {
+                        closeModal(id);
+                    });
+                }
+            });
 
             // AHORRO
             document.getElementById('ahorro-save-btn')?.addEventListener('click', async () => {
@@ -1134,6 +1563,8 @@
                 document.getElementById('debt-name').value = ''; 
                 document.getElementById('debt-total').value = '';
                 document.getElementById('debt-min-payment').value = ''; 
+                document.getElementById('debt-cut-day').value = ''; 
+                document.getElementById('debt-due-day').value = ''; 
                 document.getElementById('debt-priority').checked = false;
                 document.getElementById('debt-delete-btn').classList.add('hidden'); 
                 document.getElementById('debt-modal').style.display = 'block';
@@ -1142,10 +1573,26 @@
                 const n = document.getElementById('debt-name').value.trim(); 
                 const t = parseFloat(document.getElementById('debt-total').value);
                 const m = parseFloat(document.getElementById('debt-min-payment').value) || 0; 
+                const dc = parseInt(document.getElementById('debt-cut-day').value);
+                const dp = parseInt(document.getElementById('debt-due-day').value);
                 const p = document.getElementById('debt-priority').checked;
+                
                 if (!n || isNaN(t)) { showToast('Datos incompletos', 'error'); return; }
+
+                if (!isNaN(dc) && (dc < 1 || dc > 31)) { showToast('Día de corte inválido (1-31)', 'error'); return; }
+                if (!isNaN(dp) && (dp < 1 || dp > 31)) { showToast('Día límite inválido (1-31)', 'error'); return; }
+
                 let key = document.getElementById('edit-debt-key').value || n.toLowerCase().replace(/[^a-z0-9]/g, '_');
-                financialData.deudas[key] = { nombre: n, total: t, pagoMensual: m, esPrioridad: p };
+                
+                financialData.deudas[key] = { 
+                    nombre: n, 
+                    total: t, 
+                    pagoMensual: m, 
+                    diaCorte: isNaN(dc) ? null : dc,
+                    diaPago: isNaN(dp) ? null : dp,
+                    esPrioridad: p 
+                };
+                
                 await saveData(); renderizarUI(financialData); closeModal('debt-modal');
                 showToast('✅ Deuda actualizada');
             });
@@ -1210,6 +1657,33 @@
                     delete financialData.gastosHormiga[document.getElementById('edit-hormiga-key').value]; 
                     await saveData(); renderizarUI(financialData); closeModal('hormiga-modal');
                     showToast('Gasto eliminado');
+                }
+            });
+
+            // VARIABLES DINÁMICOS
+            document.getElementById('add-variable-btn')?.addEventListener('click', () => {
+                document.getElementById('edit-variable-key').value = ''; 
+                document.getElementById('variable-modal-title').innerText = 'Nueva Categoría Variable';
+                document.getElementById('variable-name').value = ''; 
+                document.getElementById('variable-amount').value = '';
+                document.getElementById('variable-delete-btn').classList.add('hidden');
+                document.getElementById('variable-modal').style.display = 'block';
+            });
+            document.getElementById('variable-save-btn')?.addEventListener('click', async () => {
+                const n = document.getElementById('variable-name').value.trim(); 
+                const a = parseFloat(document.getElementById('variable-amount').value);
+                if (!n || isNaN(a)) { showToast('Faltan datos', 'error'); return; }
+                let key = document.getElementById('edit-variable-key').value || n.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                if (!financialData.gastosVariables) financialData.gastosVariables = {};
+                financialData.gastosVariables[key] = { nombre: n, monto: a };
+                await saveData(); renderizarUI(financialData); closeModal('variable-modal');
+                showToast('✅ Categoría variable guardada');
+            });
+            document.getElementById('variable-delete-btn')?.addEventListener('click', async () => {
+                if (confirm("¿Eliminar esta categoría variable?")) { 
+                    delete financialData.gastosVariables[document.getElementById('edit-variable-key').value]; 
+                    await saveData(); renderizarUI(financialData); closeModal('variable-modal');
+                    showToast('Categoría eliminada');
                 }
             });
 
