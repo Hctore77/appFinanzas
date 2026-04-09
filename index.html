@@ -95,8 +95,8 @@
         </div>
 
         <div class="z-10 w-full max-w-5xl flex flex-col items-center text-center">
-            <!-- Logo fusionado con el fondo en modo claro, y con fondo blanco en oscuro -->
-            <img src="logo.jpg" alt="fr4finance Logo" class="h-20 sm:h-28 object-contain mix-blend-multiply dark:mix-blend-normal dark:bg-white dark:p-4 dark:rounded-[2rem] dark:shadow-xl mb-10 transition-all hover:scale-105">
+            <!-- Logo fusionado con el fondo en modo claro, y con fondo blanco en oscuro. -->
+            <img src="logo.png" alt="fr4finance Logo" class="h-20 sm:h-28 object-contain mix-blend-multiply dark:mix-blend-normal dark:bg-white dark:p-4 dark:rounded-[2rem] dark:shadow-xl mb-10 transition-all hover:scale-105">
 
             <!-- Título Principal -->
             <h1 class="text-5xl sm:text-7xl font-black text-slate-900 dark:text-white tracking-tighter mb-6 leading-tight">
@@ -286,9 +286,9 @@
         <header class="max-w-7xl mx-auto mb-12 text-center lg:text-left flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
                 <div class="flex items-center justify-center lg:justify-start mb-4">
-                    <!-- Logo con fondo blanco para que resalte incluso en modo oscuro -->
+                    <!-- Logo con fondo blanco para que resalte incluso en modo oscuro. Corregido a .png -->
                     <div class="bg-white p-2.5 rounded-2xl shadow-sm inline-block border border-slate-100">
-                        <img src="logo.jpg" alt="fr4finance Logo" class="h-10 sm:h-12 object-contain">
+                        <img src="logo.png" alt="fr4finance Logo" class="h-10 sm:h-12 object-contain">
                     </div>
                 </div>
                 <p class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400 mb-6 tracking-tight">Logra tu libertad financiera en 4 pasos 🚀</p>
@@ -475,6 +475,7 @@
         import { getFirestore, doc, getDoc, setDoc, collection, addDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+        // Configuración dura (Segura por las Reglas de Firestore)
         const firebaseConfig = {
             apiKey: "AIzaSyC6Y5_bfA2Gr-4rvLuUdRUoMzNUUpxmDuw",
             authDomain: "plan-maestro-2026-fea50.firebaseapp.com",
@@ -995,7 +996,8 @@
                 4. Formatea la respuesta usando etiquetas HTML simples (usa <b>, <ul>, <li>, <br>). NO uses markdown.
             `;
 
-            const apiKey = import.meta.env?.VITE_GEMINI_API_KEY || "AIzaSyCKfi2oYy_rhacf5_repHxNWo7IacVEig4";
+            // Mantener la llave directa de momento al usar un archivo estático
+            const apiKey = "AIzaSyCKfi2oYy_rhacf5_repHxNWo7IacVEig4";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
 
             try {
