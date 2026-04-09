@@ -95,8 +95,8 @@
         </div>
 
         <div class="z-10 w-full max-w-5xl flex flex-col items-center text-center">
-            <!-- Logo fusionado con el fondo en modo claro, y con fondo blanco en oscuro. -->
-            <img src="logo.png" alt="fr4finance Logo" class="h-20 sm:h-28 object-contain mix-blend-multiply dark:mix-blend-normal dark:bg-white dark:p-4 dark:rounded-[2rem] dark:shadow-xl mb-10 transition-all hover:scale-105">
+            <!-- Logo con fondo transparente, sin hacks de CSS -->
+            <img src="logo.png" alt="fr4finance Logo" class="h-20 sm:h-28 object-contain mb-10 transition-all hover:scale-105">
 
             <!-- Título Principal -->
             <h1 class="text-5xl sm:text-7xl font-black text-slate-900 dark:text-white tracking-tighter mb-6 leading-tight">
@@ -286,9 +286,9 @@
         <header class="max-w-7xl mx-auto mb-12 text-center lg:text-left flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
                 <div class="flex items-center justify-center lg:justify-start mb-4">
-                    <!-- Logo con fondo blanco para que resalte incluso en modo oscuro. Corregido a .png -->
-                    <div class="bg-white p-2.5 rounded-2xl shadow-sm inline-block border border-slate-100">
-                        <img src="logo.png" alt="fr4finance Logo" class="h-10 sm:h-12 object-contain">
+                    <!-- Logo transparente -->
+                    <div class="inline-block">
+                        <img src="logo.png" alt="fr4finance Logo" class="h-10 sm:h-12 object-contain transition-transform hover:scale-105">
                     </div>
                 </div>
                 <p class="text-sm sm:text-base font-semibold text-slate-500 dark:text-slate-400 mb-6 tracking-tight">Logra tu libertad financiera en 4 pasos 🚀</p>
