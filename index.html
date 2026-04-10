@@ -160,9 +160,7 @@
         <div class="relative z-10 w-full max-w-6xl text-center">
             <!-- Logo Oficial -->
             <div class="flex justify-center mb-8">
-                <!-- Ajustamos el padding (px-8 py-4) para que respire el logo rectangular -->
                 <div class="bg-white/80 dark:bg-slate-800/80 px-8 py-4 rounded-3xl shadow-2xl floating-card">
-                    <!-- Cambiamos a altura dinámica (h-16 md:h-20) para que se vea gigante -->
                     <img src="logo.png" alt="fr4finance" class="h-16 md:h-20 w-auto object-contain">
                 </div>
             </div>
@@ -196,23 +194,26 @@
     <!-- DASHBOARD PRINCIPAL -->
     <div id="dashboard-page" class="pb-12" style="display: none;">
         
-        <!-- Barra Superior -->
+        <!-- Barra Superior Corregida -->
         <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 px-6 py-3 shadow-sm">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <!-- Aumentamos tamaño y mejoramos el fondo blanco para el modo oscuro -->
                     <img src="logo.png" class="h-10 sm:h-12 w-auto object-contain drop-shadow-sm dark:bg-white/95 dark:rounded-xl dark:p-2" alt="Logo">
-                    <!-- Se eliminó el texto <span> porque el nuevo logo ya incluye la palabra fr4finance -->
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-4">
                     <div id="sync-indicator" class="hidden sm:flex items-center gap-2 mr-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">
-                    <button id="dark-mode-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-105 transition-all shadow-sm">🌙</button>
+                        <div id="sync-dot" class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <span id="sync-text" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sincronizado</span>
+                    </div>
+                    <button id="settings-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-105 transition-all text-lg shadow-sm flex items-center justify-center">⚙️</button>
+                    <button id="dark-mode-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-105 transition-all text-lg shadow-sm flex items-center justify-center">🌙</button>
+                    <div id="auth-container"></div>
                 </div>
             </div>
         </div>
 
         <!-- Contenido Principal -->
-        <div class="max-w-7xl mx-auto mt-20">
+        <div class="max-w-7xl mx-auto mt-24 px-4 sm:px-6 md:px-8">
             
             <!-- Banner de Bienvenida Personalizado -->
             <div class="card bg-gradient-to-r from-frteal to-frnavy text-white mb-8 overflow-hidden relative border-0 shadow-xl">
@@ -254,7 +255,6 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div class="card lg:col-span-2">
                     <h3 class="font-black text-lg mb-4">📈 Distribución de Gastos</h3>
-                    <!-- Aumentamos la altura a h-80 para darle más respiro a la gráfica -->
                     <div class="relative h-80 w-full flex justify-center p-2">
                         <canvas id="flujoChart"></canvas>
                     </div>
@@ -378,7 +378,6 @@
         <div class="modal-content !max-w-2xl text-center relative overflow-hidden">
             <div id="onboard-step-1" class="transition-all duration-500">
                 <div class="flex justify-center mb-6">
-                    <!-- Cambiamos rounded-full por rounded-2xl para que el rectángulo encaje perfecto -->
                     <div class="bg-slate-100 dark:bg-slate-800 px-6 py-4 rounded-2xl">
                         <img src="logo.png" alt="fr4finance" class="h-10 md:h-12 w-auto object-contain drop-shadow-md">
                     </div>
@@ -645,6 +644,8 @@
                 try {
                     const userDocRef = doc(db, "usuarios", currentUser.uid);
                     await setDoc(userDocRef, financialData);
+                    const sync = document.getElementById('sync-text');
+                    if(sync) { sync.innerText = 'Guardado'; setTimeout(()=> sync.innerText = 'Sincronizado', 2000); }
                 } catch (e) {
                     console.error("Save error:", e);
                     showToast('Error al guardar', 'error');
@@ -1042,6 +1043,8 @@
 
             const sobrante = ingresosTotales - totalGastos;
             
+            // Tasa de ahorro (Se considera el sobrante como posible ahorro + el abono real al fondo)
+            // Aquí usamos solo el sobrante para simplificar el KPI
             const tasaAhorro = ingresosTotales > 0 ? (Math.max(0, sobrante) / ingresosTotales) * 100 : 0;
 
             document.getElementById('statIngresos').innerText = formatCurrency(ingresosTotales);
@@ -1064,6 +1067,7 @@
             const ctx = document.getElementById('flujoChart')?.getContext('2d');
             if (ctx) {
                 if (myChart) myChart.destroy();
+                const isMobile = window.innerWidth < 768;
                 myChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: { 
@@ -1076,17 +1080,17 @@
                         }] 
                     },
                     options: { 
-                        cutout: '70%', 
+                        cutout: '75%', 
                         maintainAspectRatio: false,
-                        layout: { padding: { bottom: 20 } },
+                        layout: { padding: { bottom: 10 } },
                         plugins: { 
                             legend: { 
-                                position: 'bottom',
+                                position: isMobile ? 'bottom' : 'right',
                                 align: 'center',
                                 labels: { 
                                     color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569', 
                                     font: {family: 'Inter', size: 11},
-                                    padding: 20,
+                                    padding: 15,
                                     usePointStyle: true,
                                     pointStyle: 'circle'
                                 }
@@ -1391,12 +1395,10 @@
                 dashboard.style.display = 'block';
                 authContainer.innerHTML = `
                     <div class="flex items-center gap-3">
-                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:scale-105 transition-transform" onclick="signOut(getAuth())" title="Cerrar sesión">
                         <span class="text-sm font-bold hidden sm:inline text-slate-800 dark:text-white">${user.displayName?.split(' ')[0]}</span>
-                        <button id="logout-btn" class="text-xs font-black text-red-500 hover:text-white hover:bg-red-500 bg-red-50 dark:bg-red-900/30 px-3 py-1.5 rounded-lg transition-all shadow-sm">Salir</button>
                     </div>
                 `;
-                document.getElementById('logout-btn')?.addEventListener('click', () => signOut(auth));
                 currentUser = user;
                 loadUserData(user.uid);
             } else {
