@@ -161,7 +161,7 @@
             <!-- Logo -->
             <div class="flex justify-center mb-8">
                 <div class="bg-white/80 dark:bg-slate-800/80 p-4 rounded-3xl shadow-2xl floating-card">
-                    <img src="logo.png" alt="fr4finance" class="w-32 h-auto object-contain">
+                    <img src="Logo.png" alt="fr4finance" class="w-32 h-auto object-contain">
                 </div>
             </div>
             
@@ -198,7 +198,7 @@
         <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-6 py-3">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <img src="logo.png" class="h-8 w-auto object-contain drop-shadow-sm dark:bg-white/90 dark:rounded-md dark:p-1" alt="Logo">
+                    <img src="Logo.png" class="h-8 w-auto object-contain drop-shadow-sm dark:bg-white/90 dark:rounded-md dark:p-1" alt="Logo">
                     <span class="font-black text-xl gradient-text hidden sm:inline">fr4finance</span>
                 </div>
                 <div class="flex items-center gap-4">
@@ -252,7 +252,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div class="card lg:col-span-2">
                     <h3 class="font-black text-lg mb-4">📈 Distribución de Gastos</h3>
-                    <div class="h-64">
+                    <!-- Se ajustó la altura relativa para que la gráfica respire mejor y no amontone la leyenda -->
+                    <div class="relative h-72 w-full flex justify-center p-2">
                         <canvas id="flujoChart"></canvas>
                     </div>
                 </div>
@@ -370,6 +371,54 @@
     </div>
 
     <!-- MODALES -->
+    <!-- Modal Onboarding -->
+    <div id="welcome-modal" class="modal">
+        <div class="modal-content !max-w-2xl text-center relative overflow-hidden">
+            <div id="onboard-step-1" class="transition-all duration-500">
+                <div class="flex justify-center mb-6">
+                    <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-full">
+                        <img src="Logo.png" alt="fr4finance" class="h-10 object-contain drop-shadow-md">
+                    </div>
+                </div>
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">¡Bienvenido a tu Hub Financiero! 🎉</h2>
+                <p class="text-slate-500 mb-8 text-sm font-medium">Tu camino a la libertad financiera se basa en 4 pilares editables y personalizables:</p>
+                <div class="grid grid-cols-2 gap-3 mb-10 text-left">
+                    <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800"><p class="text-xs font-bold text-emerald-700 dark:text-emerald-400">🔋 1. Ahorro</p></div>
+                    <div class="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl border border-cyan-100 dark:border-cyan-800"><p class="text-xs font-bold text-cyan-700 dark:text-cyan-400">📈 2. Inversión</p></div>
+                    <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-xl border border-rose-100 dark:border-rose-800"><p class="text-xs font-bold text-rose-700 dark:text-rose-400">⚖️ 3. Control</p></div>
+                    <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800"><p class="text-xs font-bold text-purple-700 dark:text-purple-400">🧠 4. Educación AI</p></div>
+                </div>
+                <button id="onboard-next-btn" class="bg-frteal hover:bg-teal-700 text-white px-8 py-3.5 rounded-xl font-black w-full text-sm uppercase tracking-widest shadow-lg transition-all">Configurar mi cuenta ➡️</button>
+            </div>
+
+            <div id="onboard-step-2" class="hidden transition-all duration-500">
+                <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">Paso final: Tus datos base 🚀</h2>
+                <p class="text-slate-500 mb-8 text-sm font-medium">Pre-llenemos el panel para no empezar en blanco.</p>
+                <div class="space-y-5 text-left mb-10">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Moneda Local</label>
+                        <select id="onboard-currency-input" class="budget-input bg-slate-50 dark:bg-slate-800 font-bold">
+                            <option value="MXN">Peso Mexicano (MXN)</option><option value="USD">Dólar (USD)</option>
+                            <option value="EUR">Euro (EUR)</option><option value="COP">Peso Colombiano (COP)</option>
+                            <option value="ARS">Peso Argentino (ARS)</option><option value="CLP">Peso Chileno (CLP)</option>
+                            <option value="PEN">Sol Peruano (PEN)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Sueldo Neto (Quincenal)</label>
+                        <input type="number" id="onboard-sueldo-input" class="budget-input" placeholder="Ej: 5000">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Fondo de Emergencia Ideal</label>
+                        <input type="number" id="onboard-meta-input" class="budget-input" value="50000">
+                    </div>
+                </div>
+                <button id="onboard-finish-btn" class="bg-frnavy hover:bg-slate-800 text-white px-8 py-3.5 rounded-xl font-black w-full text-sm uppercase tracking-widest shadow-lg transition-all">¡Ir a mi Dashboard!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resto de Modales -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3>
@@ -593,8 +642,6 @@
                 try {
                     const userDocRef = doc(db, "usuarios", currentUser.uid);
                     await setDoc(userDocRef, financialData);
-                    const sync = document.getElementById('sync-text');
-                    if(sync) { sync.innerText = 'Guardado'; setTimeout(()=> sync.innerText = 'Sincronizado', 2000); }
                 } catch (e) {
                     console.error("Save error:", e);
                     showToast('Error al guardar', 'error');
@@ -628,11 +675,7 @@
                 hideLoader();
 
                 if (!financialData.hasSeenTutorial) {
-                    setTimeout(() => {
-                        alert('🎉 Bienvenido a fr4finance\n\nCompleta tus datos básicos para comenzar:\n1. Tu sueldo quincenal\n2. Tus gastos fijos\n3. ¡Listo! La IA te guiará');
-                        financialData.hasSeenTutorial = true;
-                        saveData();
-                    }, 1000);
+                    document.getElementById('welcome-modal').style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -996,8 +1039,6 @@
 
             const sobrante = ingresosTotales - totalGastos;
             
-            // Tasa de ahorro (Se considera el sobrante como posible ahorro + el abono real al fondo)
-            // Aquí usamos solo el sobrante para simplificar el KPI
             const tasaAhorro = ingresosTotales > 0 ? (Math.max(0, sobrante) / ingresosTotales) * 100 : 0;
 
             document.getElementById('statIngresos').innerText = formatCurrency(ingresosTotales);
@@ -1020,6 +1061,7 @@
             const ctx = document.getElementById('flujoChart')?.getContext('2d');
             if (ctx) {
                 if (myChart) myChart.destroy();
+                const isMobile = window.innerWidth < 768;
                 myChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: { 
@@ -1027,15 +1069,25 @@
                         datasets: [{ 
                             data: [pagoMinimoDeudas, gastosFijosNum, gastosVariablesNum, gastosHormigaNum, Math.max(0, sobrante)], 
                             backgroundColor: ['#ef4444', '#0f766e', '#3b82f6', '#f59e0b', '#10b981'], 
-                            borderWidth: 0 
+                            borderWidth: 0,
+                            hoverOffset: 10
                         }] 
                     },
                     options: { 
                         cutout: '75%', 
+                        maintainAspectRatio: false,
+                        layout: { padding: { bottom: 10 } },
                         plugins: { 
                             legend: { 
-                                position: 'bottom',
-                                labels: { color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569', font: {family: 'Inter', size: 10} }
+                                position: isMobile ? 'bottom' : 'right',
+                                align: 'center',
+                                labels: { 
+                                    color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569', 
+                                    font: {family: 'Inter', size: 11},
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
                             } 
                         } 
                     }
@@ -1089,13 +1141,18 @@
                     body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey })
                 });
                 
-                if (!response.ok) throw new Error("Fallo en API");
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || "Fallo en API");
+                }
                 
                 const data = await response.json();
                 let aiText = data.text || 'No pude generar consejos ahora.';
                 
-                // Limpieza de formato
-                aiText = aiText.replace(/```html/g, '').replace(/```/g, '').replace(/\*\*/g, '<strong>').replace(/\*/g, '');
+                // La limpieza principal ya la hace el backend, pero mantenemos esto por seguridad
+                if (!aiText.includes('<')) {
+                    aiText = `<p>${aiText.replace(/\n/g, '<br>')}</p>`;
+                }
 
                 loading.classList.add('hidden');
                 content.classList.remove('hidden');
@@ -1108,9 +1165,16 @@
             } catch (error) {
                 loading.classList.add('hidden');
                 content.classList.remove('hidden');
+                
+                // Capturar el mensaje personalizado del backend (ej. "Límite de uso de IA alcanzado...")
+                const backendMsg = error.message === "Failed to fetch" ? "Problema de conexión" : error.message;
+
                 content.innerHTML = `
                     <div class="border-b border-amber-200 dark:border-amber-800 pb-3 mb-4">
-                        <p class="text-xs text-amber-600 dark:text-amber-400 font-bold uppercase tracking-widest">📡 Modo Local (Fallo de conexión)</p>
+                        <p class="text-xs text-amber-600 dark:text-amber-400 font-bold uppercase tracking-widest">📡 Modo Local (Fallo IA)</p>
+                    </div>
+                    <div class="bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 p-3 rounded-lg text-xs mb-4 font-medium border border-amber-200 dark:border-amber-800/50">
+                        <strong>Motivo:</strong> ${backendMsg}
                     </div>
                     <ul class="space-y-3">
                         ${sobrante < 0 ? `<li><strong>⚠️ Déficit:</strong> Gastas más de lo que ganas. Reduce gastos hormiga/variables urgente.</li>` : `<li><strong>💰 Ahorro:</strong> Tienes ${formatCurrency(sobrante)} libres. Úsalo para tu meta prioritaria.</li>`}
@@ -1137,6 +1201,22 @@
                     btn.innerHTML = orig;
                     btn.disabled = false;
                 }
+            });
+
+            document.getElementById('onboard-next-btn')?.addEventListener('click', () => {
+                document.getElementById('onboard-step-1').classList.add('hidden');
+                document.getElementById('onboard-step-2').classList.remove('hidden');
+            });
+
+            document.getElementById('onboard-finish-btn')?.addEventListener('click', async () => {
+                financialData.hasSeenTutorial = true;
+                financialData.settings.currency = document.getElementById('onboard-currency-input').value;
+                financialData.sueldoQuincenal = parseFloat(document.getElementById('onboard-sueldo-input').value) || 0;
+                financialData.metas.fondoEmergencia.objetivo = parseFloat(document.getElementById('onboard-meta-input').value) || 50000;
+                await saveData();
+                renderizarUI();
+                closeModal('welcome-modal');
+                showToast('¡Configuración completada! 🎉');
             });
 
             document.getElementById('dark-mode-btn')?.addEventListener('click', () => {
