@@ -1,5 +1,4 @@
 # Archivos sensibles
-*.json
 *.key
 *.pem
 .env
