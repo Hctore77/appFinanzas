@@ -523,7 +523,21 @@
             const ctx = document.getElementById('flujoChart')?.getContext('2d');
             if (ctx) {
                 if (myChart) myChart.destroy();
-                myChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Fijos', 'Var', 'Deuda', 'Libre'], datasets: [{ data: [f, v + h, dm, Math.max(0, sobrante)], backgroundColor: ['#0f766e', '#3b82f6', '#ef4444', '#10b981'], borderWidth: 0 }] }, options: { cutout: '75%', plugins: { legend: { position: 'bottom' } } } });
+                myChart = new Chart(ctx, { 
+                    type: 'doughnut', 
+                    data: { 
+                        labels: ['Gastos Fijos', 'Gastos Variables', 'Pago Deudas', 'Sobrante Libre'], 
+                        datasets: [{ 
+                            data: [f, v + h, dm, Math.max(0, sobrante)], 
+                            backgroundColor: ['#0f766e', '#3b82f6', '#ef4444', '#10b981'], 
+                            borderWidth: 0 
+                        }] 
+                    }, 
+                    options: { 
+                        cutout: '75%', 
+                        plugins: { legend: { position: 'bottom' } } 
+                    } 
+                });
             }
         }
 
@@ -556,14 +570,32 @@ Reglas:
 3. No uses markdown.`;
 
             try {
-                const response = await fetch('/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey }) });
-                if (!response.ok) throw new Error(response.status);
-                const data = await response.json();
-                loading.classList.add('hidden'); content.classList.remove('hidden'); content.innerHTML = data.text;
+                const response = await fetch('/api/gemini', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey }) 
+                });
+                
+                const data = await response.json(); // Intentar leer el JSON primero
+                
+                if (!response.ok) {
+                    throw new Error(data.error || `Error del servidor HTTP ${response.status}`);
+                }
+                
+                loading.classList.add('hidden'); 
+                content.classList.remove('hidden'); 
+                content.innerHTML = data.text;
+                
             } catch (error) {
                 console.error("ERROR IA:", error);
-                loading.classList.add('hidden'); content.classList.remove('hidden');
-                content.innerHTML = `<div class="bg-amber-50 p-4 border border-amber-200 rounded-xl text-amber-800 text-sm">⚠️ Error de conexión IA. Sobrante libre actual: ${formatCurrency(sobrante)}.</div>`;
+                loading.classList.add('hidden'); 
+                content.classList.remove('hidden');
+                content.innerHTML = `
+                    <div class="bg-amber-50 p-4 border border-amber-200 rounded-xl text-amber-800 text-sm">
+                        <strong>⚠️ Falló la conexión IA. Motivo:</strong> ${error.message}
+                        <br><br>Mientras tanto, tu Sobrante Libre es de: <strong>${formatCurrency(sobrante)}</strong>.
+                    </div>
+                `;
             }
         }
 
