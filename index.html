@@ -161,7 +161,7 @@
             <!-- Logo -->
             <div class="flex justify-center mb-8">
                 <div class="bg-white/80 dark:bg-slate-800/80 p-4 rounded-3xl shadow-2xl floating-card">
-                    <img src="Logo.png" alt="fr4finance" class="w-32 h-auto object-contain">
+                    <img src="logo.png" alt="fr4finance" class="w-32 h-auto object-contain">
                 </div>
             </div>
             
@@ -198,7 +198,7 @@
         <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-6 py-3">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <img src="Logo.png" class="h-8 w-auto object-contain drop-shadow-sm dark:bg-white/90 dark:rounded-md dark:p-1" alt="Logo">
+                    <img src="logo.png" class="h-8 w-auto object-contain drop-shadow-sm dark:bg-white/90 dark:rounded-md dark:p-1" alt="Logo">
                     <span class="font-black text-xl gradient-text hidden sm:inline">fr4finance</span>
                 </div>
                 <div class="flex items-center gap-4">
@@ -377,7 +377,7 @@
             <div id="onboard-step-1" class="transition-all duration-500">
                 <div class="flex justify-center mb-6">
                     <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-full">
-                        <img src="Logo.png" alt="fr4finance" class="h-10 object-contain drop-shadow-md">
+                        <img src="logo.png" alt="fr4finance" class="h-10 object-contain drop-shadow-md">
                     </div>
                 </div>
                 <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">¡Bienvenido a tu Hub Financiero! 🎉</h2>
@@ -1389,10 +1389,12 @@
                 dashboard.style.display = 'block';
                 authContainer.innerHTML = `
                     <div class="flex items-center gap-3">
-                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:scale-105 transition-transform" onclick="signOut(getAuth())" title="Cerrar sesión">
+                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
                         <span class="text-sm font-bold hidden sm:inline text-slate-800 dark:text-white">${user.displayName?.split(' ')[0]}</span>
+                        <button id="logout-btn" class="text-xs font-black text-red-500 hover:text-white hover:bg-red-500 bg-red-50 dark:bg-red-900/30 px-3 py-1.5 rounded-lg transition-all shadow-sm">Salir</button>
                     </div>
                 `;
+                document.getElementById('logout-btn')?.addEventListener('click', () => signOut(auth));
                 currentUser = user;
                 loadUserData(user.uid);
             } else {
