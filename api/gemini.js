@@ -1,99 +1,73 @@
-export const config = {
-    runtime: 'edge',
-};
+module.exports = async function (req, res) {
+    // 1. Configurar CORS básico por seguridad
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS,POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-export default async function handler(req) {
+    // Manejar preflight request (OPTIONS)
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
     // Solo permitir método POST
     if (req.method !== 'POST') {
-        return new Response(JSON.stringify({ error: 'Método no permitido' }), { 
-            status: 405,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        return res.status(405).json({ error: 'Método no permitido' });
     }
 
     try {
-        // Recibir el prompt y la API key personalizada (si existe)
-        const body = await req.json();
-        const prompt = body.prompt;
-        const customKey = body.customKey;
+        // En Vercel con Node.js clásico, req.body ya viene parseado como JSON
+        const { prompt, customKey } = req.body;
 
         if (!prompt || prompt.trim() === '') {
-            return new Response(JSON.stringify({ error: 'El prompt es requerido' }), { 
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            return res.status(400).json({ error: 'El prompt es requerido' });
         }
 
-        // Usar la API key del usuario si la proporcionó, o la de Vercel
+        // Usar la API key del usuario si la proporcionó, o la de Entorno de Vercel
         const apiKey = customKey || process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
             console.error('❌ No hay API key configurada en Vercel');
-            return new Response(JSON.stringify({ error: 'API key no configurada en el servidor' }), { 
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            return res.status(500).json({ error: 'API key no configurada en el servidor' });
         }
 
-        // URL de Gemini API (modelo estable y rápido)
+        // URL de Gemini API
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        // Payload optimizado para respuestas cortas y concisas
         const payload = {
             contents: [{ 
-                parts: [{ 
-                    text: prompt 
-                }] 
+                parts: [{ text: prompt }] 
             }],
             generationConfig: {
                 temperature: 0.7,      
-                maxOutputTokens: 600,  
-                topP: 0.9,
-                topK: 40
+                maxOutputTokens: 600
             }
         };
 
         // Llamar a Gemini API
         const response = await fetch(url, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
-        // Verificar si la respuesta es exitosa
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`❌ Gemini API error (${response.status}):`, errorText);
+            console.error(`❌ Error de Google (${response.status}):`, errorText);
             
-            // Mensajes de error amigables según el código
             let errorMessage = 'Error al comunicarse con la IA';
-            if (response.status === 429) {
-                errorMessage = 'Límite de uso de IA alcanzado. Intenta mañana o agrega tu propia API Key en Configuración.';
-            } else if (response.status === 403) {
-                errorMessage = 'API key inválida o sin permisos. Verifica tu clave en Configuración.';
-            } else if (response.status === 400) {
-                errorMessage = 'Solicitud inválida. El prompt puede ser demasiado largo.';
-            }
+            if (response.status === 429) errorMessage = 'Límite de uso de IA alcanzado por hoy.';
+            if (response.status === 403) errorMessage = 'La API key de Google es inválida.';
             
-            return new Response(JSON.stringify({ error: errorMessage }), { 
-                status: response.status,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            return res.status(response.status).json({ error: errorMessage });
         }
 
         const data = await response.json();
-        
-        // Extraer el texto de la respuesta
         const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || null;
         
         if (!aiText) {
-            console.error('❌ Respuesta vacía de Gemini:', data);
-            return new Response(JSON.stringify({ error: 'La IA no generó una respuesta válida' }), { 
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            return res.status(500).json({ error: 'La IA no generó una respuesta válida' });
         }
 
         // Limpiar la respuesta de posibles markdown
@@ -105,22 +79,10 @@ export default async function handler(req) {
             .trim();
 
         // Devolver la respuesta exitosa
-        return new Response(JSON.stringify({ text: cleanedText }), {
-            status: 200,
-            headers: { 
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache'
-            }
-        });
+        return res.status(200).json({ text: cleanedText });
 
     } catch (error) {
-        console.error('❌ Error en Edge Function:', error);
-        
-        return new Response(JSON.stringify({ 
-            error: 'Error interno del servidor. Intenta nuevamente más tarde.'
-        }), { 
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        console.error('❌ Error interno del servidor:', error);
+        return res.status(500).json({ error: 'Error del servidor Vercel. Intenta de nuevo.' });
     }
-}
+};
