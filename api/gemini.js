@@ -1,67 +1,126 @@
-export default async function handler(req, res) {
-    // 1. Solo permitir método POST
+export const config = {
+    runtime: 'edge',
+};
+
+export default async function handler(req) {
+    // Solo permitir método POST
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Método HTTP no permitido' });
+        return new Response(JSON.stringify({ error: 'Método no permitido' }), { 
+            status: 405,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 
     try {
-        // En Node.js, Vercel ya convierte automáticamente el body a JSON
-        const prompt = req.body.prompt;
-        const customKey = req.body.customKey;
+        // Recibir el prompt y la API key personalizada (si existe)
+        const body = await req.json();
+        const prompt = body.prompt;
+        const customKey = body.customKey;
 
-        if (!prompt) {
-            return res.status(400).json({ error: 'El prompt es requerido' });
+        if (!prompt || prompt.trim() === '') {
+            return new Response(JSON.stringify({ error: 'El prompt es requerido' }), { 
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
-        // 2. Obtener la llave
+        // Usar la API key del usuario si la proporcionó, o la de Vercel
         const apiKey = customKey || process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
-            console.error('❌ No hay API key en Vercel ni en la configuración del usuario');
-            return res.status(500).json({ error: 'Falta la API Key de Gemini en el servidor' });
+            console.error('❌ No hay API key configurada en Vercel');
+            return new Response(JSON.stringify({ error: 'API key no configurada en el servidor' }), { 
+                status: 500,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
-        // 3. Preparar la llamada a Google
+        // URL de Gemini API (modelo estable y rápido)
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+        // Payload optimizado para respuestas cortas y concisas
         const payload = {
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 600 }
+            contents: [{ 
+                parts: [{ 
+                    text: prompt 
+                }] 
+            }],
+            generationConfig: {
+                temperature: 0.7,      
+                maxOutputTokens: 600,  
+                topP: 0.9,
+                topK: 40
+            }
         };
 
-        // 4. Ejecutar la llamada
+        // Llamar a Gemini API
         const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(payload)
         });
 
-        // 5. Manejar errores de Google
+        // Verificar si la respuesta es exitosa
         if (!response.ok) {
-            let errorMessage = 'Error al comunicarse con la IA';
-            if (response.status === 429) errorMessage = 'Límite de uso de IA alcanzado por hoy.';
-            if (response.status === 403) errorMessage = 'La API key de Google es inválida.';
+            const errorText = await response.text();
+            console.error(`❌ Gemini API error (${response.status}):`, errorText);
             
-            return res.status(response.status).json({ error: errorMessage });
+            // Mensajes de error amigables según el código
+            let errorMessage = 'Error al comunicarse con la IA';
+            if (response.status === 429) {
+                errorMessage = 'Límite de uso de IA alcanzado. Intenta mañana o agrega tu propia API Key en Configuración.';
+            } else if (response.status === 403) {
+                errorMessage = 'API key inválida o sin permisos. Verifica tu clave en Configuración.';
+            } else if (response.status === 400) {
+                errorMessage = 'Solicitud inválida. El prompt puede ser demasiado largo.';
+            }
+            
+            return new Response(JSON.stringify({ error: errorMessage }), { 
+                status: response.status,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
-        // 6. Procesar y limpiar respuesta exitosa
         const data = await response.json();
+        
+        // Extraer el texto de la respuesta
         const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || null;
         
         if (!aiText) {
-            return res.status(500).json({ error: 'Google no generó texto' });
+            console.error('❌ Respuesta vacía de Gemini:', data);
+            return new Response(JSON.stringify({ error: 'La IA no generó una respuesta válida' }), { 
+                status: 500,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
 
+        // Limpiar la respuesta de posibles markdown
         const cleanedText = aiText
             .replace(/```html/g, '')
             .replace(/```/g, '')
+            .replace(/\*\*/g, '<strong>')
+            .replace(/\*/g, '')
             .trim();
 
-        // 7. Enviar al index.html
-        return res.status(200).json({ text: cleanedText });
+        // Devolver la respuesta exitosa
+        return new Response(JSON.stringify({ text: cleanedText }), {
+            status: 200,
+            headers: { 
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache'
+            }
+        });
 
     } catch (error) {
-        console.error('❌ Error fatal en el servidor:', error);
-        return res.status(500).json({ error: 'Error interno del servidor Vercel' });
+        console.error('❌ Error en Edge Function:', error);
+        
+        return new Response(JSON.stringify({ 
+            error: 'Error interno del servidor. Intenta nuevamente más tarde.'
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
