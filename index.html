@@ -77,15 +77,6 @@
             border-color: rgba(255, 255, 255, 0.05);
         }
         
-        .gradient-text {
-            background: linear-gradient(135deg, #0f766e 0%, #06b6d4 50%, #1e3a8a 100%);
-            background-size: 200% 200%;
-            animation: gradient 3s ease infinite;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
         .budget-input {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -99,7 +90,6 @@
             outline: none;
             border-color: #0f766e;
             box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
-            transform: scale(1.01);
         }
         .dark .budget-input {
             background: #1e293b;
@@ -107,38 +97,18 @@
             color: white;
         }
         
-        /* Animaciones */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(8px); animation: fadeIn 0.3s; overflow-y: auto;}
-        .modal-content { background: white; margin: 5% auto; padding: 2rem; width: 90%; max-width: 500px; border-radius: 2rem; animation: slideIn 0.3s; position: relative; }
+        .modal-content { background: white; margin: 5% auto; padding: 2rem; width: 90%; max-width: 500px; border-radius: 2rem; position: relative; }
         .dark .modal-content { background: #1e293b; color: white;}
         
-        .toast { position: fixed; bottom: 20px; right: 20px; z-index: 10000; padding: 0.75rem 1.5rem; border-radius: 1rem; font-weight: bold; animation: slideInRight 0.3s; }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #0f766e 0%, #06b6d4 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.4);
-        }
-        
-        .floating-card {
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        /* Scrollbar personalizada */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        .toast { position: fixed; bottom: 20px; right: 20px; z-index: 10000; padding: 0.75rem 1.5rem; border-radius: 1rem; font-weight: bold; animation: fadeIn 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #0f766e 0%, #06b6d4 100%); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.4); }
+        .floating-card { animation: float 3s ease-in-out infinite; }
     </style>
 </head>
-<body class="transition-all duration-300 font-['Inter'] text-slate-800 dark:text-slate-200">
+<body class="transition-all duration-300 text-slate-800 dark:text-slate-200">
     
     <!-- Loader -->
     <div id="loader" class="fixed inset-0 bg-gradient-to-br from-frteal to-frnavy flex flex-col items-center justify-center z-[9999] transition-opacity duration-500">
@@ -154,138 +124,76 @@
     <!-- LANDING PAGE -->
     <div id="landing-page" class="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden" style="display: none;">
         <div class="absolute inset-0 bg-gradient-to-br from-frteal/20 via-frcyan/10 to-frnavy/20"></div>
-        <div class="absolute top-20 left-10 w-72 h-72 bg-frteal rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div class="absolute bottom-20 right-10 w-72 h-72 bg-frcyan rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-
         <div class="relative z-10 w-full max-w-6xl text-center">
-            <!-- Logo Oficial Minimalista -->
             <div class="flex justify-center mb-10 mt-8">
                 <div class="floating-card">
-                    <!-- Se quitó el fondo blanco y se aumentó el tamaño (h-24 a h-36) -->
                     <img src="logo.png" alt="fr4finance" class="h-24 md:h-32 lg:h-36 w-auto object-contain drop-shadow-xl">
                 </div>
             </div>
-            
-            <p class="text-xl text-slate-600 dark:text-slate-300 mb-4 max-w-2xl mx-auto font-medium">
+            <p class="text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto font-medium">
                 Tu <span class="font-bold text-frteal">asesor financiero personal</span> con Inteligencia Artificial
             </p>
-            <p class="text-slate-500 dark:text-slate-400 mb-12 max-w-xl mx-auto">
-                Planifica tus finanzas, inversiones y metas como vacaciones. Recibe consejos inteligentes 24/7.
-            </p>
-
             <button id="login-btn-main" class="btn-primary text-white px-8 py-4 rounded-2xl font-black text-lg flex items-center gap-3 mx-auto shadow-2xl hover:shadow-3xl transition-all duration-300 group">
                 <svg class="w-6 h-6 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Comenzar con Google
             </button>
-
-            <!-- Features Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-20">
-                <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur p-4 rounded-2xl"><span class="text-2xl">🤖</span><p class="text-xs font-bold mt-1">IA 24/7</p></div>
-                <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur p-4 rounded-2xl"><span class="text-2xl">📊</span><p class="text-xs font-bold mt-1">Control Total</p></div>
-                <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur p-4 rounded-2xl"><span class="text-2xl">🎯</span><p class="text-xs font-bold mt-1">Metas Personales</p></div>
-                <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur p-4 rounded-2xl"><span class="text-2xl">🌍</span><p class="text-xs font-bold mt-1">Multi-moneda</p></div>
-                <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur p-4 rounded-2xl"><span class="text-2xl">🔒</span><p class="text-xs font-bold mt-1">Datos Seguros</p></div>
-            </div>
         </div>
     </div>
 
     <!-- DASHBOARD PRINCIPAL -->
     <div id="dashboard-page" class="pb-12" style="display: none;">
-        
-        <!-- Barra Superior Corregida -->
-        <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 px-6 py-3 shadow-sm">
+        <!-- Barra Superior -->
+        <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 px-6 py-3">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" class="h-10 sm:h-12 w-auto object-contain drop-shadow-sm dark:bg-white/95 dark:rounded-xl dark:p-2" alt="Logo">
-                </div>
+                <img src="logo.png" class="h-10 sm:h-12 w-auto object-contain dark:bg-white/95 dark:rounded-xl dark:p-2">
                 <div class="flex items-center gap-4">
-                    <div id="sync-indicator" class="hidden sm:flex items-center gap-2 mr-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">
-                        <div id="sync-dot" class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                        <span id="sync-text" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sincronizado</span>
-                    </div>
-                    <button id="settings-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-105 transition-all text-lg shadow-sm flex items-center justify-center">⚙️</button>
-                    <button id="dark-mode-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-105 transition-all text-lg shadow-sm flex items-center justify-center">🌙</button>
+                    <button id="settings-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">⚙️</button>
+                    <button id="dark-mode-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">🌙</button>
                     <div id="auth-container"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenido Principal -->
         <div class="max-w-7xl mx-auto mt-24 px-4 sm:px-6 md:px-8">
-            
-            <!-- Banner de Bienvenida Personalizado -->
-            <div class="card bg-gradient-to-r from-frteal to-frnavy text-white mb-8 overflow-hidden relative border-0 shadow-xl">
-                <div class="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full"></div>
-                <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-white/10 rounded-full"></div>
+            <!-- Bienvenida -->
+            <div class="card bg-gradient-to-r from-frteal to-frnavy text-white mb-8 relative border-0 shadow-xl">
                 <div class="relative z-10 flex flex-col md:flex-row justify-between items-center md:items-end gap-6">
                     <div class="text-center md:text-left">
-                        <p class="text-sm opacity-80 mb-2">Bienvenido de vuelta,</p>
+                        <p class="text-sm opacity-80">Bienvenido de vuelta,</p>
                         <h2 id="user-name" class="text-3xl font-black">Inversor</h2>
-                        <p class="text-sm opacity-80 mt-2">Tu asesor financiero está listo para ayudarte 🚀</p>
                     </div>
-                    <button id="ai-advisor-btn" class="mt-4 bg-white/20 hover:bg-white/30 px-6 py-3 rounded-full text-sm font-bold transition-all flex items-center gap-2 shadow-lg w-full md:w-auto justify-center">
+                    <button id="ai-advisor-btn" class="bg-white/20 hover:bg-white/30 px-6 py-3 rounded-full text-sm font-bold flex items-center gap-2">
                         <span>🧠</span> Hablar con mi Asesor IA
                     </button>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
+            <!-- Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="card text-center p-4">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Ingresos Mensuales</p>
-                    <p id="statIngresos" class="text-2xl font-black text-emerald-600 dark:text-emerald-400">$0</p>
-                </div>
-                <div class="card text-center p-4">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Gastos Mensuales</p>
-                    <p id="statGastos" class="text-2xl font-black text-red-600 dark:text-red-400">$0</p>
-                </div>
-                <div class="card text-center p-4">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Tasa de Ahorro</p>
-                    <p id="statTasaAhorro" class="text-2xl font-black text-frcyan">0%</p>
-                </div>
-                <div class="card text-center p-4">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Deuda Total</p>
-                    <p id="statDeudaTotal" class="text-2xl font-black text-orange-500">$0</p>
-                </div>
+                <div class="card text-center p-4"><p class="text-xs text-slate-400 uppercase">Ingresos</p><p id="statIngresos" class="text-2xl font-black text-emerald-600">$0</p></div>
+                <div class="card text-center p-4"><p class="text-xs text-slate-400 uppercase">Gastos</p><p id="statGastos" class="text-2xl font-black text-red-600">$0</p></div>
+                <div class="card text-center p-4"><p class="text-xs text-slate-400 uppercase">Tasa Ahorro</p><p id="statTasaAhorro" class="text-2xl font-black text-frcyan">0%</p></div>
+                <div class="card text-center p-4"><p class="text-xs text-slate-400 uppercase">Deuda</p><p id="statDeudaTotal" class="text-2xl font-black text-orange-500">$0</p></div>
             </div>
 
-            <!-- Gráfico y Resumen -->
+            <!-- Gráfico y Metas -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div class="card lg:col-span-2">
-                    <h3 class="font-black text-lg mb-4">📈 Distribución de Gastos</h3>
-                    <div class="relative h-80 w-full flex justify-center p-2">
-                        <canvas id="flujoChart"></canvas>
-                    </div>
+                    <h3 class="font-black text-lg mb-4">📈 Distribución de Flujo</h3>
+                    <div class="relative h-80 w-full flex justify-center p-2"><canvas id="flujoChart"></canvas></div>
                 </div>
                 <div class="card flex flex-col h-full">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-black text-lg">🎯 Metas Activas</h3>
-                        <button id="add-meta-btn" class="bg-frteal/10 text-frteal px-3 py-1 rounded-full font-bold text-xs hover:bg-frteal/20 transition-all">➕ Meta</button>
-                    </div>
-                    <div id="metas-container" class="space-y-3 flex-1 overflow-y-auto max-h-[220px] pr-2">
-                        <div class="text-center text-slate-400 py-8">Configura tus metas financieras</div>
-                    </div>
+                    <div class="flex justify-between items-center mb-4"><h3 class="font-black text-lg">🎯 Metas Personales</h3><button id="add-meta-btn" class="bg-frteal/10 text-frteal px-3 py-1 rounded-full font-bold text-xs">➕</button></div>
+                    <div id="metas-container" class="space-y-3 flex-1 overflow-y-auto max-h-[220px]"></div>
                 </div>
             </div>
 
-            <!-- PILAR 1: AHORRO CON METAS -->
+            <!-- PILAR 1: AHORRO -->
             <div class="card mb-8 border-emerald-100 dark:border-emerald-900/30">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-black flex items-center gap-2">🔋 Ahorro Inteligente</h2>
-                    <button onclick="document.getElementById('ahorro-modal').style.display='block'" class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-4 py-2 rounded-full text-xs font-black hover:bg-emerald-200 transition-colors">Gestionar</button>
-                </div>
+                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-black flex items-center gap-2">🔋 Ahorro</h2><button onclick="document.getElementById('ahorro-modal').style.display='block'" class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 px-4 py-2 rounded-full text-xs font-black">Gestionar</button></div>
                 <div class="flex flex-col md:flex-row items-center gap-6">
-                    <div class="text-center md:text-left min-w-[200px]">
-                        <p class="text-xs text-slate-400">Fondo de Emergencia</p>
-                        <p id="ahorro-actual-text" class="text-4xl font-black text-emerald-600 dark:text-emerald-400">$0</p>
-                        <p id="ahorro-meta-text" class="text-xs text-slate-500 mt-1">Meta: $50,000</p>
-                    </div>
-                    <div class="flex-1 w-full">
-                        <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div id="ahorro-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-700" style="width: 0%"></div>
-                        </div>
-                        <p class="text-right text-xs text-slate-400 mt-1">Nivel de Seguridad Financiera</p>
-                    </div>
+                    <div class="text-center md:text-left min-w-[200px]"><p class="text-xs text-slate-400">Fondo Emergencia</p><p id="ahorro-actual-text" class="text-4xl font-black text-emerald-600">$0</p><p id="ahorro-meta-text" class="text-xs text-slate-500 mt-1"></p></div>
+                    <div class="flex-1 w-full"><div class="h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div id="ahorro-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-700" style="width: 0%"></div></div></div>
                 </div>
             </div>
 
@@ -298,264 +206,78 @@
                 <div id="gbm-container" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
             </div>
 
-            <!-- PILAR 3: CONTROL TOTAL -->
-            <div class="flex items-center gap-3 mb-6 mt-10">
-                <h2 class="text-3xl font-black">⚖️ Control Total</h2>
-                <span class="text-xs bg-frteal/10 text-frteal dark:text-teal-400 px-3 py-1 rounded-full font-bold">Edita o elimina cualquier gasto</span>
-            </div>
-
-            <!-- Ingreso Principal y Extras -->
+            <!-- PILAR 3: CONTROL -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <!-- Sueldo Fijo -->
-                <div class="card lg:col-span-1">
-                    <h3 class="font-black text-xl mb-4 text-frteal">💼 Ingreso Principal</h3>
-                    <label class="block text-xs font-bold text-slate-400 mb-2">Sueldo Neto (Quincenal)</label>
-                    <input type="number" id="sueldoQuincenalInput" class="budget-input text-2xl font-black" placeholder="0.00">
-                </div>
-                <!-- Extras -->
+                <div class="card lg:col-span-1"><h3 class="font-black text-xl mb-4 text-frteal">💼 Sueldo Quincenal</h3><input type="number" id="sueldoQuincenalInput" class="budget-input text-2xl font-black" placeholder="0.00"></div>
                 <div class="card lg:col-span-2">
-                    <h3 class="font-black text-xl mb-4">💰 Ingresos Extras del Mes</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div><label class="block text-xs font-bold text-slate-400 mb-1">Ventas/Extras</label><input type="number" id="extra-ventas" class="budget-input extra-income-input" placeholder="0"></div>
-                        <div><label class="block text-xs font-bold text-slate-400 mb-1">Bonos</label><input type="number" id="extra-bonos" class="budget-input extra-income-input" placeholder="0"></div>
-                        <div><label class="block text-xs font-bold text-slate-400 mb-1">Otros Ingresos</label><input type="number" id="extra-otros" class="budget-input extra-income-input" placeholder="0"></div>
+                    <h3 class="font-black text-xl mb-4">💰 Ingresos Extras</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div><label class="text-[10px] font-bold text-slate-400">Ventas</label><input type="number" id="extra-ventas" class="budget-input"></div>
+                        <div><label class="text-[10px] font-bold text-slate-400">Bonos</label><input type="number" id="extra-bonos" class="budget-input"></div>
+                        <div><label class="text-[10px] font-bold text-slate-400">Otros</label><input type="number" id="extra-otros" class="budget-input"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Deudas -->
             <div class="card mb-8 border-red-100 dark:border-red-900/30">
-                <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
-                    <h3 class="font-black text-xl">💳 Deudas</h3>
-                    <button id="add-debt-btn" class="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 px-4 py-2 rounded-full text-xs font-black transition-colors">➕ Nueva Deuda</button>
-                </div>
+                <div class="flex justify-between items-center mb-4"><h3 class="font-black text-xl">💳 Deudas</h3><button id="add-debt-btn" class="bg-red-50 text-red-600 px-4 py-2 rounded-full text-xs font-black">➕ Nueva</button></div>
                 <div id="deudas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
 
-            <!-- Gastos Fijos y Variables -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <!-- Fijos -->
-                <div class="card">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-black text-xl">🏠 Gastos Fijos</h3>
-                        <button id="add-fixed-btn" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 px-4 py-2 rounded-full text-xs font-black transition-colors">➕ Agregar</button>
-                    </div>
-                    <div id="gastos-fijos-container" class="space-y-3"></div>
-                </div>
-                <!-- Variables -->
-                <div class="card">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-black text-xl">🛒 Gastos Variables</h3>
-                        <button id="add-variable-btn" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 px-4 py-2 rounded-full text-xs font-black transition-colors">➕ Categoría</button>
-                    </div>
-                    <div id="gastos-variables-container" class="space-y-3"></div>
-                </div>
+                <div class="card"><div class="flex justify-between items-center mb-4"><h3 class="font-black text-xl">🏠 Gastos Fijos</h3><button id="add-fixed-btn" class="text-xs font-black px-3 py-1 bg-slate-100 rounded-full">➕</button></div><div id="gastos-fijos-container" class="space-y-3"></div></div>
+                <div class="card"><div class="flex justify-between items-center mb-4"><h3 class="font-black text-xl">🛒 Gastos Variables</h3><button id="add-variable-btn" class="text-xs font-black px-3 py-1 bg-slate-100 rounded-full">➕</button></div><div id="gastos-variables-container" class="space-y-3"></div></div>
             </div>
 
-            <!-- Gastos Hormiga -->
-            <div class="card mb-8 border-orange-100 dark:border-orange-900/20">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-black text-xl">🐜 Gastos Hormiga</h3>
-                    <button id="add-hormiga-btn" class="bg-orange-50 text-orange-600 hover:bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400 px-4 py-2 rounded-full text-xs font-black transition-colors">➕ Gasto</button>
-                </div>
+            <div class="card mb-8 border-orange-100">
+                <div class="flex justify-between items-center mb-4"><h3 class="font-black text-xl">🐜 Gastos Hormiga</h3><button id="add-hormiga-btn" class="text-xs font-black px-3 py-1 bg-orange-50 text-orange-600 rounded-full">➕</button></div>
                 <div id="hormiga-container" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
             </div>
 
-            <!-- Poder de Avalancha -->
             <div class="card bg-gradient-to-r from-frteal to-frnavy text-white text-center py-12 shadow-xl border-0">
-                <p class="text-sm opacity-80 uppercase tracking-widest font-bold">💪 Poder de Pago Libre</p>
+                <p class="text-sm opacity-80 uppercase font-bold">💪 Poder de Pago Libre</p>
                 <p id="sobranteReal" class="text-5xl md:text-7xl font-black mt-2 tracking-tighter">$0</p>
-                <p class="text-sm opacity-70 mt-4 max-w-md mx-auto">Usa este excedente para pagar deudas (Estrategia Avalancha) o para fondear tus inversiones.</p>
             </div>
         </div>
     </div>
 
     <!-- MODALES -->
-    <!-- Modal Onboarding -->
+    <!-- Modal Welcome -->
     <div id="welcome-modal" class="modal">
-        <div class="modal-content !max-w-2xl text-center relative overflow-hidden">
-            <div id="onboard-step-1" class="transition-all duration-500">
-                <div class="flex justify-center mb-8 mt-2">
-                    <!-- Se quitó el cuadro de fondo también aquí -->
-                    <img src="logo.png" alt="fr4finance" class="h-12 md:h-16 w-auto object-contain drop-shadow-md">
-                </div>
-                <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">¡Bienvenido a tu Hub Financiero! 🎉</h2>
-                <p class="text-slate-500 mb-8 text-sm font-medium">Tu camino a la libertad financiera se basa en 4 pilares editables y personalizables:</p>
-                <div class="grid grid-cols-2 gap-3 mb-10 text-left">
-                    <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800"><p class="text-xs font-bold text-emerald-700 dark:text-emerald-400">🔋 1. Ahorro</p></div>
-                    <div class="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl border border-cyan-100 dark:border-cyan-800"><p class="text-xs font-bold text-cyan-700 dark:text-cyan-400">📈 2. Inversión</p></div>
-                    <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-xl border border-rose-100 dark:border-rose-800"><p class="text-xs font-bold text-rose-700 dark:text-rose-400">⚖️ 3. Control</p></div>
-                    <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800"><p class="text-xs font-bold text-purple-700 dark:text-purple-400">🧠 4. Educación AI</p></div>
-                </div>
-                <button id="onboard-next-btn" class="bg-frteal hover:bg-teal-700 text-white px-8 py-3.5 rounded-xl font-black w-full text-sm uppercase tracking-widest shadow-lg transition-all">Configurar mi cuenta ➡️</button>
-            </div>
-
-            <div id="onboard-step-2" class="hidden transition-all duration-500">
-                <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">Paso final: Tus datos base 🚀</h2>
-                <p class="text-slate-500 mb-8 text-sm font-medium">Pre-llenemos el panel para no empezar en blanco.</p>
-                <div class="space-y-5 text-left mb-10">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Moneda Local</label>
-                        <select id="onboard-currency-input" class="budget-input bg-slate-50 dark:bg-slate-800 font-bold">
-                            <option value="MXN">Peso Mexicano (MXN)</option><option value="USD">Dólar (USD)</option>
-                            <option value="EUR">Euro (EUR)</option><option value="COP">Peso Colombiano (COP)</option>
-                            <option value="ARS">Peso Argentino (ARS)</option><option value="CLP">Peso Chileno (CLP)</option>
-                            <option value="PEN">Sol Peruano (PEN)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Sueldo Neto (Quincenal)</label>
-                        <input type="number" id="onboard-sueldo-input" class="budget-input" placeholder="Ej: 5000">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Fondo de Emergencia Ideal</label>
-                        <input type="number" id="onboard-meta-input" class="budget-input" value="50000">
-                    </div>
-                </div>
-                <button id="onboard-finish-btn" class="bg-frnavy hover:bg-slate-800 text-white px-8 py-3.5 rounded-xl font-black w-full text-sm uppercase tracking-widest shadow-lg transition-all">¡Ir a mi Dashboard!</button>
+        <div class="modal-content !max-w-2xl text-center">
+            <h2 class="text-3xl font-black mb-4">¡Bienvenido! 🎉</h2>
+            <p class="text-slate-500 mb-8">Configura tus datos para comenzar.</p>
+            <div class="space-y-4 text-left">
+                <div><label class="text-xs font-bold text-slate-400">Moneda</label><select id="onboard-currency-input" class="budget-input"><option value="MXN">MXN</option><option value="USD">USD</option></select></div>
+                <div><label class="text-xs font-bold text-slate-400">Sueldo Quincenal</label><input type="number" id="onboard-sueldo-input" class="budget-input"></div>
+                <button id="onboard-finish-btn" class="bg-frnavy text-white px-8 py-4 rounded-xl font-black w-full mt-4">¡Ir al Dashboard!</button>
             </div>
         </div>
     </div>
 
-    <!-- Resto de Modales -->
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3>
-            <label class="block text-xs font-bold text-slate-400 mb-1">Moneda Local</label>
-            <select id="settings-currency" class="budget-input mb-4 cursor-pointer">
-                <option value="MXN">Peso Mexicano (MXN)</option><option value="USD">Dólar (USD)</option>
-                <option value="EUR">Euro (EUR)</option><option value="COP">Peso Colombiano (COP)</option>
-                <option value="ARS">Peso Argentino (ARS)</option><option value="CLP">Peso Chileno (CLP)</option>
-                <option value="PEN">Sol Peruano (PEN)</option>
-            </select>
-            <label class="block text-xs font-bold text-slate-400 mb-1 mt-2">API Key Gemini (Opcional)</label>
-            <input type="password" id="settings-gemini" class="budget-input mb-6" placeholder="AIzaSy...">
-            <button id="settings-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar y Actualizar</button>
-            <button onclick="closeModal('settings-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cerrar</button>
-        </div>
-    </div>
-
-    <div id="ahorro-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-black mb-4">🎯 Fondo de Emergencia</h3>
-            <label class="block text-xs font-bold text-slate-400 mb-1">Meta Objetivo</label>
-            <input type="number" id="ahorro-meta" class="budget-input mb-4" placeholder="Ej: 50000">
-            <label class="block text-xs font-bold text-slate-400 mb-1 mt-2">Abonar al fondo (+)</label>
-            <input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="0.00">
-            <button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button>
-            <button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="debt-modal" class="modal">
-        <div class="modal-content">
-            <h3 id="debt-modal-title" class="text-2xl font-black mb-4">Nueva Deuda</h3>
-            <input type="hidden" id="edit-debt-key">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Acreedor</label>
-            <input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre (Ej: Tarjeta Citibanamex)">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Saldo Total</label>
-            <input type="number" id="debt-total" class="budget-input mb-3" placeholder="0.00">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Pago Mínimo Mensual</label>
-            <input type="number" id="debt-min-payment" class="budget-input mb-4" placeholder="0.00">
-            <div class="flex items-center gap-2 mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-lg">
-                <input type="checkbox" id="debt-priority" class="w-5 h-5 rounded text-red-600">
-                <label for="debt-priority" class="text-sm font-bold text-red-700 dark:text-red-400 cursor-pointer">Prioridad (Estrategia Avalancha)</label>
-            </div>
-            <button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar Deuda</button>
-            <button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold text-sm py-2 hidden">Eliminar Deuda</button>
-            <button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="fixed-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-black mb-4">Gasto Fijo</h3>
-            <input type="hidden" id="edit-fixed-key">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Concepto</label>
-            <input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Ej: Renta, Colegiatura">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Monto Mensual</label>
-            <input type="number" id="fixed-amount" class="budget-input mb-6" placeholder="0.00">
-            <button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button>
-            <button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold text-sm py-2 hidden">Eliminar</button>
-            <button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="variable-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-black mb-4">Gasto Variable</h3>
-            <input type="hidden" id="edit-variable-key">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Categoría</label>
-            <input type="text" id="variable-name" class="budget-input mb-3" placeholder="Ej: Despensa, Gasolina">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Monto Mensual Estimado</label>
-            <input type="number" id="variable-amount" class="budget-input mb-6" placeholder="0.00">
-            <button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button>
-            <button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold text-sm py-2 hidden">Eliminar</button>
-            <button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="hormiga-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3>
-            <input type="hidden" id="edit-hormiga-key">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Nombre / Suscripción</label>
-            <input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Ej: Spotify, Café">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Monto Mensual</label>
-            <input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="0.00">
-            <button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button>
-            <button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold text-sm py-2 hidden">Eliminar</button>
-            <button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="gbm-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-black mb-4">Activo de Inversión</h3>
-            <input type="hidden" id="edit-gbm-key">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Ticker / Instrumento</label>
-            <input type="text" id="gbm-ticker" class="budget-input uppercase mb-3" placeholder="Ej: VOO, CETES">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Títulos / Acumulado</label>
-            <input type="number" id="gbm-shares" class="budget-input mb-3" placeholder="0">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Meta Objetivo (Opcional)</label>
-            <input type="number" id="gbm-target" class="budget-input mb-6" placeholder="0">
-            <button id="gbm-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button>
-            <button id="gbm-delete-btn" class="w-full mt-3 text-red-500 font-bold text-sm py-2 hidden">Eliminar</button>
-            <button onclick="closeModal('gbm-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cancelar</button>
-        </div>
-    </div>
-
-    <div id="meta-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-2xl font-black mb-4">🎯 Nueva Meta Personal</h3>
-            <input type="hidden" id="edit-meta-key">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Nombre de la Meta</label>
-            <input type="text" id="meta-name" class="budget-input mb-3" placeholder="Ej: Vacaciones en Cancún">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Monto Objetivo</label>
-            <input type="number" id="meta-target" class="budget-input mb-3" placeholder="0.00">
-            <label class="block text-xs font-bold text-slate-400 mb-1">Ahorrado Actualmente</label>
-            <input type="number" id="meta-current" class="budget-input mb-6" placeholder="0.00">
-            <button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar Meta</button>
-            <button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold text-sm py-2 hidden">Eliminar Meta</button>
-            <button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 text-sm font-bold py-2">Cancelar</button>
-        </div>
-    </div>
-
+    <!-- Modal IA -->
     <div id="ai-modal" class="modal">
         <div class="modal-content max-w-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-black">🧠 Asesor IA</h3>
-                <button onclick="closeModal('ai-modal')" class="text-3xl text-slate-400 hover:text-slate-600">&times;</button>
-            </div>
-            <div id="ai-loading" class="text-center py-10 hidden">
-                <div class="animate-spin w-12 h-12 border-4 border-frcyan border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p class="font-bold text-slate-500 animate-pulse">Analizando tus finanzas...</p>
-            </div>
-            <div id="ai-content" class="text-slate-700 dark:text-slate-300 text-sm md:text-base leading-relaxed hidden space-y-4"></div>
+            <div class="flex justify-between items-center mb-4"><h3 class="text-2xl font-black">🧠 Asesor IA de FinAI</h3><button onclick="closeModal('ai-modal')" class="text-3xl text-slate-400">&times;</button></div>
+            <div id="ai-loading" class="text-center py-10 hidden"><div class="animate-spin w-12 h-12 border-4 border-frcyan border-t-transparent rounded-full mx-auto mb-4"></div><p>Analizando...</p></div>
+            <div id="ai-content" class="text-slate-700 dark:text-slate-300 space-y-4 hidden"></div>
         </div>
     </div>
 
-    <!-- Firebase y Lógica Principal -->
+    <!-- Modal Inversión -->
+    <div id="gbm-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Activo Inversión</h3><input type="hidden" id="edit-gbm-key"><input type="text" id="gbm-ticker" class="budget-input mb-3 uppercase" placeholder="Ticker (Ej: VOO)"><input type="number" id="gbm-shares" class="budget-input mb-3" placeholder="Títulos"><input type="number" id="gbm-target" class="budget-input mb-6" placeholder="Meta"><button id="gbm-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="gbm-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('gbm-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+
+    <!-- Otros Modales -->
+    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-4" placeholder="Pago Mínimo"><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Avalancha</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-6" placeholder="Monto"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="ahorro-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🔋 Fondo</h3><input type="number" id="ahorro-meta" class="budget-input mb-4" placeholder="Meta"><input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="Abonar"><button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
+    <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🎯 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-6" placeholder="Ahorrado"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="settings-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3><label class="text-xs text-slate-400">Moneda</label><select id="settings-currency" class="budget-input mb-4"><option value="MXN">MXN</option><option value="USD">USD</option></select><label class="text-xs text-slate-400">API Key Gemini</label><input type="password" id="settings-gemini" class="budget-input mb-6" placeholder="AIzaSy..."><button id="settings-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('settings-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
+
+    <!-- LÓGICA PRINCIPAL -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -575,378 +297,181 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        enableIndexedDbPersistence(db).catch(() => console.warn('Offline persistence not available'));
+        enableIndexedDbPersistence(db).catch(() => console.warn('Offline enabled'));
 
         let financialData = {};
         let myChart = null;
         let saveTimeout = null;
         let currentUser = null;
 
-        const defaultFinancialData = {
-            "hasSeenTutorial": false,
-            "settings": { "currency": "MXN", "geminiApiKey": "" },
-            "sueldoQuincenal": 0,
-            "metas": { "fondoEmergencia": { "objetivo": 50000, "actual": 0 } },
-            "deudas": {},
-            "gastosFijos": {},
-            "gastosVariables": {},
-            "gastosHormiga": {},
-            "gbm": {},
-            "ingresosExtras": { "ventas": 0, "bonos": 0, "otros": 0 },
-            "metasPersonalizadas": {}
+        // Global functions
+        window.cerrarSesion = () => {
+            signOut(auth).then(() => { showToast('Sesión cerrada'); window.location.reload(); }).catch(e => console.error(e));
         };
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-        const loader = document.getElementById('loader');
-
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type === 'success' ? 'bg-emerald-500' : 'bg-red-500'} text-white z-[10000]`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function showToast(m, type = 'success') {
+            const t = document.createElement('div');
+            t.className = `toast ${type === 'success' ? 'bg-emerald-500' : 'bg-red-500'} text-white`;
+            t.textContent = m;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
         }
 
-        function showLoader(text = 'CARGANDO...') {
-            const lt = document.getElementById('loader-text');
-            if (lt) lt.textContent = text;
-            loader.style.opacity = '1';
-            loader.style.display = 'flex';
-        }
-
-        function hideLoader() {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 500);
-        }
-
-        window.closeModal = function(id) {
-            document.getElementById(id).style.display = 'none';
-        };
+        function showLoader(text) { document.getElementById('loader-text').textContent = text; document.getElementById('loader').style.display = 'flex'; document.getElementById('loader').style.opacity = '1'; }
+        function hideLoader() { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display = 'none', 500); }
 
         function formatCurrency(v) {
             const cur = financialData.settings?.currency || 'MXN';
-            let loc = 'es-MX';
-            if (cur === 'USD') loc = 'en-US';
-            if (cur === 'EUR') loc = 'es-ES';
-            if (cur === 'COP') loc = 'es-CO';
-            if (cur === 'ARS') loc = 'es-AR';
-            if (cur === 'CLP') loc = 'es-CL';
-            if (cur === 'PEN') loc = 'es-PE';
-            return new Intl.NumberFormat(loc, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(v);
+            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(v);
         }
 
         async function saveData() {
             if (!currentUser) return;
             if (saveTimeout) clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
-                try {
-                    const userDocRef = doc(db, "usuarios", currentUser.uid);
-                    await setDoc(userDocRef, financialData);
-                    const sync = document.getElementById('sync-text');
-                    if(sync) { sync.innerText = 'Guardado'; setTimeout(()=> sync.innerText = 'Sincronizado', 2000); }
-                } catch (e) {
-                    console.error("Save error:", e);
-                    showToast('Error al guardar', 'error');
-                }
+                try { await setDoc(doc(db, "usuarios", currentUser.uid), financialData); } catch (e) { console.error(e); }
             }, 1000);
         }
 
-        async function loadUserData(userId) {
-            showLoader('CARGANDO DATOS...');
-            try {
-                const userDocRef = doc(db, "usuarios", userId);
-                const docSnap = await getDoc(userDocRef);
-
-                if (docSnap.exists()) {
-                    financialData = docSnap.data();
-                    if (!financialData.metas) financialData.metas = { fondoEmergencia: { objetivo: 50000, actual: 0 } };
-                    if (!financialData.gastosFijos) financialData.gastosFijos = {};
-                    if (!financialData.gastosVariables) financialData.gastosVariables = {};
-                    if (!financialData.gastosHormiga) financialData.gastosHormiga = {};
-                    if (!financialData.ingresosExtras) financialData.ingresosExtras = { ventas: 0, bonos: 0, otros: 0 };
-                    if (!financialData.metasPersonalizadas) financialData.metasPersonalizadas = {};
-                    if (!financialData.deudas) financialData.deudas = {};
-                    if (!financialData.gbm) financialData.gbm = {};
-                    if (!financialData.settings) financialData.settings = { currency: "MXN", geminiApiKey: "" };
-                } else {
-                    financialData = JSON.parse(JSON.stringify(defaultFinancialData));
-                    await setDoc(userDocRef, financialData);
-                }
-
-                renderizarUI();
-                hideLoader();
-
-                if (!financialData.hasSeenTutorial) {
-                    document.getElementById('welcome-modal').style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showToast('Error al cargar datos', 'error');
-                hideLoader();
+        async function loadUserData(uid) {
+            showLoader('SINCRONIZANDO...');
+            const snap = await getDoc(doc(db, "usuarios", uid));
+            if (snap.exists()) {
+                financialData = snap.data();
+                if (!financialData.gbm) financialData.gbm = {};
+            } else {
+                financialData = {
+                    hasSeenTutorial: false,
+                    settings: { currency: "MXN", geminiApiKey: "" },
+                    sueldoQuincenal: 0,
+                    metas: { fondoEmergencia: { objetivo: 50000, actual: 0 } },
+                    deudas: {}, gastosFijos: {}, gastosVariables: {}, gastosHormiga: {},
+                    gbm: {}, ingresosExtras: { ventas: 0, bonos: 0, otros: 0 },
+                    metasPersonalizadas: {}
+                };
+                await setDoc(doc(db, "usuarios", uid), financialData);
             }
+            renderizarUI();
+            hideLoader();
+            if (!financialData.hasSeenTutorial) document.getElementById('welcome-modal').style.display = 'block';
         }
 
         function renderizarUI() {
-            if (currentUser && document.getElementById('user-name')) {
-                document.getElementById('user-name').innerText = currentUser.displayName?.split(' ')[0] || 'Inversor';
-            }
-
+            if (currentUser) document.getElementById('user-name').innerText = currentUser.displayName.split(' ')[0];
             document.getElementById('sueldoQuincenalInput').value = financialData.sueldoQuincenal || '';
-            document.getElementById('extra-ventas').value = financialData.ingresosExtras?.ventas || '';
-            document.getElementById('extra-bonos').value = financialData.ingresosExtras?.bonos || '';
-            document.getElementById('extra-otros').value = financialData.ingresosExtras?.otros || '';
+            document.getElementById('extra-ventas').value = financialData.ingresosExtras.ventas || '';
+            document.getElementById('extra-bonos').value = financialData.ingresosExtras.bonos || '';
+            document.getElementById('extra-otros').value = financialData.ingresosExtras.otros || '';
 
-            const fondo = financialData.metas?.fondoEmergencia || { objetivo: 50000, actual: 0 };
-            document.getElementById('ahorro-actual-text').innerText = formatCurrency(fondo.actual);
-            document.getElementById('ahorro-meta-text').innerHTML = `Meta: ${formatCurrency(fondo.objetivo)}`;
-            const pct = fondo.objetivo > 0 ? (fondo.actual / fondo.objetivo) * 100 : 0;
+            const f = financialData.metas.fondoEmergencia;
+            document.getElementById('ahorro-actual-text').innerText = formatCurrency(f.actual);
+            document.getElementById('ahorro-meta-text').innerText = `Meta: ${formatCurrency(f.objetivo)}`;
+            const pct = f.objetivo > 0 ? (f.actual / f.objetivo) * 100 : 0;
             document.getElementById('ahorro-progress-bar').style.width = `${Math.min(100, pct)}%`;
 
             renderizarDeudas();
             renderizarGastosFijos();
             renderizarGastosVariables();
             renderizarGastosHormiga();
-            renderizarInversiones();
             renderizarMetas();
+            renderizarInversiones();
             calcularYActualizarTodo();
-
-            if (financialData.settings) {
-                document.getElementById('settings-currency').value = financialData.settings.currency || 'MXN';
-                document.getElementById('settings-gemini').value = financialData.settings.geminiApiKey || '';
-            }
         }
 
         function renderizarDeudas() {
-            const container = document.getElementById('deudas-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (Object.keys(financialData.deudas || {}).length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center text-slate-400 py-6 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl">No hay deudas registradas 🎉</div>';
-                return;
-            }
-
-            for (const [key, deuda] of Object.entries(financialData.deudas)) {
+            const c = document.getElementById('deudas-container');
+            c.innerHTML = '';
+            Object.entries(financialData.deudas).forEach(([k, d]) => {
                 const div = document.createElement('div');
-                div.className = `flex flex-col justify-between p-4 rounded-xl ${deuda.esPrioridad ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' : 'bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700'}`;
-                div.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <p class="font-black text-sm">${deuda.nombre}</p>
-                            ${deuda.esPrioridad ? '<span class="text-[10px] text-red-500 font-bold uppercase tracking-widest bg-red-100 dark:bg-red-900/50 px-2 py-0.5 rounded">🔥 Avalancha</span>' : ''}
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="editarDeuda('${key}')" class="text-frteal hover:scale-110 transition">✏️</button>
-                            <button onclick="eliminarDeuda('${key}')" class="text-red-500 hover:scale-110 transition">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="mt-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-                        <p class="flex justify-between"><span class="uppercase tracking-widest text-[9px] font-bold">Saldo:</span> <span class="font-black text-slate-800 dark:text-white text-sm">${formatCurrency(deuda.total)}</span></p>
-                        <p class="flex justify-between mt-1"><span class="uppercase tracking-widest text-[9px] font-bold">Pago Mín:</span> <span class="font-mono text-xs">${formatCurrency(deuda.pagoMensual)}</span></p>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
+                div.className = `p-4 rounded-xl border ${d.esPrioridad ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'} dark:bg-slate-800`;
+                div.innerHTML = `<div class="flex justify-between"><div><p class="font-black text-sm">${d.nombre}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">AVALANCHA</span>' : ''}</div><button onclick="window.editarDeuda('${k}')">✏️</button></div><p class="mt-2 text-sm font-black">${formatCurrency(d.total)}</p>`;
+                c.appendChild(div);
+            });
         }
-
-        window.editarDeuda = (key) => {
-            const deuda = financialData.deudas[key];
-            document.getElementById('edit-debt-key').value = key;
-            document.getElementById('debt-modal-title').innerText = `Editar ${deuda.nombre}`;
-            document.getElementById('debt-name').value = deuda.nombre;
-            document.getElementById('debt-total').value = deuda.total;
-            document.getElementById('debt-min-payment').value = deuda.pagoMensual;
-            document.getElementById('debt-priority').checked = deuda.esPrioridad || false;
+        window.editarDeuda = (k) => {
+            const d = financialData.deudas[k];
+            document.getElementById('edit-debt-key').value = k;
+            document.getElementById('debt-name').value = d.nombre;
+            document.getElementById('debt-total').value = d.total;
+            document.getElementById('debt-min-payment').value = d.pagoMensual;
+            document.getElementById('debt-priority').checked = d.esPrioridad;
             document.getElementById('debt-delete-btn').classList.remove('hidden');
             document.getElementById('debt-modal').style.display = 'block';
         };
 
-        window.eliminarDeuda = async (key) => {
-            if (confirm('¿Eliminar esta deuda?')) {
-                delete financialData.deudas[key];
-                await saveData();
-                renderizarUI();
-                showToast('Deuda eliminada');
-            }
-        };
-
         function renderizarGastosFijos() {
-            const container = document.getElementById('gastos-fijos-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (Object.keys(financialData.gastosFijos || {}).length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-400 py-6 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold uppercase tracking-widest">No hay gastos fijos registrados</div>';
-                return;
-            }
-
-            for (const [key, gasto] of Object.entries(financialData.gastosFijos)) {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 hover:border-frteal transition-colors group';
-                div.innerHTML = `
-                    <span class="font-bold text-sm tracking-tight">${gasto.nombre}</span>
-                    <div class="flex items-center gap-3">
-                        <span class="font-black font-mono text-sm">${formatCurrency(gasto.monto)}</span>
-                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="editarGastoFijo('${key}')" class="text-frteal text-xs">✏️</button>
-                            <button onclick="eliminarGastoFijo('${key}')" class="text-red-500 text-xs">🗑️</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
+            const c = document.getElementById('gastos-fijos-container');
+            c.innerHTML = '';
+            Object.entries(financialData.gastosFijos).forEach(([k, g]) => {
+                const d = document.createElement('div');
+                d.className = 'flex justify-between items-center p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700';
+                d.innerHTML = `<span class="text-sm font-bold">${g.nombre}</span><div class="flex gap-2"><span class="font-black">${formatCurrency(g.monto)}</span><button onclick="window.editarFijo('${k}')">✏️</button></div>`;
+                c.appendChild(d);
+            });
         }
-
-        window.editarGastoFijo = (key) => {
-            const gasto = financialData.gastosFijos[key];
-            document.getElementById('edit-fixed-key').value = key;
-            document.getElementById('fixed-name').value = gasto.nombre;
-            document.getElementById('fixed-amount').value = gasto.monto;
+        window.editarFijo = (k) => {
+            const g = financialData.gastosFijos[k];
+            document.getElementById('edit-fixed-key').value = k;
+            document.getElementById('fixed-name').value = g.nombre;
+            document.getElementById('fixed-amount').value = g.monto;
             document.getElementById('fixed-delete-btn').classList.remove('hidden');
             document.getElementById('fixed-modal').style.display = 'block';
         };
 
-        window.eliminarGastoFijo = async (key) => {
-            if (confirm('¿Eliminar este gasto fijo?')) {
-                delete financialData.gastosFijos[key];
-                await saveData();
-                renderizarUI();
-                showToast('Gasto fijo eliminado');
-            }
-        };
-
         function renderizarGastosVariables() {
-            const container = document.getElementById('gastos-variables-container');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            if (Object.keys(financialData.gastosVariables || {}).length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-400 py-6 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold uppercase tracking-widest">Aún no hay categorías</div>';
-                return;
-            }
-
-            for (const [key, gasto] of Object.entries(financialData.gastosVariables || {})) {
-                const div = document.createElement('div');
-                div.className = 'bg-blue-50 dark:bg-blue-900/10 p-3 rounded-xl border border-blue-100 dark:border-blue-900/30 flex justify-between items-center group hover:border-blue-400 transition-colors';
-                div.innerHTML = `
-                    <div>
-                        <span class="font-bold text-sm text-blue-900 dark:text-blue-300">${gasto.nombre}</span><br>
-                        <span class="font-mono font-black text-sm text-blue-700 dark:text-blue-400">${formatCurrency(gasto.monto)}</span>
-                    </div>
-                    <div class="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onclick="editarGastoVariable('${key}')" class="text-blue-600 text-xs">✏️</button>
-                        <button onclick="eliminarGastoVariable('${key}')" class="text-red-500 text-xs">🗑️</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
+            const c = document.getElementById('gastos-variables-container');
+            c.innerHTML = '';
+            Object.entries(financialData.gastosVariables).forEach(([k, g]) => {
+                const d = document.createElement('div');
+                d.className = 'flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800';
+                d.innerHTML = `<span class="text-sm font-bold">${g.nombre}</span><div class="flex gap-2"><span class="font-black">${formatCurrency(g.monto)}</span><button onclick="window.editarVariable('${k}')">✏️</button></div>`;
+                c.appendChild(d);
+            });
         }
-
-        window.editarGastoVariable = (key) => {
-            const gasto = financialData.gastosVariables[key];
-            document.getElementById('edit-variable-key').value = key;
-            document.getElementById('variable-name').value = gasto.nombre;
-            document.getElementById('variable-amount').value = gasto.monto;
+        window.editarVariable = (k) => {
+            const g = financialData.gastosVariables[k];
+            document.getElementById('edit-variable-key').value = k;
+            document.getElementById('variable-name').value = g.nombre;
+            document.getElementById('variable-amount').value = g.monto;
             document.getElementById('variable-delete-btn').classList.remove('hidden');
             document.getElementById('variable-modal').style.display = 'block';
         };
 
-        window.eliminarGastoVariable = async (key) => {
-            if (confirm('¿Eliminar esta categoría?')) {
-                delete financialData.gastosVariables[key];
-                await saveData();
-                renderizarUI();
-                showToast('Categoría eliminada');
-            }
-        };
-
         function renderizarGastosHormiga() {
-            const container = document.getElementById('hormiga-container');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            if (Object.keys(financialData.gastosHormiga || {}).length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center text-slate-400 py-6 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold uppercase tracking-widest">Sin fugas detectadas</div>';
-                return;
-            }
-
-            for (const [key, gasto] of Object.entries(financialData.gastosHormiga || {})) {
-                const div = document.createElement('div');
-                div.className = 'bg-orange-50 dark:bg-orange-900/10 p-3 rounded-xl border border-orange-100 dark:border-orange-900/30 flex justify-between items-center group hover:border-orange-400 transition-colors';
-                div.innerHTML = `
-                    <div class="overflow-hidden">
-                        <span class="block font-bold text-xs text-orange-900 dark:text-orange-300 truncate">${gasto.nombre}</span>
-                        <span class="block font-mono font-black text-sm text-orange-700 dark:text-orange-400 mt-1">${formatCurrency(gasto.monto)}</span>
-                    </div>
-                    <div class="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
-                        <button onclick="editarGastoHormiga('${key}')" class="text-orange-600 text-xs">✏️</button>
-                        <button onclick="eliminarGastoHormiga('${key}')" class="text-red-500 text-xs">🗑️</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
+            const c = document.getElementById('hormiga-container');
+            c.innerHTML = '';
+            Object.entries(financialData.gastosHormiga).forEach(([k, g]) => {
+                const d = document.createElement('div');
+                d.className = 'p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-100 dark:border-orange-800';
+                d.innerHTML = `<div class="flex justify-between"><span class="text-[10px] font-bold truncate">${g.nombre}</span><button onclick="window.editarHormiga('${k}')">✏️</button></div><p class="font-black text-xs mt-1">${formatCurrency(g.monto)}</p>`;
+                c.appendChild(d);
+            });
         }
-
-        window.editarGastoHormiga = (key) => {
-            const gasto = financialData.gastosHormiga[key];
-            document.getElementById('edit-hormiga-key').value = key;
-            document.getElementById('hormiga-name').value = gasto.nombre;
-            document.getElementById('hormiga-amount').value = gasto.monto;
+        window.editarHormiga = (k) => {
+            const g = financialData.gastosHormiga[k];
+            document.getElementById('edit-hormiga-key').value = k;
+            document.getElementById('hormiga-name').value = g.nombre;
+            document.getElementById('hormiga-amount').value = g.monto;
             document.getElementById('hormiga-delete-btn').classList.remove('hidden');
             document.getElementById('hormiga-modal').style.display = 'block';
         };
 
-        window.eliminarGastoHormiga = async (key) => {
-            if (confirm('¿Eliminar este gasto hormiga?')) {
-                delete financialData.gastosHormiga[key];
-                await saveData();
-                renderizarUI();
-                showToast('Gasto hormiga eliminado');
-            }
-        };
-
         function renderizarInversiones() {
-            const container = document.getElementById('gbm-container');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            if (Object.keys(financialData.gbm || {}).length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center text-slate-500 py-6 text-xs font-bold uppercase tracking-widest border border-dashed border-slate-700 rounded-xl">Sin activos registrados</div>';
-                return;
-            }
-
-            for (const [key, inv] of Object.entries(financialData.gbm || {})) {
+            const c = document.getElementById('gbm-container');
+            c.innerHTML = '';
+            Object.entries(financialData.gbm || {}).forEach(([k, inv]) => {
+                const p = inv.target > 0 ? (inv.shares / inv.target) * 100 : 0;
                 const div = document.createElement('div');
-                div.className = 'bg-slate-800/50 p-4 rounded-xl border border-slate-700 hover:border-frcyan transition-colors group cursor-pointer';
-                div.onclick = () => window.editarInversion(key);
-                
-                const pct = inv.target > 0 ? Math.min(100, (inv.shares / inv.target) * 100) : 0;
-                
-                div.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <h4 class="text-frcyan font-black text-sm uppercase tracking-widest">${inv.ticker}</h4>
-                        <span class="text-slate-400 opacity-0 group-hover:opacity-100 text-xs">✏️</span>
-                    </div>
-                    <div class="flex items-baseline gap-1 mb-3">
-                        <span class="text-3xl font-black">${inv.shares}</span>
-                        <span class="text-[9px] text-slate-400 uppercase tracking-widest">Títulos</span>
-                    </div>
-                    ${inv.target > 0 ? `
-                        <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden mb-1">
-                            <div class="h-full bg-frcyan transition-all" style="width: ${pct}%"></div>
-                        </div>
-                        <div class="flex justify-between text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-                            <span>Meta: ${inv.target}</span>
-                            <span>${pct.toFixed(0)}%</span>
-                        </div>
-                    ` : '<p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Acumulación Libre</p>'}
-                `;
-                container.appendChild(div);
-            }
+                div.className = 'bg-slate-800/50 p-4 rounded-xl border border-slate-700 cursor-pointer';
+                div.onclick = () => window.editarInversion(k);
+                div.innerHTML = `<h4 class="text-frcyan font-black text-sm uppercase">${inv.ticker}</h4><span class="text-3xl font-black">${inv.shares}</span><p class="text-[10px] text-slate-400">Objetivo: ${inv.target}</p>`;
+                c.appendChild(div);
+            });
         }
-        
-        window.editarInversion = (key) => {
-            const inv = financialData.gbm[key];
-            document.getElementById('edit-gbm-key').value = key;
+        window.editarInversion = (k) => {
+            const inv = financialData.gbm[k];
+            document.getElementById('edit-gbm-key').value = k;
             document.getElementById('gbm-ticker').value = inv.ticker;
             document.getElementById('gbm-shares').value = inv.shares;
             document.getElementById('gbm-target').value = inv.target || 0;
@@ -954,147 +479,51 @@
             document.getElementById('gbm-modal').style.display = 'block';
         }
 
-        window.eliminarInversion = async (key) => {
-            if (confirm('¿Eliminar este activo?')) {
-                delete financialData.gbm[key];
-                await saveData();
-                renderizarUI();
-                showToast('Activo eliminado');
-            }
-        };
-
         function renderizarMetas() {
-            const container = document.getElementById('metas-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (Object.keys(financialData.metasPersonalizadas || {}).length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-400 py-8 text-xs font-bold uppercase tracking-widest border border-dashed border-slate-200 dark:border-slate-700 rounded-xl mt-2">🎯 Sin metas. Agrega una.</div>';
-                return;
-            }
-
-            for (const [key, meta] of Object.entries(financialData.metasPersonalizadas || {})) {
-                const pct = meta.objetivo > 0 ? (meta.actual / meta.objetivo) * 100 : 0;
-                const div = document.createElement('div');
-                div.className = 'bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:border-frteal transition-colors group cursor-pointer';
-                div.onclick = () => window.editarMeta(key);
-                div.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <p class="font-bold text-sm tracking-tight text-slate-800 dark:text-white">🎯 ${meta.nombre}</p>
-                        <span class="text-[10px] font-black text-frteal bg-frteal/10 px-2 py-0.5 rounded">${pct.toFixed(0)}%</span>
-                    </div>
-                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full mb-2 overflow-hidden shadow-inner">
-                        <div class="h-full bg-gradient-to-r from-frgold to-frteal rounded-full transition-all" style="width: ${Math.min(100, pct)}%"></div>
-                    </div>
-                    <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                        <span>${formatCurrency(meta.actual)}</span>
-                        <span>De ${formatCurrency(meta.objetivo)}</span>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
+            const c = document.getElementById('metas-container');
+            c.innerHTML = '';
+            Object.entries(financialData.metasPersonalizadas).forEach(([k, m]) => {
+                const p = m.objetivo > 0 ? (m.actual / m.objetivo) * 100 : 0;
+                const d = document.createElement('div');
+                d.className = 'p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 cursor-pointer';
+                d.onclick = () => window.editarMeta(k);
+                d.innerHTML = `<p class="text-xs font-bold mb-1">${m.nombre}</p><div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-frteal" style="width:${Math.min(100, p)}%"></div></div>`;
+                c.appendChild(d);
+            });
         }
-
-        window.editarMeta = (key) => {
-            const meta = financialData.metasPersonalizadas[key];
-            document.getElementById('edit-meta-key').value = key;
-            document.getElementById('meta-name').value = meta.nombre;
-            document.getElementById('meta-target').value = meta.objetivo;
-            document.getElementById('meta-current').value = meta.actual;
+        window.editarMeta = (k) => {
+            const m = financialData.metasPersonalizadas[k];
+            document.getElementById('edit-meta-key').value = k;
+            document.getElementById('meta-name').value = m.nombre;
+            document.getElementById('meta-target').value = m.objetivo;
+            document.getElementById('meta-current').value = m.actual;
             document.getElementById('meta-delete-btn').classList.remove('hidden');
             document.getElementById('meta-modal').style.display = 'block';
         };
 
-        window.eliminarMeta = async (key) => {
-            if (confirm('¿Eliminar esta meta?')) {
-                delete financialData.metasPersonalizadas[key];
-                await saveData();
-                renderizarUI();
-                closeModal('meta-modal');
-                showToast('Meta eliminada');
-            }
-        };
-
         function calcularYActualizarTodo() {
             const sueldo = (financialData.sueldoQuincenal || 0) * 2;
-            const extras = (financialData.ingresosExtras?.ventas || 0) + (financialData.ingresosExtras?.bonos || 0) + (financialData.ingresosExtras?.otros || 0);
-            const ingresosTotales = sueldo + extras;
+            const extras = (financialData.ingresosExtras.ventas || 0) + (financialData.ingresosExtras.bonos || 0) + (financialData.ingresosExtras.otros || 0);
+            const ingresos = sueldo + extras;
+            let f = 0, v = 0, h = 0, dm = 0, dt = 0;
+            Object.values(financialData.gastosFijos).forEach(g => f += g.monto);
+            Object.values(financialData.gastosVariables).forEach(g => v += g.monto);
+            Object.values(financialData.gastosHormiga).forEach(g => h += g.monto);
+            Object.values(financialData.deudas).forEach(d => { dm += d.pagoMensual; dt += d.total; });
+            const totalG = f + v + h + dm;
+            const sobrante = ingresos - totalG;
+            const tasa = ingresos > 0 ? (Math.max(0, sobrante) / ingresos) * 100 : 0;
 
-            let totalGastos = 0;
-            let gastosFijosNum = 0;
-            let gastosVariablesNum = 0;
-            let gastosHormigaNum = 0;
+            document.getElementById('statIngresos').innerText = formatCurrency(ingresos);
+            document.getElementById('statGastos').innerText = formatCurrency(totalG);
+            document.getElementById('statTasaAhorro').innerText = tasa.toFixed(1) + '%';
+            document.getElementById('statDeudaTotal').innerText = formatCurrency(dt);
+            document.getElementById('sobranteReal').innerText = formatCurrency(sobrante);
 
-            for (const g of Object.values(financialData.gastosFijos || {})) gastosFijosNum += g.monto;
-            for (const g of Object.values(financialData.gastosVariables || {})) gastosVariablesNum += g.monto;
-            for (const g of Object.values(financialData.gastosHormiga || {})) gastosHormigaNum += g.monto;
-            
-            let pagoMinimoDeudas = 0;
-            let totalDeudas = 0;
-            for (const d of Object.values(financialData.deudas || {})) {
-                totalDeudas += d.total;
-                pagoMinimoDeudas += d.pagoMensual;
-            }
-
-            totalGastos = gastosFijosNum + gastosVariablesNum + gastosHormigaNum + pagoMinimoDeudas;
-
-            const sobrante = ingresosTotales - totalGastos;
-            
-            // Tasa de ahorro (Se considera el sobrante como posible ahorro + el abono real al fondo)
-            // Aquí usamos solo el sobrante para simplificar el KPI
-            const tasaAhorro = ingresosTotales > 0 ? (Math.max(0, sobrante) / ingresosTotales) * 100 : 0;
-
-            document.getElementById('statIngresos').innerText = formatCurrency(ingresosTotales);
-            document.getElementById('statGastos').innerText = formatCurrency(totalGastos);
-            document.getElementById('statTasaAhorro').innerHTML = `${tasaAhorro.toFixed(1)}%`;
-            document.getElementById('statDeudaTotal').innerText = formatCurrency(totalDeudas);
-            document.getElementById('sobranteReal').innerHTML = formatCurrency(sobrante);
-
-            // Colores del poder de avalancha
-            const contenedorSobrante = document.getElementById('sobranteReal').parentElement;
-            if (sobrante < 0) {
-                contenedorSobrante.classList.remove('from-frteal', 'to-frnavy');
-                contenedorSobrante.classList.add('bg-red-600');
-            } else {
-                contenedorSobrante.classList.remove('bg-red-600');
-                contenedorSobrante.classList.add('from-frteal', 'to-frnavy');
-            }
-
-            // Gráfico
             const ctx = document.getElementById('flujoChart')?.getContext('2d');
             if (ctx) {
                 if (myChart) myChart.destroy();
-                const isMobile = window.innerWidth < 768;
-                myChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: { 
-                        labels: ['Deuda Min.', 'Gastos Fijos', 'Gastos Variables', 'Gastos Hormiga', 'Sobrante Libre'], 
-                        datasets: [{ 
-                            data: [pagoMinimoDeudas, gastosFijosNum, gastosVariablesNum, gastosHormigaNum, Math.max(0, sobrante)], 
-                            backgroundColor: ['#ef4444', '#0f766e', '#3b82f6', '#f59e0b', '#10b981'], 
-                            borderWidth: 0,
-                            hoverOffset: 10
-                        }] 
-                    },
-                    options: { 
-                        cutout: '75%', 
-                        maintainAspectRatio: false,
-                        layout: { padding: { bottom: 10 } },
-                        plugins: { 
-                            legend: { 
-                                position: isMobile ? 'bottom' : 'right',
-                                align: 'center',
-                                labels: { 
-                                    color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569', 
-                                    font: {family: 'Inter', size: 11},
-                                    padding: 15,
-                                    usePointStyle: true,
-                                    pointStyle: 'circle'
-                                }
-                            } 
-                        } 
-                    }
-                });
+                myChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Fijos', 'Var', 'Deuda', 'Libre'], datasets: [{ data: [f, v + h, dm, Math.max(0, sobrante)], backgroundColor: ['#0f766e', '#3b82f6', '#ef4444', '#10b981'], borderWidth: 0 }] }, options: { cutout: '75%', plugins: { legend: { position: 'bottom' } } } });
             }
         }
 
@@ -1102,313 +531,126 @@
             const modal = document.getElementById('ai-modal');
             const loading = document.getElementById('ai-loading');
             const content = document.getElementById('ai-content');
-
-            modal.style.display = 'block';
-            loading.classList.remove('hidden');
-            content.classList.add('hidden');
+            modal.style.display = 'block'; loading.classList.remove('hidden'); content.classList.add('hidden');
 
             const sueldo = (financialData.sueldoQuincenal || 0) * 2;
-            const extras = (financialData.ingresosExtras?.ventas || 0) + (financialData.ingresosExtras?.bonos || 0) + (financialData.ingresosExtras?.otros || 0);
+            const extras = (financialData.ingresosExtras.ventas || 0) + (financialData.ingresosExtras.bonos || 0) + (financialData.ingresosExtras.otros || 0);
             const ingresos = sueldo + extras;
+            let f = 0, v = 0, h = 0, dm = 0, dt = 0;
+            Object.values(financialData.gastosFijos).forEach(g => f += g.monto);
+            Object.values(financialData.gastosVariables).forEach(g => v += g.monto);
+            Object.values(financialData.gastosHormiga).forEach(g => h += g.monto);
+            Object.values(financialData.deudas).forEach(d => { dm += d.pagoMensual; dt += d.total; });
+            const sobrante = ingresos - (f + v + h + dm);
 
-            let gastosFijosNum = 0, gastosVariablesNum = 0, gastosHormigaNum = 0, pagoMinimoDeudas = 0;
-            for (const g of Object.values(financialData.gastosFijos || {})) gastosFijosNum += g.monto;
-            for (const g of Object.values(financialData.gastosVariables || {})) gastosVariablesNum += g.monto;
-            for (const g of Object.values(financialData.gastosHormiga || {})) gastosHormigaNum += g.monto;
-            
-            const deudas = Object.values(financialData.deudas || {});
-            let totalDeuda = 0;
-            deudas.forEach(d => { totalDeuda += d.total; pagoMinimoDeudas += d.pagoMensual; });
-            
-            const gastos = gastosFijosNum + gastosVariablesNum + gastosHormigaNum + pagoMinimoDeudas;
-            const sobrante = ingresos - gastos;
-            
-            const ahorro = financialData.metas?.fondoEmergencia?.actual || 0;
-            const metaAhorro = financialData.metas?.fondoEmergencia?.objetivo || 50000;
-            const metas = Object.values(financialData.metasPersonalizadas || {});
+            const prompt = `Actúa como FinAI, asesor financiero experto. Analiza el perfil:
+- Ingresos: ${formatCurrency(ingresos)}
+- Gastos: ${formatCurrency(ingresos - sobrante)}
+- Sobrante: ${formatCurrency(sobrante)}
+- Deuda Total: ${formatCurrency(dt)}
+- Fondo: ${formatCurrency(financialData.metas.fondoEmergencia.actual)}
 
-            const prompt = `Eres FinAI, asesor financiero de fr4finance. Analiza estos datos y da 3 consejos específicos y accionables en HTML (usa <ul><li>):
-            - Ingresos mensuales: ${formatCurrency(ingresos)}
-            - Gastos mensuales: ${formatCurrency(gastos)}
-            - Sobrante libre: ${formatCurrency(sobrante)}
-            - Deuda total: ${formatCurrency(totalDeuda)}
-            - Fondo de emergencia: ${formatCurrency(ahorro)} de ${formatCurrency(metaAhorro)}
-            - Metas personales: ${metas.map(m => `${m.nombre}: ${formatCurrency(m.actual)}/${formatCurrency(m.objetivo)}`).join(', ') || 'Ninguna'}
-            
-            Tono: motivador, práctico, como un amigo experto. Máximo 150 palabras. NO uses markdown como \`\`\`.`;
+Reglas:
+1. Responde ÚNICAMENTE usando etiquetas HTML <ul> y <li>.
+2. 3 consejos prácticos.
+3. No uses markdown.`;
 
             try {
-                const response = await fetch('/api/gemini', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey })
-                });
-                
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error || "Fallo en API");
-                }
-                
+                const response = await fetch('/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey }) });
+                if (!response.ok) throw new Error(response.status);
                 const data = await response.json();
-                let aiText = data.text || 'No pude generar consejos ahora.';
-                
-                // La limpieza principal ya la hace el backend, pero mantenemos esto por seguridad
-                if (!aiText.includes('<')) {
-                    aiText = `<p>${aiText.replace(/\n/g, '<br>')}</p>`;
-                }
-
-                loading.classList.add('hidden');
-                content.classList.remove('hidden');
-                content.innerHTML = `
-                    <div class="border-b border-emerald-200 dark:border-emerald-800 pb-3 mb-4">
-                        <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">🤖 Análisis en tiempo real</p>
-                    </div>
-                    ${aiText}
-                `;
+                loading.classList.add('hidden'); content.classList.remove('hidden'); content.innerHTML = data.text;
             } catch (error) {
-                loading.classList.add('hidden');
-                content.classList.remove('hidden');
-                
-                // Capturar el mensaje personalizado del backend (ej. "Límite de uso de IA alcanzado...")
-                const backendMsg = error.message === "Failed to fetch" ? "Problema de conexión" : error.message;
-
-                content.innerHTML = `
-                    <div class="border-b border-amber-200 dark:border-amber-800 pb-3 mb-4">
-                        <p class="text-xs text-amber-600 dark:text-amber-400 font-bold uppercase tracking-widest">📡 Modo Local (Fallo IA)</p>
-                    </div>
-                    <div class="bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 p-3 rounded-lg text-xs mb-4 font-medium border border-amber-200 dark:border-amber-800/50">
-                        <strong>Motivo:</strong> ${backendMsg}
-                    </div>
-                    <ul class="space-y-3">
-                        ${sobrante < 0 ? `<li><strong>⚠️ Déficit:</strong> Gastas más de lo que ganas. Reduce gastos hormiga/variables urgente.</li>` : `<li><strong>💰 Ahorro:</strong> Tienes ${formatCurrency(sobrante)} libres. Úsalo para tu meta prioritaria.</li>`}
-                        ${totalDeuda > 0 ? `<li><strong>⚖️ Deuda:</strong> Prioriza pagar la deuda con la tasa de interés más alta usando el método Avalancha.</li>` : ''}
-                    </ul>
-                `;
+                console.error("ERROR IA:", error);
+                loading.classList.add('hidden'); content.classList.remove('hidden');
+                content.innerHTML = `<div class="bg-amber-50 p-4 border border-amber-200 rounded-xl text-amber-800 text-sm">⚠️ Error de conexión IA. Sobrante libre actual: ${formatCurrency(sobrante)}.</div>`;
             }
         }
 
-        // Event Listeners
-        function setupEventListeners() {
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-            });
+        // LISTENERS
+        document.getElementById('login-btn-main')?.addEventListener('click', () => signInWithPopup(auth, provider));
+        document.getElementById('dark-mode-btn')?.addEventListener('click', () => document.documentElement.classList.toggle('dark'));
+        document.getElementById('ai-advisor-btn')?.addEventListener('click', callGeminiAI);
+        document.getElementById('settings-btn')?.addEventListener('click', () => document.getElementById('settings-modal').style.display='block');
 
-            document.getElementById('login-btn-main')?.addEventListener('click', async () => {
-                const btn = document.getElementById('login-btn-main');
-                const orig = btn.innerHTML;
-                btn.innerHTML = '<div class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div> Conectando...';
-                btn.disabled = true;
-                try {
-                    await signInWithPopup(auth, provider);
-                } catch (e) {
-                    btn.innerHTML = orig;
-                    btn.disabled = false;
-                }
-            });
+        // CRUD Event Listeners (GBM, Debt, Meta, etc)
+        document.getElementById('gbm-save-btn').addEventListener('click', async () => {
+            const k = document.getElementById('edit-gbm-key').value || Date.now().toString();
+            financialData.gbm[k] = { ticker: document.getElementById('gbm-ticker').value.toUpperCase(), shares: parseFloat(document.getElementById('gbm-shares').value) || 0, target: parseFloat(document.getElementById('gbm-target').value) || 0 };
+            await saveData(); renderizarUI(); closeModal('gbm-modal');
+        });
+        document.getElementById('add-gbm-btn').onclick = () => { document.getElementById('edit-gbm-key').value=''; document.getElementById('gbm-modal').style.display='block'; };
+        document.getElementById('gbm-delete-btn').onclick = async () => { delete financialData.gbm[document.getElementById('edit-gbm-key').value]; await saveData(); renderizarUI(); closeModal('gbm-modal'); };
 
-            document.getElementById('onboard-next-btn')?.addEventListener('click', () => {
-                document.getElementById('onboard-step-1').classList.add('hidden');
-                document.getElementById('onboard-step-2').classList.remove('hidden');
-            });
+        document.getElementById('debt-save-btn').addEventListener('click', async () => {
+            const k = document.getElementById('edit-debt-key').value || Date.now().toString();
+            financialData.deudas[k] = { nombre: document.getElementById('debt-name').value, total: parseFloat(document.getElementById('debt-total').value), pagoMensual: parseFloat(document.getElementById('debt-min-payment').value), esPrioridad: document.getElementById('debt-priority').checked };
+            await saveData(); renderizarUI(); closeModal('debt-modal');
+        });
+        document.getElementById('fixed-save-btn').addEventListener('click', async () => {
+            const k = document.getElementById('edit-fixed-key').value || Date.now().toString();
+            financialData.gastosFijos[k] = { nombre: document.getElementById('fixed-name').value, monto: parseFloat(document.getElementById('fixed-amount').value) };
+            await saveData(); renderizarUI(); closeModal('fixed-modal');
+        });
+        document.getElementById('variable-save-btn').addEventListener('click', async () => {
+            const k = document.getElementById('edit-variable-key').value || Date.now().toString();
+            financialData.gastosVariables[k] = { nombre: document.getElementById('variable-name').value, monto: parseFloat(document.getElementById('variable-amount').value) };
+            await saveData(); renderizarUI(); closeModal('variable-modal');
+        });
+        document.getElementById('hormiga-save-btn').addEventListener('click', async () => {
+            const k = document.getElementById('edit-hormiga-key').value || Date.now().toString();
+            financialData.gastosHormiga[k] = { nombre: document.getElementById('hormiga-name').value, monto: parseFloat(document.getElementById('hormiga-amount').value) };
+            await saveData(); renderizarUI(); closeModal('hormiga-modal');
+        });
+        document.getElementById('meta-save-btn').addEventListener('click', async () => {
+            const k = document.getElementById('edit-meta-key').value || Date.now().toString();
+            financialData.metasPersonalizadas[k] = { nombre: document.getElementById('meta-name').value, objetivo: parseFloat(document.getElementById('meta-target').value), actual: parseFloat(document.getElementById('meta-current').value) };
+            await saveData(); renderizarUI(); closeModal('meta-modal');
+        });
+        document.getElementById('ahorro-save-btn').addEventListener('click', async () => {
+            financialData.metas.fondoEmergencia.objetivo = parseFloat(document.getElementById('ahorro-meta').value);
+            financialData.metas.fondoEmergencia.actual += parseFloat(document.getElementById('ahorro-abono').value) || 0;
+            await saveData(); renderizarUI(); closeModal('ahorro-modal'); document.getElementById('ahorro-abono').value='';
+        });
+        document.getElementById('onboard-finish-btn').addEventListener('click', async () => {
+            financialData.hasSeenTutorial = true;
+            financialData.settings.currency = document.getElementById('onboard-currency-input').value;
+            financialData.sueldoQuincenal = parseFloat(document.getElementById('onboard-sueldo-input').value) || 0;
+            await saveData(); renderizarUI(); closeModal('welcome-modal');
+        });
 
-            document.getElementById('onboard-finish-btn')?.addEventListener('click', async () => {
-                financialData.hasSeenTutorial = true;
-                financialData.settings.currency = document.getElementById('onboard-currency-input').value;
-                financialData.sueldoQuincenal = parseFloat(document.getElementById('onboard-sueldo-input').value) || 0;
-                financialData.metas.fondoEmergencia.objetivo = parseFloat(document.getElementById('onboard-meta-input').value) || 50000;
-                await saveData();
-                renderizarUI();
-                closeModal('welcome-modal');
-                showToast('¡Configuración completada! 🎉');
-            });
+        document.getElementById('add-debt-btn').onclick = () => { document.getElementById('edit-debt-key').value=''; document.getElementById('debt-modal').style.display='block'; };
+        document.getElementById('add-fixed-btn').onclick = () => { document.getElementById('edit-fixed-key').value=''; document.getElementById('fixed-modal').style.display='block'; };
+        document.getElementById('add-variable-btn').onclick = () => { document.getElementById('edit-variable-key').value=''; document.getElementById('variable-modal').style.display='block'; };
+        document.getElementById('add-hormiga-btn').onclick = () => { document.getElementById('edit-hormiga-key').value=''; document.getElementById('hormiga-modal').style.display='block'; };
+        document.getElementById('add-meta-btn').onclick = () => { document.getElementById('edit-meta-key').value=''; document.getElementById('meta-modal').style.display='block'; };
 
-            document.getElementById('dark-mode-btn')?.addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
-                localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
-            });
-            if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
+        // Deletes
+        document.getElementById('debt-delete-btn').onclick = async () => { delete financialData.deudas[document.getElementById('edit-debt-key').value]; await saveData(); renderizarUI(); closeModal('debt-modal'); };
+        document.getElementById('fixed-delete-btn').onclick = async () => { delete financialData.gastosFijos[document.getElementById('edit-fixed-key').value]; await saveData(); renderizarUI(); closeModal('fixed-modal'); };
+        document.getElementById('variable-delete-btn').onclick = async () => { delete financialData.gastosVariables[document.getElementById('edit-variable-key').value]; await saveData(); renderizarUI(); closeModal('variable-modal'); };
+        document.getElementById('hormiga-delete-btn').onclick = async () => { delete financialData.gastosHormiga[document.getElementById('edit-hormiga-key').value]; await saveData(); renderizarUI(); closeModal('hormiga-modal'); };
+        document.getElementById('meta-delete-btn').onclick = async () => { delete financialData.metasPersonalizadas[document.getElementById('edit-meta-key').value]; await saveData(); renderizarUI(); closeModal('meta-modal'); };
 
-            document.getElementById('settings-btn')?.addEventListener('click', () => document.getElementById('settings-modal').style.display = 'block');
-            document.getElementById('settings-save-btn')?.addEventListener('click', async () => {
-                financialData.settings.currency = document.getElementById('settings-currency').value;
-                financialData.settings.geminiApiKey = document.getElementById('settings-gemini').value.trim();
-                await saveData();
-                renderizarUI();
-                closeModal('settings-modal');
-                showToast('Configuración guardada');
-            });
+        // Inputs reactivos
+        document.getElementById('sueldoQuincenalInput').addEventListener('input', (e) => { financialData.sueldoQuincenal = parseFloat(e.target.value) || 0; calcularYActualizarTodo(); saveData(); });
+        ['extra-ventas', 'extra-bonos', 'extra-otros'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => { financialData.ingresosExtras[id.replace('extra-','')] = parseFloat(e.target.value) || 0; calcularYActualizarTodo(); saveData(); });
+        });
 
-            document.getElementById('ai-advisor-btn')?.addEventListener('click', callGeminiAI);
-
-            // Inputs reactivos
-            document.getElementById('sueldoQuincenalInput')?.addEventListener('input', async (e) => {
-                financialData.sueldoQuincenal = parseFloat(e.target.value) || 0;
-                calcularYActualizarTodo(); await saveData();
-            });
-
-            ['extra-ventas', 'extra-bonos', 'extra-otros'].forEach(id => {
-                document.getElementById(id)?.addEventListener('input', async (e) => {
-                    financialData.ingresosExtras[id.replace('extra-', '')] = parseFloat(e.target.value) || 0;
-                    calcularYActualizarTodo(); await saveData();
-                });
-            });
-
-            // DEUDAS
-            document.getElementById('add-debt-btn')?.addEventListener('click', () => {
-                document.getElementById('edit-debt-key').value = '';
-                document.getElementById('debt-modal-title').innerText = 'Nueva Deuda';
-                document.getElementById('debt-name').value = '';
-                document.getElementById('debt-total').value = '';
-                document.getElementById('debt-min-payment').value = '';
-                document.getElementById('debt-priority').checked = false;
-                document.getElementById('debt-delete-btn').classList.add('hidden');
-                document.getElementById('debt-modal').style.display = 'block';
-            });
-
-            document.getElementById('debt-save-btn')?.addEventListener('click', async () => {
-                const key = document.getElementById('edit-debt-key').value || Date.now().toString();
-                financialData.deudas[key] = {
-                    nombre: document.getElementById('debt-name').value || 'Deuda',
-                    total: parseFloat(document.getElementById('debt-total').value) || 0,
-                    pagoMensual: parseFloat(document.getElementById('debt-min-payment').value) || 0,
-                    esPrioridad: document.getElementById('debt-priority').checked
-                };
-                await saveData(); renderizarUI(); closeModal('debt-modal'); showToast('Deuda guardada');
-            });
-
-            // GASTOS FIJOS
-            document.getElementById('add-fixed-btn')?.addEventListener('click', () => {
-                document.getElementById('edit-fixed-key').value = '';
-                document.getElementById('fixed-name').value = '';
-                document.getElementById('fixed-amount').value = '';
-                document.getElementById('fixed-delete-btn').classList.add('hidden');
-                document.getElementById('fixed-modal').style.display = 'block';
-            });
-
-            document.getElementById('fixed-save-btn')?.addEventListener('click', async () => {
-                const key = document.getElementById('edit-fixed-key').value || Date.now().toString();
-                financialData.gastosFijos[key] = {
-                    nombre: document.getElementById('fixed-name').value || 'Gasto',
-                    monto: parseFloat(document.getElementById('fixed-amount').value) || 0
-                };
-                await saveData(); renderizarUI(); closeModal('fixed-modal'); showToast('Gasto fijo guardado');
-            });
-
-            // GASTOS VARIABLES
-            document.getElementById('add-variable-btn')?.addEventListener('click', () => {
-                document.getElementById('edit-variable-key').value = '';
-                document.getElementById('variable-name').value = '';
-                document.getElementById('variable-amount').value = '';
-                document.getElementById('variable-delete-btn').classList.add('hidden');
-                document.getElementById('variable-modal').style.display = 'block';
-            });
-
-            document.getElementById('variable-save-btn')?.addEventListener('click', async () => {
-                const key = document.getElementById('edit-variable-key').value || Date.now().toString();
-                financialData.gastosVariables[key] = {
-                    nombre: document.getElementById('variable-name').value || 'Categoría',
-                    monto: parseFloat(document.getElementById('variable-amount').value) || 0
-                };
-                await saveData(); renderizarUI(); closeModal('variable-modal'); showToast('Categoría guardada');
-            });
-
-            // GASTOS HORMIGA
-            document.getElementById('add-hormiga-btn')?.addEventListener('click', () => {
-                document.getElementById('edit-hormiga-key').value = '';
-                document.getElementById('hormiga-name').value = '';
-                document.getElementById('hormiga-amount').value = '';
-                document.getElementById('hormiga-delete-btn').classList.add('hidden');
-                document.getElementById('hormiga-modal').style.display = 'block';
-            });
-
-            document.getElementById('hormiga-save-btn')?.addEventListener('click', async () => {
-                const key = document.getElementById('edit-hormiga-key').value || Date.now().toString();
-                financialData.gastosHormiga[key] = {
-                    nombre: document.getElementById('hormiga-name').value || 'Gasto',
-                    monto: parseFloat(document.getElementById('hormiga-amount').value) || 0
-                };
-                await saveData(); renderizarUI(); closeModal('hormiga-modal'); showToast('Gasto hormiga guardado');
-            });
-
-            // INVERSIONES
-            document.getElementById('add-gbm-btn')?.addEventListener('click', () => {
-                document.getElementById('edit-gbm-key').value = '';
-                document.getElementById('gbm-ticker').value = '';
-                document.getElementById('gbm-shares').value = '';
-                document.getElementById('gbm-target').value = '';
-                document.getElementById('gbm-delete-btn').classList.add('hidden');
-                document.getElementById('gbm-modal').style.display = 'block';
-            });
-
-            document.getElementById('gbm-save-btn')?.addEventListener('click', async () => {
-                const t = document.getElementById('gbm-ticker').value.trim().toUpperCase();
-                if (!t) return;
-                const key = document.getElementById('edit-gbm-key').value || Date.now().toString();
-                financialData.gbm[key] = {
-                    ticker: t,
-                    shares: parseFloat(document.getElementById('gbm-shares').value) || 0,
-                    target: parseFloat(document.getElementById('gbm-target').value) || 0
-                };
-                await saveData(); renderizarUI(); closeModal('gbm-modal'); showToast('Activo guardado');
-            });
-
-            // METAS PERSONALIZADAS
-            document.getElementById('add-meta-btn')?.addEventListener('click', () => {
-                document.getElementById('edit-meta-key').value = '';
-                document.getElementById('meta-name').value = '';
-                document.getElementById('meta-target').value = '';
-                document.getElementById('meta-current').value = '';
-                document.getElementById('meta-delete-btn').classList.add('hidden');
-                document.getElementById('meta-modal').style.display = 'block';
-            });
-
-            document.getElementById('meta-save-btn')?.addEventListener('click', async () => {
-                const key = document.getElementById('edit-meta-key').value || Date.now().toString();
-                financialData.metasPersonalizadas[key] = {
-                    nombre: document.getElementById('meta-name').value || 'Meta',
-                    objetivo: parseFloat(document.getElementById('meta-target').value) || 0,
-                    actual: parseFloat(document.getElementById('meta-current').value) || 0
-                };
-                await saveData(); renderizarUI(); closeModal('meta-modal'); showToast('Meta guardada');
-            });
-
-            // AHORRO
-            document.getElementById('ahorro-save-btn')?.addEventListener('click', async () => {
-                const meta = parseFloat(document.getElementById('ahorro-meta').value);
-                const abono = parseFloat(document.getElementById('ahorro-abono').value) || 0;
-                if (!isNaN(meta) && meta > 0) financialData.metas.fondoEmergencia.objetivo = meta;
-                financialData.metas.fondoEmergencia.actual += abono;
-                await saveData(); renderizarUI(); closeModal('ahorro-modal'); document.getElementById('ahorro-abono').value=''; showToast('Fondo actualizado');
-            });
-        }
-
-        function renderAuthButtons(user) {
-            const landing = document.getElementById('landing-page');
-            const dashboard = document.getElementById('dashboard-page');
-            const authContainer = document.getElementById('auth-container');
-
+        // Auth
+        onAuthStateChanged(auth, (user) => {
+            const lp = document.getElementById('landing-page');
+            const dp = document.getElementById('dashboard-page');
+            const ac = document.getElementById('auth-container');
             if (user) {
-                landing.style.display = 'none';
-                dashboard.style.display = 'block';
-                authContainer.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:scale-105 transition-transform" onclick="signOut(getAuth())" title="Cerrar sesión">
-                        <span class="text-sm font-bold hidden sm:inline text-slate-800 dark:text-white">${user.displayName?.split(' ')[0]}</span>
-                    </div>
-                `;
-                currentUser = user;
-                loadUserData(user.uid);
+                lp.style.display = 'none'; dp.style.display = 'block';
+                ac.innerHTML = `<img src="${user.photoURL || 'logo.png'}" class="w-8 h-8 rounded-full cursor-pointer hover:scale-110 transition" onclick="window.cerrarSesion()">`;
+                currentUser = user; loadUserData(user.uid);
             } else {
-                authContainer.innerHTML = '';
-                landing.style.display = 'flex';
-                dashboard.style.display = 'none';
-                hideLoader();
-                currentUser = null;
+                ac.innerHTML = ''; lp.style.display = 'flex'; dp.style.display = 'none'; hideLoader(); currentUser = null;
             }
-        }
-
-        onAuthStateChanged(auth, renderAuthButtons);
-        setupEventListeners();
+        });
     </script>
 </body>
 </html>
