@@ -158,10 +158,12 @@
         <div class="absolute bottom-20 right-10 w-72 h-72 bg-frcyan rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
 
         <div class="relative z-10 w-full max-w-6xl text-center">
-            <!-- Logo -->
+            <!-- Logo Oficial -->
             <div class="flex justify-center mb-8">
-                <div class="bg-white/80 dark:bg-slate-800/80 p-4 rounded-3xl shadow-2xl floating-card">
-                    <img src="logo.png" alt="fr4finance" class="w-32 h-auto object-contain">
+                <!-- Ajustamos el padding (px-8 py-4) para que respire el logo rectangular -->
+                <div class="bg-white/80 dark:bg-slate-800/80 px-8 py-4 rounded-3xl shadow-2xl floating-card">
+                    <!-- Cambiamos a altura dinámica (h-16 md:h-20) para que se vea gigante -->
+                    <img src="logo.png" alt="fr4finance" class="h-16 md:h-20 w-auto object-contain">
                 </div>
             </div>
             
@@ -192,18 +194,18 @@
     </div>
 
     <!-- DASHBOARD PRINCIPAL -->
-    <div id="dashboard-page" class="p-4 md:p-8" style="display: none;">
+    <div id="dashboard-page" class="pb-12" style="display: none;">
         
         <!-- Barra Superior -->
-        <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 px-6 py-3">
+        <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 px-6 py-3 shadow-sm">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <img src="logo.png" class="h-8 w-auto object-contain drop-shadow-sm dark:bg-white/90 dark:rounded-md dark:p-1" alt="Logo">
-                    <span class="font-black text-xl gradient-text hidden sm:inline">fr4finance</span>
+                    <!-- Aumentamos tamaño y mejoramos el fondo blanco para el modo oscuro -->
+                    <img src="logo.png" class="h-10 sm:h-12 w-auto object-contain drop-shadow-sm dark:bg-white/95 dark:rounded-xl dark:p-2" alt="Logo">
+                    <!-- Se eliminó el texto <span> porque el nuevo logo ya incluye la palabra fr4finance -->
                 </div>
-                <div class="flex items-center gap-4">
-                    <div id="auth-container" class="flex items-center gap-3"></div>
-                    <button id="settings-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-105 transition-all shadow-sm">⚙️</button>
+                <div class="flex items-center gap-3">
+                    <div id="sync-indicator" class="hidden sm:flex items-center gap-2 mr-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">
                     <button id="dark-mode-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-105 transition-all shadow-sm">🌙</button>
                 </div>
             </div>
@@ -252,8 +254,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div class="card lg:col-span-2">
                     <h3 class="font-black text-lg mb-4">📈 Distribución de Gastos</h3>
-                    <!-- Se ajustó la altura relativa para que la gráfica respire mejor y no amontone la leyenda -->
-                    <div class="relative h-72 w-full flex justify-center p-2">
+                    <!-- Aumentamos la altura a h-80 para darle más respiro a la gráfica -->
+                    <div class="relative h-80 w-full flex justify-center p-2">
                         <canvas id="flujoChart"></canvas>
                     </div>
                 </div>
@@ -376,8 +378,9 @@
         <div class="modal-content !max-w-2xl text-center relative overflow-hidden">
             <div id="onboard-step-1" class="transition-all duration-500">
                 <div class="flex justify-center mb-6">
-                    <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-full">
-                        <img src="logo.png" alt="fr4finance" class="h-10 object-contain drop-shadow-md">
+                    <!-- Cambiamos rounded-full por rounded-2xl para que el rectángulo encaje perfecto -->
+                    <div class="bg-slate-100 dark:bg-slate-800 px-6 py-4 rounded-2xl">
+                        <img src="logo.png" alt="fr4finance" class="h-10 md:h-12 w-auto object-contain drop-shadow-md">
                     </div>
                 </div>
                 <h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">¡Bienvenido a tu Hub Financiero! 🎉</h2>
@@ -1061,7 +1064,6 @@
             const ctx = document.getElementById('flujoChart')?.getContext('2d');
             if (ctx) {
                 if (myChart) myChart.destroy();
-                const isMobile = window.innerWidth < 768;
                 myChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: { 
@@ -1074,17 +1076,17 @@
                         }] 
                     },
                     options: { 
-                        cutout: '75%', 
+                        cutout: '70%', 
                         maintainAspectRatio: false,
-                        layout: { padding: { bottom: 10 } },
+                        layout: { padding: { bottom: 20 } },
                         plugins: { 
                             legend: { 
-                                position: isMobile ? 'bottom' : 'right',
+                                position: 'bottom',
                                 align: 'center',
                                 labels: { 
                                     color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569', 
                                     font: {family: 'Inter', size: 11},
-                                    padding: 15,
+                                    padding: 20,
                                     usePointStyle: true,
                                     pointStyle: 'circle'
                                 }
