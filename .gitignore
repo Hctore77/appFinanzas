@@ -1,14 +1,13 @@
+# Archivos sensibles
+*.json
+*.key
+*.pem
+.env
+.env.local
+
+# Dependencias
+node_modules/
+
 # Archivos del sistema
 .DS_Store
 Thumbs.db
-
-# Editor
-.vscode/
-.idea/
-
-# Logs
-*.log
-
-# Backup files
-*.backup
-*.old

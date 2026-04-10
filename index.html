@@ -1212,6 +1212,26 @@
             content.classList.add('hidden');
             content.innerHTML = '';
 
+            // === CONTROL DE CACHÉ: 1 análisis por día ===
+            const hoy = new Date().toDateString();
+            const ultimoAnalisis = localStorage.getItem('fr4finance_last_ai_analysis');
+            const analisisCacheado = localStorage.getItem('fr4finance_cached_analysis');
+            
+            // Si ya analizó hoy y tenemos caché, mostrar el análisis guardado
+            if (ultimoAnalisis === hoy && analisisCacheado) {
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+                content.innerHTML = `
+                    <div class="border-b border-amber-200 dark:border-amber-800 pb-3 mb-4">
+                        <p class="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                            <span>📅</span> Análisis de hoy (actualizado una vez al día)
+                        </p>
+                    </div>
+                    ${analisisCacheado}
+                `;
+                return;
+            }
+
             // Obtener datos financieros actualizados
             const fij = (financialData.sueldoQuincenal || 0) * 2;
             let ext = 0; 
@@ -1228,171 +1248,150 @@
             const ahorroActual = financialData.metas?.fondoEmergencia?.actual || 0;
             const ahorroMeta = financialData.metas?.fondoEmergencia?.objetivo || 50000;
             const moneda = financialData.settings?.currency || 'MXN';
-            const simboloMoneda = getCurrencySymbol(moneda);
+            const porcentajeAhorro = ahorroMeta > 0 ? (ahorroActual / ahorroMeta) * 100 : 0;
             
-            // Calcular deudas con prioridad (avalancha)
+            // Calcular deudas prioritarias
             const deudasPrioritarias = Object.values(financialData.deudas || {}).filter(d => d.esPrioridad);
             const tieneDeudasPrioritarias = deudasPrioritarias.length > 0;
-            const deudaPrioritariaMasAlta = deudasPrioritarias.sort((a,b) => a.total - b.total)[0];
-
-            // Prompt mejorado con más contexto y moneda
+            const totalGastosDiscrecionales = hrmg + vrs;
+            const porcentajeGastos = ingresosTotales > 0 ? (totalGastosDiscrecionales / ingresosTotales) * 100 : 0;
+            
+            // Prompt para Gemini
             const promptText = `
-                Actúa como "FinAI", el asesor de educación financiera experto de la app "fr4finance". 
-                fr4finance se basa en 4 pilares: 🔋 Ahorro, 📈 Inversión, ⚖️ Control Deuda, 🧠 Educación.
-
-                **DATOS FINANCIEROS DEL USUARIO (Moneda: ${moneda} | ${simboloMoneda}):**
-                - Ingresos Totales del mes: ${formatCurrency(ingresosTotales)}
-                - Gastos Totales del mes: ${formatCurrency(gastosTotales)}
-                - Gastos Hormiga + Variables: ${formatCurrency(hrmg + vrs)}
-                - Sobrante (Poder de Avalancha/Inversión): ${formatCurrency(sobrante)}
-                - Deuda Total Pendiente: ${formatCurrency(totalDeuda)}
-                - ¿Tiene deudas marcadas como "Prioridad Avalancha"? ${tieneDeudasPrioritarias ? 'SÍ' : 'NO'}
-                ${tieneDeudasPrioritarias ? `- Deuda prioritaria más pequeña: ${formatCurrency(deudaPrioritariaMasAlta.total)} (${deudaPrioritariaMasAlta.nombre})` : ''}
-                - Fondo de Emergencia Actual: ${formatCurrency(ahorroActual)}
-                - Meta del Fondo de Emergencia: ${formatCurrency(ahorroMeta)}
-                - Porcentaje de Fondo Completado: ${ahorroMeta > 0 ? ((ahorroActual / ahorroMeta) * 100).toFixed(1) : 0}%
-
-                **INSTRUCCIONES PARA EL ANÁLISIS:**
-                1. Analiza su situación financiera basándote ESTRICTAMENTE en los 4 pilares de fr4finance.
-                2. Si el sobrante es negativo, enfócate en reducir gastos urgentemente.
-                3. Si tiene deudas prioritarias, recomienda la estrategia avalancha.
-                4. Si el fondo de emergencia está por debajo del 50%, prioriza el ahorro.
-                5. Da 3 consejos ACCIONABLES y ESPECÍFICOS (no genéricos).
-                6. Usa un tono EMPÁTICO, MODERNO y MOTIVADOR, como un amigo experto.
-                7. Formatea la respuesta usando SOLO HTML simple: <b>, <ul>, <li>, <br>, <p>, <strong>. 
-                8. NO uses markdown, NO uses \`\`\`, NO uses títulos gigantes.
-                9. Al final, agrega una frase motivadora corta.
-
-                **ESTRUCTURA SUGERIDA DE RESPUESTA:**
-                <p><strong>📊 Análisis rápido:</strong> [2 líneas de análisis]</p>
-                <ul>
-                    <li><strong>1. [Pilar relacionado]:</strong> [Consejo específico]</li>
-                    <li><strong>2. [Pilar relacionado]:</strong> [Consejo específico]</li>
-                    <li><strong>3. [Pilar relacionado]:</strong> [Consejo específico]</li>
-                </ul>
-                <p>💪 <em>[Frase motivadora de cierre]</em></p>
+                Eres "FinAI", asesor financiero de la app fr4finance. Da un análisis breve y 3 consejos específicos.
+                DATOS DEL USUARIO (${moneda}):
+                - Ingresos: ${formatCurrency(ingresosTotales)} | Gastos: ${formatCurrency(gastosTotales)} | Sobrante: ${formatCurrency(sobrante)}
+                - Deuda total: ${formatCurrency(totalDeuda)} | ${tieneDeudasPrioritarias ? 'Tiene deudas prioritarias' : 'Sin deudas prioritarias'}
+                - Fondo emergencia: ${formatCurrency(ahorroActual)} de ${formatCurrency(ahorroMeta)} (${porcentajeAhorro.toFixed(0)}%)
+                - Gastos hormiga+variables: ${formatCurrency(totalGastosDiscrecionales)} (${porcentajeGastos.toFixed(0)}% de ingresos)
+                INSTRUCCIONES:
+                1. Usa TONO MOTIVADOR y EMPÁTICO, como un amigo experto.
+                2. Da 3 consejos ACCIONABLES y ESPECÍFICOS.
+                3. Formatea SOLO con HTML: <p>, <ul>, <li>, <strong>.
+                4. NO uses markdown, NO uses \`\`\`, NO uses títulos grandes.
+                5. Máximo 250 palabras.
+                6. Al final, una frase motivadora corta.
             `;
-
-            // Intentar con la API key del usuario primero, luego con la default
-            const userApiKey = financialData.settings?.geminiApiKey?.trim();
-            const defaultApiKey = "AIzaSyCKfi2oYy_rhacf5_repHxNWo7IacVEig4";
             
-            // Lista de modelos en orden de preferencia
-            const modelos = [
-                "gemini-1.5-flash",
-                "gemini-1.5-pro",
-                "gemini-1.0-pro"
-            ];
+            // Obtener la API key personalizada del usuario (si la tiene)
+            const customApiKey = financialData.settings?.geminiApiKey?.trim() || '';
             
-            let aiText = null;
-            let ultimoError = null;
-
-            // Función para intentar con una API key y modelo
-            async function intentarConAPI(apiKey, modelo) {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent?key=${apiKey}`;
-                const payload = { 
-                    contents: [{ parts: [{ text: promptText }] }],
-                    generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 800,
-                        topP: 0.9
-                    }
-                };
-                
-                const response = await fetch(url, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify(payload) 
+            try {
+                // Llamar a nuestra Edge Function en Vercel
+                const response = await fetch('/api/gemini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompt: promptText,
+                        customKey: customApiKey || undefined
+                    })
                 });
                 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Modelo ${modelo}: ${response.status} - ${errorText.substring(0, 100)}`);
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error en la petición');
                 }
                 
-                const result = await response.json();
-                return result.candidates?.[0]?.content?.parts?.[0]?.text || null;
-            }
-
-            try {
-                // Estrategia: Probar keys y modelos
-                const claves = [];
-                if (userApiKey && userApiKey.length > 10) claves.push(userApiKey);
-                claves.push(defaultApiKey);
-                
-                for (const apiKey of claves) {
-                    for (const modelo of modelos) {
-                        try {
-                            console.log(`Intentando con modelo: ${modelo}...`);
-                            const texto = await intentarConAPI(apiKey, modelo);
-                            if (texto && texto.length > 50) {
-                                aiText = texto;
-                                console.log(`✅ Éxito con ${modelo}`);
-                                break; // Romper loop de modelos
-                            }
-                        } catch (err) {
-                            console.warn(`Falló ${modelo}:`, err.message);
-                            ultimoError = err;
-                            continue; // Intentar siguiente modelo
-                        }
-                    }
-                    if (aiText) break; // Romper loop de keys si hubo éxito
-                }
+                const data = await response.json();
+                const aiText = data.text;
                 
                 loading.classList.add('hidden');
                 content.classList.remove('hidden');
                 
-                if (aiText) {
-                    // Limpiar y formatear la respuesta
+                if (aiText && aiText.length > 50) {
                     let respuestaLimpia = aiText
                         .replace(/```html/g, '')
                         .replace(/```/g, '')
                         .replace(/\*\*/g, '<strong>')
                         .replace(/\*/g, '');
                         
-                    // Si la respuesta no tiene formato HTML básico, envolverla
                     if (!respuestaLimpia.includes('<')) {
                         respuestaLimpia = `<p>${respuestaLimpia.replace(/\n/g, '<br>')}</p>`;
                     }
-                        
-                    content.innerHTML = respuestaLimpia;
+                    
+                    // Guardar en caché local
+                    localStorage.setItem('fr4finance_last_ai_analysis', hoy);
+                    localStorage.setItem('fr4finance_cached_analysis', respuestaLimpia);
+                    
+                    content.innerHTML = `
+                        <div class="border-b border-emerald-200 dark:border-emerald-800 pb-3 mb-4">
+                            <p class="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                                <span>🤖</span> Análisis del día ${new Date().toLocaleDateString('es-MX')}
+                            </p>
+                        </div>
+                        ${respuestaLimpia}
+                    `;
                 } else {
-                    throw new Error('No se pudo obtener respuesta de la IA');
+                    // Fallback a consejos locales
+                    content.innerHTML = generarConsejosLocales(
+                        sobrante, porcentajeAhorro, ahorroActual, ahorroMeta,
+                        totalDeuda, tieneDeudasPrioritarias, deudasPrioritarias,
+                        porcentajeGastos
+                    );
                 }
                 
             } catch (error) {
-                console.error("AI Error detallado:", error);
+                console.error("AI Error:", error);
                 loading.classList.add('hidden');
                 content.classList.remove('hidden');
                 
-                // Mensajes de error más amigables
-                let errorMsg = '';
-                if (ultimoError?.message?.includes('429')) {
-                    errorMsg = '📊 El servicio de IA está muy solicitado ahora mismo.';
-                } else if (ultimoError?.message?.includes('403') || ultimoError?.message?.includes('quota')) {
-                    errorMsg = '🔑 La API key de Gemini ha alcanzado su límite diario.';
-                } else if (ultimoError?.message?.includes('404')) {
-                    errorMsg = '🔧 Estamos actualizando el servicio de IA.';
-                } else {
-                    errorMsg = '🌐 No pudimos conectar con el Asesor IA en este momento.';
-                }
-                
-                content.innerHTML = `
-                    <div class="text-center p-6 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-800/50 shadow-sm">
-                        <p class="text-amber-600 dark:text-amber-400 font-bold text-lg mb-3">🧠 Asesor IA Temporalmente No Disponible</p>
-                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4">${errorMsg}</p>
-                        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl text-left text-xs text-slate-500 shadow-sm border border-slate-100 dark:border-slate-700">
-                            <p class="font-bold mb-2">💡 Mientras tanto, sigue estos consejos:</p>
-                            <ul class="list-disc pl-4 space-y-1">
-                                <li>Revisa si tus gastos hormiga superan el 10% de tus ingresos.</li>
-                                <li>Prioriza pagar la deuda con la tasa de interés más alta (Estrategia Avalancha).</li>
-                                <li>Intenta ahorrar al menos el 20% de tu sobrante mensual.</li>
-                            </ul>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-4 uppercase tracking-widest">Puedes agregar tu propia <strong>API Key de Gemini</strong> en ⚙️ Configuración para mayor disponibilidad.</p>
-                    </div>
-                `;
+                // Fallback garantizado con consejos locales
+                content.innerHTML = generarConsejosLocales(
+                    sobrante, porcentajeAhorro, ahorroActual, ahorroMeta,
+                    totalDeuda, tieneDeudasPrioritarias, deudasPrioritarias,
+                    porcentajeGastos
+                );
             }
+        }
+
+        // Función auxiliar para consejos locales (fallback)
+        function generarConsejosLocales(sobrante, porcentajeAhorro, ahorroActual, ahorroMeta, totalDeuda, tieneDeudasPrioritarias, deudasPrioritarias, porcentajeGastos) {
+            let consejos = [];
+            
+            if (sobrante < 0) {
+                consejos.push(`<li><strong>⚠️ 1. Emergencia financiera:</strong> Tus gastos superan tus ingresos. Revisa tus gastos hormiga y variables para recortar al menos un 15%.</li>`);
+            } else if (sobrante < 2000) {
+                consejos.push(`<li><strong>📊 1. Margen ajustado:</strong> Tu sobrante es reducido. Considera reducir gastos hormiga o buscar un ingreso extra pequeño.</li>`);
+            } else {
+                consejos.push(`<li><strong>💰 1. Excelente sobrante:</strong> Destina <strong>50% a deudas</strong>, <strong>30% a ahorro</strong> y <strong>20% a inversión</strong>.</li>`);
+            }
+            
+            if (porcentajeAhorro < 30) {
+                consejos.push(`<li><strong>🔋 2. Fondo de emergencia:</strong> Solo has completado el ${porcentajeAhorro.toFixed(0)}% de tu meta. Prioriza ahorrar.</li>`);
+            } else if (porcentajeAhorro < 100) {
+                consejos.push(`<li><strong>🔋 2. Buen progreso:</strong> Llevas ${porcentajeAhorro.toFixed(0)}% de tu fondo. ¡Sigue así!</li>`);
+            } else {
+                consejos.push(`<li><strong>🎯 2. Fondo blindado:</strong> ¡Completaste tu fondo! Ahora enfócate en inversiones.</li>`);
+            }
+            
+            if (totalDeuda > 0) {
+                if (tieneDeudasPrioritarias) {
+                    const deudaMenor = deudasPrioritarias.sort((a,b) => a.total - b.total)[0];
+                    consejos.push(`<li><strong>⚖️ 3. Estrategia avalancha:</strong> Destina tu sobrante extra a liquidar ${deudaMenor.nombre} primero.</li>`);
+                } else {
+                    consejos.push(`<li><strong>⚖️ 3. Control de deudas:</strong> Considera marcar una deuda como "Prioridad" para aplicar la estrategia avalancha.</li>`);
+                }
+            } else {
+                consejos.push(`<li><strong>🏆 3. Sin deudas:</strong> ¡Felicidades! Enfócate en invertir.</li>`);
+            }
+            
+            if (porcentajeGastos > 30) {
+                consejos.push(`<li><strong>🐜 4. Gastos hormiga:</strong> Representan el ${porcentajeGastos.toFixed(0)}% de tus ingresos. Revísalos.</li>`);
+            }
+            
+            return `
+                <div class="border-b border-amber-200 dark:border-amber-800 pb-3 mb-4">
+                    <p class="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                        <span>📋</span> Modo offline - Análisis basado en tus datos
+                    </p>
+                </div>
+                <ul class="space-y-3">
+                    ${consejos.slice(0, 4).join('')}
+                </ul>
+                <p class="mt-4 pt-3 text-center text-[10px] text-slate-400 border-t border-slate-100 dark:border-slate-700">
+                    💪 Pequeñas acciones consistentes crean grandes resultados.
+                </p>
+            `;
         }
 
         function setupEventListeners() {
