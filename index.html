@@ -569,23 +569,48 @@ Reglas:
 2. 3 consejos prácticos.
 3. No uses markdown.`;
 
+            const apiKey = financialData.settings?.geminiApiKey;
+            if (!apiKey) {
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+                content.innerHTML = `
+                    <div class="bg-amber-50 p-4 border border-amber-200 rounded-xl text-amber-800 text-sm">
+                        <strong>⚠️ Falta tu API Key de Gemini.</strong>
+                        <br><br>Ve a <strong>⚙️ Configuración</strong> e ingresa tu API Key de Google AI Studio para activar el asesor IA.
+                        <br><br><a href="https://aistudio.google.com/app/apikey" target="_blank" class="underline font-bold">Obtener API Key gratis →</a>
+                    </div>
+                `;
+                return;
+            }
+
             try {
-                const response = await fetch('/api/gemini', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey }) 
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { temperature: 0.7, maxOutputTokens: 600 }
+                };
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
-                
-                const data = await response.json(); // Intentar leer el JSON primero
-                
+
+                const data = await response.json();
+
                 if (!response.ok) {
-                    throw new Error(data.error || `Error del servidor HTTP ${response.status}`);
+                    const msg = data.error?.message || `Error HTTP ${response.status}`;
+                    throw new Error(msg);
                 }
-                
-                loading.classList.add('hidden'); 
-                content.classList.remove('hidden'); 
-                content.innerHTML = data.text;
-                
+
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!aiText) throw new Error('La IA no generó respuesta');
+
+                const cleanedText = aiText.replace(/```html/g, '').replace(/```/g, '').trim();
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+                content.innerHTML = cleanedText;
+
             } catch (error) {
                 console.error("ERROR IA:", error);
                 loading.classList.add('hidden'); 
@@ -603,7 +628,19 @@ Reglas:
         document.getElementById('login-btn-main')?.addEventListener('click', () => signInWithPopup(auth, provider));
         document.getElementById('dark-mode-btn')?.addEventListener('click', () => document.documentElement.classList.toggle('dark'));
         document.getElementById('ai-advisor-btn')?.addEventListener('click', callGeminiAI);
-        document.getElementById('settings-btn')?.addEventListener('click', () => document.getElementById('settings-modal').style.display='block');
+        document.getElementById('settings-btn')?.addEventListener('click', () => {
+            document.getElementById('settings-currency').value = financialData.settings?.currency || 'MXN';
+            document.getElementById('settings-gemini').value = financialData.settings?.geminiApiKey || '';
+            document.getElementById('settings-modal').style.display = 'block';
+        });
+        document.getElementById('settings-save-btn')?.addEventListener('click', async () => {
+            if (!financialData.settings) financialData.settings = {};
+            financialData.settings.currency = document.getElementById('settings-currency').value;
+            financialData.settings.geminiApiKey = document.getElementById('settings-gemini').value.trim();
+            await saveData();
+            showToast('Configuración guardada ✅');
+            closeModal('settings-modal');
+        });
 
         // CRUD Event Listeners (GBM, Debt, Meta, etc)
         document.getElementById('gbm-save-btn').addEventListener('click', async () => {
