@@ -569,48 +569,23 @@ Reglas:
 2. 3 consejos prácticos.
 3. No uses markdown.`;
 
-            const apiKey = financialData.settings?.geminiApiKey;
-            if (!apiKey) {
-                loading.classList.add('hidden');
-                content.classList.remove('hidden');
-                content.innerHTML = `
-                    <div class="bg-amber-50 p-4 border border-amber-200 rounded-xl text-amber-800 text-sm">
-                        <strong>⚠️ Falta tu API Key de Gemini.</strong>
-                        <br><br>Ve a <strong>⚙️ Configuración</strong> e ingresa tu API Key de Google AI Studio para activar el asesor IA.
-                        <br><br><a href="https://aistudio.google.com/app/apikey" target="_blank" class="underline font-bold">Obtener API Key gratis →</a>
-                    </div>
-                `;
-                return;
-            }
-
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-                const payload = {
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { temperature: 0.7, maxOutputTokens: 600 }
-                };
-
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                const response = await fetch('/api/gemini', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey }) 
                 });
-
+                
                 const data = await response.json();
-
+                
                 if (!response.ok) {
-                    const msg = data.error?.message || `Error HTTP ${response.status}`;
-                    throw new Error(msg);
+                    throw new Error(data.error || `Error del servidor HTTP ${response.status}`);
                 }
-
-                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!aiText) throw new Error('La IA no generó respuesta');
-
-                const cleanedText = aiText.replace(/```html/g, '').replace(/```/g, '').trim();
-                loading.classList.add('hidden');
-                content.classList.remove('hidden');
-                content.innerHTML = cleanedText;
-
+                
+                loading.classList.add('hidden'); 
+                content.classList.remove('hidden'); 
+                content.innerHTML = data.text;
+                
             } catch (error) {
                 console.error("ERROR IA:", error);
                 loading.classList.add('hidden'); 
