@@ -397,7 +397,7 @@
     </div></div>
 
     <!-- Otros Modales -->
-    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><label for="debt-day" class="text-xs text-slate-400">Día límite de pago (1-31), para recordártelo</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input mb-4" placeholder="Ej: 15"><div class="rounded-xl bg-slate-50 dark:bg-slate-800 p-3 mb-4"><div class="flex items-center gap-2"><input type="checkbox" id="debt-msi" class="w-5 h-5"><label for="debt-msi" class="text-sm font-bold">🛍️ Es compra a meses sin intereses</label></div><div id="debt-msi-box" class="hidden mt-2"><label for="debt-msi-months" class="text-xs text-slate-400">Meses que te faltan (calculo el pago y pongo tasa 0)</label><input type="number" min="1" step="1" id="debt-msi-months" class="budget-input" placeholder="Ej: 9"></div></div><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><div class="grid grid-cols-2 gap-3 mb-1"><div><label for="debt-cut" class="text-xs text-slate-400">✂️ Día de corte</label><input type="number" min="1" max="31" step="1" id="debt-cut" class="budget-input" placeholder="Ej: 28"></div><div><label for="debt-day" class="text-xs text-slate-400">📅 Día límite de pago</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input" placeholder="Ej: 18"></div></div><p class="text-[11px] text-slate-400 mb-4">Vienen en tu estado de cuenta. Te aviso antes de cada una.</p><div class="rounded-xl bg-slate-50 dark:bg-slate-800 p-3 mb-4"><div class="flex items-center gap-2"><input type="checkbox" id="debt-msi" class="w-5 h-5"><label for="debt-msi" class="text-sm font-bold">🛍️ Es compra a meses sin intereses</label></div><div id="debt-msi-box" class="hidden mt-2"><label for="debt-msi-months" class="text-xs text-slate-400">Meses que te faltan (calculo el pago y pongo tasa 0)</label><input type="number" min="1" step="1" id="debt-msi-months" class="budget-input" placeholder="Ej: 9"></div></div><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-3" placeholder="Monto"><label for="fixed-day" class="text-xs text-slate-400">Día de pago (1-31, opcional)</label><input type="number" min="1" max="31" step="1" id="fixed-day" class="budget-input mb-6" placeholder="Ej: 5"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
@@ -1145,7 +1145,7 @@
         // `${tipo}-save-btn`, `${tipo}-delete-btn`, `add-${tipo}-btn`.
         // El primer campo de cada lista es el nombre (obligatorio).
         const LISTAS = {
-            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], diaPago: ['debt-day', 'dia'], esMSI: ['debt-msi', 'check'], mesesRestantes: ['debt-msi-months', 'numopt'], esPrioridad: ['debt-priority', 'check'] },
+            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], diaCorte: ['debt-cut', 'dia'], diaPago: ['debt-day', 'dia'], esMSI: ['debt-msi', 'check'], mesesRestantes: ['debt-msi-months', 'numopt'], esPrioridad: ['debt-priority', 'check'] },
                         // Compra a MSI: el pago sale del saldo entre los meses que faltan y no cobra intereses.
                         antesDeGuardar(item) {
                             if (!item.esMSI) { item.mesesRestantes = null; return; }
@@ -1278,28 +1278,29 @@
             };
             const items = [
                 ...Object.entries(data.deudas || {}).filter(([, d]) => num(d.total) > 0).map(([k, d]) => ({ k, tipo: 'debt', nombre: d.nombre, monto: num(d.pagoMensual), dia: d.diaPago })),
+                ...Object.entries(data.deudas || {}).filter(([, d]) => num(d.total) > 0 && !d.esMSI).map(([k, d]) => ({ k, tipo: 'debt', corte: true, nombre: d.nombre, monto: 0, dia: d.diaCorte })),
                 ...Object.entries(data.gastosFijos || {}).map(([k, g]) => ({ k, tipo: 'fixed', nombre: g.nombre, monto: num(g.monto), dia: g.diaPago })),
             ].filter(x => Number.isInteger(x.dia) && x.dia >= 1 && x.dia <= 31);
             return items.map(x => {
                 const fecha = vence(x.dia);
                 return { ...x, fecha, faltan: Math.round((fecha - base) / 864e5) };
-            }).filter(x => x.faltan <= dias).sort((a, b) => a.faltan - b.faltan || b.monto - a.monto);
+            }).filter(x => x.faltan <= dias).sort((a, b) => a.faltan - b.faltan || a.corte - b.corte || b.monto - a.monto);
         }
 
         function renderizarProximosPagos() {
             const cont = $('proximos-pagos');
-            const tieneDias = [...Object.values(financialData.deudas), ...Object.values(financialData.gastosFijos)].some(x => Number.isInteger(x.diaPago));
+            const tieneDias = [...Object.values(financialData.deudas), ...Object.values(financialData.gastosFijos)].some(x => Number.isInteger(x.diaPago) || Number.isInteger(x.diaCorte));
             const lista = proximosPagos(financialData);
             if (!lista.length) {
-                cont.innerHTML = `<p class="text-sm text-slate-500 md:col-span-3">${tieneDias ? '✅ Nada vence en los próximos 10 días.' : 'Agrega el día de pago a tus deudas y gastos fijos (botón ✏️) y aquí verás lo que vence pronto.'}</p>`;
+                cont.innerHTML = `<p class="text-sm text-slate-500 md:col-span-3">${tieneDias ? '✅ Nada vence en los próximos 10 días.' : 'Agrega la fecha de corte y de pago a tus deudas, y el día de pago a tus gastos fijos (botón ✏️), y aquí verás lo que viene.'}</p>`;
                 return;
             }
             const cuando = (n) => n === 0 ? 'Hoy' : n === 1 ? 'Mañana' : `En ${n} días`;
             cont.innerHTML = lista.map(x => `
-                <div data-editar="${x.tipo}" data-key="${esc(x.k)}" role="button" tabindex="0" class="flex justify-between items-center p-3 rounded-xl border cursor-pointer ${x.faltan <= 2 ? 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800' : 'bg-slate-50 border-slate-100 dark:bg-slate-800 dark:border-slate-700'}">
-                    <div><p class="text-sm font-bold">${x.tipo === 'debt' ? '💳' : '🏠'} ${esc(x.nombre)}</p>
-                    <p class="text-[11px] ${x.faltan <= 2 ? 'text-red-600 font-bold' : 'text-slate-500'}">${cuando(x.faltan)} · ${x.fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}</p></div>
-                    <span class="font-black text-sm">${x.monto > 0 ? formatCurrency(x.monto) : '—'}</span>
+                <div data-editar="${x.tipo}" data-key="${esc(x.k)}" role="button" tabindex="0" class="flex justify-between items-center p-3 rounded-xl border cursor-pointer ${x.corte ? 'bg-sky-50 border-sky-200 dark:bg-sky-900/20 dark:border-sky-800' : x.faltan <= 2 ? 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800' : 'bg-slate-50 border-slate-100 dark:bg-slate-800 dark:border-slate-700'}">
+                    <div><p class="text-sm font-bold">${x.corte ? '✂️ Corte de' : x.tipo === 'debt' ? '💳' : '🏠'} ${esc(x.nombre)}</p>
+                    <p class="text-[11px] ${x.faltan <= 2 && !x.corte ? 'text-red-600 font-bold' : 'text-slate-500'}">${cuando(x.faltan)} · ${x.fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}${x.corte ? ' · compra mejor después' : ''}</p></div>
+                    <span class="font-black text-sm">${x.corte ? '' : x.monto > 0 ? formatCurrency(x.monto) : '—'}</span>
                 </div>`).join('');
         }
 
@@ -1307,12 +1308,23 @@
             return `<button data-editar="${tipo}" data-key="${esc(k)}" aria-label="Editar ${esc(nombre)}">✏️</button>`;
         }
 
+        // Corte y límite de pago de una deuda (MSI no las muestra: van con la tarjeta donde se compró).
+        function fechasDeuda(d) {
+            if (d.esMSI) return '';
+            const corte = Number.isInteger(d.diaCorte), pago = Number.isInteger(d.diaPago);
+            if (!corte && !pago) return '<p class="text-[11px] text-amber-600 mt-1">📅 Agrega tu fecha de corte y de pago (✏️)</p>';
+            const partes = [corte && `✂️ Corte: día ${d.diaCorte}`, pago && `📅 Pago: día ${d.diaPago}`].filter(Boolean).join(' · ');
+            const mejor = corte ? '<p class="text-[11px] text-emerald-700 dark:text-emerald-400">💡 Compra justo después del corte: tendrás más días para pagar sin intereses</p>' : '';
+            return `<p class="text-[11px] text-slate-600 dark:text-slate-300 mt-1">${partes}</p>${mejor}`;
+        }
+
         function renderizarDeudas() {
             $('deudas-container').innerHTML = Object.entries(financialData.deudas).map(([k, d]) => `
                 <div class="p-4 rounded-xl border ${d.esPrioridad ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'} dark:bg-slate-800">
                     <div class="flex justify-between"><div><p class="font-black text-sm">${esc(d.nombre)}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">PRIORIDAD</span>' : ''}${d.esMSI ? `<span class="text-[9px] text-violet-600 font-bold ml-1">MSI · ${num(d.mesesRestantes)} meses</span>` : ''}</div>${botonEditar('debt', k, d.nombre)}</div>
                     <p class="mt-2 text-sm font-black">${formatCurrency(d.total)}</p>
-                    <p class="text-[11px] text-slate-500">Mínimo ${formatCurrency(d.pagoMensual)}/mes${Number.isInteger(d.diaPago) ? ` (día ${d.diaPago})` : ''} · ${num(d.tasaAnual) > 0 ? `${num(d.tasaAnual)}% anual` : (d.tasaAnual == null || d.tasaAnual === '' ? '<span class="text-amber-600 font-bold">falta la tasa</span>' : 'sin intereses')}</p>
+                    <p class="text-[11px] text-slate-500">Mínimo ${formatCurrency(d.pagoMensual)}/mes · ${num(d.tasaAnual) > 0 ? `${num(d.tasaAnual)}% anual` : (d.tasaAnual == null || d.tasaAnual === '' ? '<span class="text-amber-600 font-bold">falta la tasa</span>' : 'sin intereses')}</p>
+                    ${fechasDeuda(d)}
                 </div>`).join('');
         }
 

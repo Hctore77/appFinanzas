@@ -22,7 +22,9 @@ otras ramas generan preview deploys).
 - Firestore: **un documento por usuario** en `usuarios/{uid}` con todo su estado:
   `settings.currency`, `sueldoQuincenal` (monto **por pago**, nombre legado), `frecuenciaIngreso` ('semanal'|'quincenal'|'mensual'),
   `aguinaldo` (anual, no entra al ingreso mensual), `ingresosExtras{ventas,bonos,otros}`, `metas.fondoEmergencia{objetivo,actual}`,
-  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaPago,esMSI,mesesRestantes,esPrioridad}`
+  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaCorte,diaPago,esMSI,mesesRestantes,esPrioridad}`
+  (`diaCorte` y `diaPago` = día de corte y día límite de pago, 1-31 o `null`; `proximosPagos()` incluye los cortes como
+  avisos sin monto; `fechasDeuda()` los muestra en la tarjeta con el consejo de comprar justo después del corte)
   (compra a MSI: `antesDeGuardar` pone tasa 0 y pago = total / mesesRestantes; `tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables{nombre,monto}`,
   `gastosHormiga{nombre,monto,habito?,habitoPeriodo?,reto?}` (`habito` = clave de `HABITOS`; `habitoPeriodo` = dia|semana|quincena|mes
   en que el usuario lo contestó, `monto` siempre mensual; `reto{inicio,modo,montoAntes,apartado,hito}`:
