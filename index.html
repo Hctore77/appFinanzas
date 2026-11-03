@@ -146,6 +146,7 @@
 
     <!-- DASHBOARD PRINCIPAL -->
     <div id="dashboard-page" class="pb-12" style="display: none;">
+        <button id="quick-add-btn" aria-label="Registrar movimiento" title="Registrar movimiento" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-frteal text-white text-3xl font-black shadow-xl hover:scale-105 transition">+</button>
         <!-- Barra Superior -->
         <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 px-6 py-3">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -184,6 +185,20 @@
             <div class="card mb-8 p-5">
                 <div class="flex justify-between items-center mb-3"><h3 class="font-black text-lg">📅 Próximos pagos</h3><span class="text-xs text-slate-400">siguientes 10 días</span></div>
                 <div id="proximos-pagos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+            </div>
+
+            <!-- Este mes (movimientos reales) y progreso histórico -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="card">
+                    <div class="flex justify-between items-center mb-3"><h3 class="font-black text-lg">🧾 Este mes</h3><button id="quick-add-inline" class="text-xs font-black px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">➕ Registrar</button></div>
+                    <div id="mes-resumen" class="mb-3"></div>
+                    <ul id="mes-movimientos" class="space-y-2"></ul>
+                </div>
+                <div class="card">
+                    <h3 class="font-black text-lg mb-1">📊 Tu progreso</h3>
+                    <p id="progreso-texto" class="text-sm text-slate-500 mb-3"></p>
+                    <div class="relative h-56"><canvas id="historialChart" aria-label="Deuda y fondo de emergencia por mes" role="img"></canvas></div>
+                </div>
             </div>
 
             <!-- Gráfico y Metas -->
@@ -293,6 +308,27 @@
     <!-- Modal Inversión -->
     <div id="gbm-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Activo Inversión</h3><input type="hidden" id="edit-gbm-key"><input type="text" id="gbm-ticker" class="budget-input mb-3 uppercase" placeholder="Ticker (Ej: VOO)"><input type="number" id="gbm-shares" class="budget-input mb-3" placeholder="Títulos"><input type="number" id="gbm-target" class="budget-input mb-6" placeholder="Meta"><button id="gbm-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="gbm-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('gbm-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
 
+    <!-- Modal Registro rápido -->
+    <div id="mov-modal" class="modal"><div class="modal-content">
+        <h3 class="text-2xl font-black mb-4">➕ Registrar</h3>
+        <div id="mov-tipos" class="grid grid-cols-3 gap-2 mb-4" role="radiogroup" aria-label="Tipo de movimiento">
+            <button type="button" data-mov-tipo="gasto" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">💸<br>Gasto</button>
+            <button type="button" data-mov-tipo="hormiga" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">🐜<br>Hormiga</button>
+            <button type="button" data-mov-tipo="deuda" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">💳<br>Abono deuda</button>
+            <button type="button" data-mov-tipo="fondo" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">🔋<br>Al fondo</button>
+            <button type="button" data-mov-tipo="ingreso" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">💰<br>Ingreso</button>
+        </div>
+        <label for="mov-monto" class="text-xs text-slate-400">Monto</label>
+        <input type="number" min="0" step="0.01" inputmode="decimal" id="mov-monto" class="budget-input text-2xl font-black mb-3" placeholder="0">
+        <div id="mov-deuda-box" class="hidden"><label for="mov-deuda" class="text-xs text-slate-400">¿A qué deuda?</label><select id="mov-deuda" class="budget-input mb-3"></select></div>
+        <label for="mov-nota" class="text-xs text-slate-400">Nota (opcional)</label>
+        <input type="text" maxlength="60" id="mov-nota" class="budget-input mb-3" placeholder="Ej: súper, gasolina, café">
+        <label for="mov-fecha" class="text-xs text-slate-400">Fecha</label>
+        <input type="date" id="mov-fecha" class="budget-input mb-6">
+        <button id="mov-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button>
+        <button onclick="closeModal('mov-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button>
+    </div></div>
+
     <!-- Otros Modales -->
     <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><label for="debt-day" class="text-xs text-slate-400">Día límite de pago (1-31), para recordártelo</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input mb-4" placeholder="Ej: 15"><div class="rounded-xl bg-slate-50 dark:bg-slate-800 p-3 mb-4"><div class="flex items-center gap-2"><input type="checkbox" id="debt-msi" class="w-5 h-5"><label for="debt-msi" class="text-sm font-bold">🛍️ Es compra a meses sin intereses</label></div><div id="debt-msi-box" class="hidden mt-2"><label for="debt-msi-months" class="text-xs text-slate-400">Meses que te faltan (calculo el pago y pongo tasa 0)</label><input type="number" min="1" step="1" id="debt-msi-months" class="budget-input" placeholder="Ej: 9"></div></div><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-3" placeholder="Monto"><label for="fixed-day" class="text-xs text-slate-400">Día de pago (1-31, opcional)</label><input type="number" min="1" max="31" step="1" id="fixed-day" class="budget-input mb-6" placeholder="Ej: 5"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
@@ -393,7 +429,9 @@
                 metas: { fondoEmergencia: { objetivo: 50000, actual: 0 } },
                 deudas: {}, gastosFijos: {}, gastosVariables: {}, gastosHormiga: {},
                 gbm: {}, ingresosExtras: { ventas: 0, bonos: 0, otros: 0 },
-                metasPersonalizadas: {}
+                metasPersonalizadas: {},
+                movimientos: {},             // solo los del mes en curso; al cambiar de mes se resumen en historial
+                historial: {}                // { 'YYYY-MM': foto del mes + gasto real por tipo }
             };
         }
         // Completa campos faltantes en documentos viejos para que la UI nunca truene.
@@ -406,7 +444,7 @@
             out.metas.fondoEmergencia = { ...base.metas.fondoEmergencia, ...(out.metas.fondoEmergencia || {}) };
             out.ingresosExtras = { ...base.ingresosExtras, ...(d.ingresosExtras || {}) };
             if (!FRECUENCIAS[out.frecuenciaIngreso]) out.frecuenciaIngreso = 'quincenal';
-            for (const k of ['deudas', 'gastosFijos', 'gastosVariables', 'gastosHormiga', 'gbm', 'metasPersonalizadas']) out[k] = d[k] || {};
+            for (const k of ['deudas', 'gastosFijos', 'gastosVariables', 'gastosHormiga', 'gbm', 'metasPersonalizadas', 'movimientos', 'historial']) out[k] = d[k] || {};
             return out;
         }
 
@@ -416,6 +454,7 @@
             clearTimeout(saveTimeout);
             saveTimeout = null;
             hayCambiosPendientes = false;
+            actualizarFotoDelMes();
             setDoc(doc(db, 'usuarios', currentUser.uid), financialData).catch((e) => {
                 console.error(e);
                 hayCambiosPendientes = true;
@@ -442,6 +481,7 @@
                     financialData = datosPorDefecto();
                     await setDoc(doc(db, 'usuarios', uid), financialData);
                 }
+                if (cerrarMesesAnteriores()) guardarAhora();
                 renderizarUI();
                 if (!financialData.hasSeenTutorial) openModal('welcome-modal');
             } catch (e) {
@@ -451,6 +491,185 @@
                 hideLoader();
             }
         }
+
+        // ---------- Movimientos del mes e historial ----------
+        const TIPOS_MOV = {
+            gasto:   { icono: '💸', nombre: 'Gasto' },
+            hormiga: { icono: '🐜', nombre: 'Hormiga' },
+            deuda:   { icono: '💳', nombre: 'Abono a deuda' },
+            fondo:   { icono: '🔋', nombre: 'Al fondo' },
+            ingreso: { icono: '💰', nombre: 'Ingreso' },
+        };
+        const ymd = (f) => `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
+        const mesActual = (hoy = new Date()) => ymd(hoy).slice(0, 7);
+
+        // Suma lo registrado en un mes por tipo: { gasto, hormiga, deuda, fondo, ingreso }.
+        function sumasDelMes(movs, mes) {
+            const r = { gasto: 0, hormiga: 0, deuda: 0, fondo: 0, ingreso: 0 };
+            for (const m of Object.values(movs || {})) if ((m.fecha || '').startsWith(mes) && m.tipo in r) r[m.tipo] += num(m.monto);
+            return r;
+        }
+        // Foto del mes en curso (se refresca en cada guardado; al cambiar de mes queda congelada).
+        function actualizarFotoDelMes() {
+            const t = calcularTotales();
+            const mes = mesActual();
+            financialData.historial[mes] = {
+                ingresos: t.ingresos, gastos: t.gastos, sobrante: t.sobrante, deudaTotal: t.deudaTotal,
+                fondo: num(financialData.metas.fondoEmergencia.actual),
+                real: sumasDelMes(financialData.movimientos, mes),
+            };
+        }
+        // Movimientos de meses pasados: su suma queda en historial[mes].real y se borran del documento.
+        // Devuelve true si cambió algo (hay que guardar).
+        function cerrarMesesAnteriores(hoy = new Date()) {
+            const actual = mesActual(hoy);
+            const viejos = Object.entries(financialData.movimientos).filter(([, m]) => (m.fecha || '').slice(0, 7) < actual);
+            if (!viejos.length) return false;
+            for (const mes of new Set(viejos.map(([, m]) => m.fecha.slice(0, 7)))) {
+                const foto = financialData.historial[mes] || {};
+                financialData.historial[mes] = { ...foto, real: sumasDelMes(financialData.movimientos, mes) };
+            }
+            for (const [k] of viejos) delete financialData.movimientos[k];
+            return true;
+        }
+
+        function abrirMovimiento(tipo = 'gasto') {
+            const sel = $('mov-deuda');
+            const vivas = Object.entries(financialData.deudas).filter(([, d]) => num(d.total) > 0);
+            sel.replaceChildren(...vivas.map(([k, d]) => { const o = document.createElement('option'); o.value = k; o.textContent = `${d.nombre} (${formatCurrency(d.total)})`; return o; }));
+            $('mov-monto').value = '';
+            $('mov-nota').value = '';
+            $('mov-fecha').value = ymd(new Date());
+            elegirTipoMov(tipo);
+            openModal('mov-modal');
+            $('mov-monto').focus();
+        }
+        function elegirTipoMov(tipo) {
+            $('mov-modal').dataset.tipo = tipo;
+            document.querySelectorAll('.mov-tipo').forEach(b => {
+                const on = b.dataset.movTipo === tipo;
+                b.setAttribute('aria-pressed', on);
+                b.className = `mov-tipo rounded-xl p-2 text-xs font-bold border-2 ${on ? 'border-frteal bg-teal-50 dark:bg-teal-900/30' : 'border-slate-200 dark:border-slate-700'}`;
+            });
+            $('mov-deuda-box').classList.toggle('hidden', tipo !== 'deuda');
+        }
+        function guardarMovimiento() {
+            const tipo = $('mov-modal').dataset.tipo;
+            const monto = Math.round(num($('mov-monto').value) * 100) / 100;
+            const fecha = /^\d{4}-\d{2}-\d{2}$/.test($('mov-fecha').value) ? $('mov-fecha').value : ymd(new Date());
+            if (!(monto > 0)) { showToast('Escribe un monto mayor a 0', 'error'); $('mov-monto').focus(); return; }
+            if (fecha.slice(0, 7) !== mesActual()) { showToast('Solo puedes registrar movimientos de este mes', 'error'); $('mov-fecha').focus(); return; }
+            const mov = { tipo, monto, fecha, nota: $('mov-nota').value.trim().slice(0, 60) };
+            if (tipo === 'deuda') {
+                const k = $('mov-deuda').value;
+                const d = financialData.deudas[k];
+                if (!d) { showToast('No tienes deudas pendientes', 'error'); return; }
+                mov.aplicado = Math.min(monto, num(d.total)); // lo que realmente bajó el saldo (para poder deshacerlo)
+                mov.deuda = k;
+                d.total = Math.round((num(d.total) - mov.aplicado) * 100) / 100;
+                if (d.esMSI && num(d.pagoMensual) > 0) d.mesesRestantes = Math.max(0, Math.ceil(d.total / num(d.pagoMensual)));
+                if (d.total === 0) showToast(`🎉 ¡Liquidaste ${d.nombre}!`);
+            }
+            if (tipo === 'fondo') {
+                const f = financialData.metas.fondoEmergencia;
+                f.actual = num(f.actual) + monto;
+            }
+            financialData.movimientos[nuevaClave()] = mov;
+            guardarAhora();
+            renderizarUI();
+            closeModal('mov-modal');
+            if (tipo !== 'deuda') showToast('Registrado');
+        }
+        function eliminarMovimiento(k) {
+            const m = financialData.movimientos[k];
+            if (!m || !confirm(`¿Borrar ${TIPOS_MOV[m.tipo]?.nombre.toLowerCase() || 'movimiento'} de ${formatCurrency(m.monto)}?${m.tipo === 'deuda' || m.tipo === 'fondo' ? ' Se revierte su efecto en el saldo.' : ''}`)) return;
+            if (m.tipo === 'deuda' && financialData.deudas[m.deuda]) {
+                const d = financialData.deudas[m.deuda];
+                d.total = Math.round((num(d.total) + num(m.aplicado ?? m.monto)) * 100) / 100;
+                if (d.esMSI && num(d.pagoMensual) > 0) d.mesesRestantes = Math.ceil(d.total / num(d.pagoMensual));
+            }
+            if (m.tipo === 'fondo') {
+                const f = financialData.metas.fondoEmergencia;
+                f.actual = Math.max(0, num(f.actual) - num(m.monto));
+            }
+            delete financialData.movimientos[k];
+            guardarAhora();
+            renderizarUI();
+        }
+
+        function renderizarMes() {
+            const t = calcularTotales();
+            const mes = mesActual();
+            const r = sumasDelMes(financialData.movimientos, mes);
+            const real = r.gasto + r.hormiga;
+            const plan = t.variables + t.hormiga;
+            const pct = plan > 0 ? Math.min(100, real / plan * 100) : 0;
+            const pasado = plan > 0 && real > plan;
+            $('mes-resumen').innerHTML = `
+                <div class="flex justify-between text-sm mb-1"><span>Gastos variables y hormiga</span><span><strong class="${pasado ? 'text-red-600' : ''}">${formatCurrency(real)}</strong> de ${formatCurrency(plan)}</span></div>
+                <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full ${pasado ? 'bg-red-500' : 'bg-frteal'}" style="width:${pct}%"></div></div>
+                ${r.deuda || r.fondo || r.ingreso ? `<p class="text-xs text-slate-500 mt-2">${[r.deuda && `💳 ${formatCurrency(r.deuda)} abonado a deudas`, r.fondo && `🔋 ${formatCurrency(r.fondo)} al fondo`, r.ingreso && `💰 ${formatCurrency(r.ingreso)} de ingresos extra`].filter(Boolean).join(' · ')}</p>` : ''}`;
+            const lista = Object.entries(financialData.movimientos)
+                .filter(([, m]) => (m.fecha || '').startsWith(mes))
+                .sort((a, b) => (b[1].fecha || '').localeCompare(a[1].fecha || '') || b[0].localeCompare(a[0]));
+            $('mes-movimientos').innerHTML = lista.length ? lista.slice(0, 8).map(([k, m]) => {
+                const tipo = TIPOS_MOV[m.tipo] || { icono: '•', nombre: '' };
+                const detalle = m.tipo === 'deuda' ? (financialData.deudas[m.deuda]?.nombre || 'deuda') : (m.nota || tipo.nombre);
+                return `<li class="flex justify-between items-center text-sm p-2 rounded-lg bg-slate-50 dark:bg-slate-800">
+                    <span>${tipo.icono} ${esc(detalle)} <span class="text-[11px] text-slate-400">${Number(m.fecha.slice(8))}</span></span>
+                    <span class="flex items-center gap-2"><strong>${formatCurrency(m.monto)}</strong><button data-borrar-mov="${esc(k)}" aria-label="Borrar movimiento" class="text-slate-400 hover:text-red-500">✕</button></span></li>`;
+            }).join('') + (lista.length > 8 ? `<li class="text-xs text-slate-400 text-center">y ${lista.length - 8} más</li>` : '')
+                : '<li class="text-sm text-slate-500">Toca <strong>+</strong> para anotar lo que gastas, abonas o ahorras. Así verás tu mes real contra tu plan.</li>';
+        }
+
+        let historialChart = null;
+        function renderizarHistorial() {
+            const h = financialData.historial;
+            const meses = Object.keys(h).filter(m => /^\d{4}-\d{2}$/.test(m)).sort().slice(-12);
+            const nombreMes = (m) => new Date(Number(m.slice(0, 4)), Number(m.slice(5)) - 1, 1).toLocaleDateString('es-MX', { month: 'short', year: '2-digit' });
+            const deudaHoy = calcularTotales().deudaTotal;
+            const conDeuda = meses.filter(m => num(h[m].deudaTotal) > 0);
+            const txt = $('progreso-texto');
+            if (meses.length < 2) {
+                txt.textContent = 'Cada mes guardo una foto de tus números. A partir del próximo mes verás aquí cómo baja tu deuda y crece tu fondo.';
+            } else if (conDeuda.length) {
+                const inicio = num(h[conDeuda[0]].deudaTotal);
+                const pagado = inicio - deudaHoy;
+                txt.textContent = pagado > 0
+                    ? `Desde ${nombreMes(conDeuda[0])} has bajado tu deuda ${formatCurrency(pagado)} (${Math.round(pagado / inicio * 100)}%).`
+                    : `Tu deuda no ha bajado desde ${nombreMes(conDeuda[0])}. Revisa el plan en tu diagnóstico.`;
+            } else {
+                txt.textContent = 'Sin deudas registradas: aquí verás crecer tu fondo de emergencia.';
+            }
+            const ctx = $('historialChart')?.getContext('2d');
+            if (!ctx || typeof Chart === 'undefined') return;
+            const etiquetas = meses.map(nombreMes);
+            const deuda = meses.map(m => num(h[m].deudaTotal));
+            const fondo = meses.map(m => num(h[m].fondo));
+            if (historialChart) {
+                historialChart.data.labels = etiquetas;
+                historialChart.data.datasets[0].data = deuda;
+                historialChart.data.datasets[1].data = fondo;
+                historialChart.update('none');
+                return;
+            }
+            historialChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: etiquetas, datasets: [
+                    { label: 'Deuda', data: deuda, borderColor: '#ef4444', backgroundColor: '#ef4444', tension: 0.3 },
+                    { label: 'Fondo', data: fondo, borderColor: '#10b981', backgroundColor: '#10b981', tension: 0.3 },
+                ] },
+                options: { maintainAspectRatio: false, animation: false, plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true, ticks: { callback: (v) => formatCurrency(v) } } } }
+            });
+        }
+
+        $('quick-add-btn').addEventListener('click', () => abrirMovimiento());
+        $('quick-add-inline').addEventListener('click', () => abrirMovimiento());
+        $('mov-tipos').addEventListener('click', (e) => { const b = e.target.closest('[data-mov-tipo]'); if (b) elegirTipoMov(b.dataset.movTipo); });
+        $('mov-save-btn').addEventListener('click', guardarMovimiento);
+        $('mov-monto').addEventListener('keydown', (e) => { if (e.key === 'Enter') guardarMovimiento(); });
+        $('mes-movimientos').addEventListener('click', (e) => { const b = e.target.closest('[data-borrar-mov]'); if (b) eliminarMovimiento(b.dataset.borrarMov); });
 
         // ---------- Listas editables (deudas, gastos, metas, inversiones) ----------
         // Un solo editor genérico. Convención de IDs: `${tipo}-modal`, `edit-${tipo}-key`,
@@ -567,6 +786,8 @@
             renderizarMetas();
             renderizarInversiones();
             renderizarProximosPagos();
+            renderizarMes();
+            renderizarHistorial();
             calcularYActualizarTodo();
         }
 
@@ -891,6 +1112,8 @@
             const vivas = Object.values(deudas).filter(d => num(d.total) > 0);
             const sinTasa = vivas.filter(d => d.tasaAnual == null || d.tasaAnual === '').map(d => d.nombre || 'Sin nombre');
             const mejor = (avalancha.interes ?? Infinity) < (nieve.interes ?? Infinity) - 1 ? 'avalancha' : 'nieve';
+            // Solo se recomienda si de verdad hay diferencia (con prioridades o sin tasas, ambos pueden dar igual).
+            const hayDiferencia = Math.abs((avalancha.interes ?? 0) - (nieve.interes ?? 0)) > 1 || avalancha.meses !== nieve.meses;
             metodo = metodo || mejor;
             const plan = metodo === 'avalancha' ? avalancha : nieve;
             const soloMinimos = planDeudas(deudas, 0, metodo);
@@ -898,7 +1121,7 @@
 
             const opcion = (m, titulo, desc, p) => `
                 <button data-metodo="${m}" class="text-left rounded-xl p-3 border-2 ${metodo === m ? 'border-frteal bg-teal-50 dark:bg-teal-900/30' : 'border-slate-200 dark:border-slate-700'}">
-                    <div class="font-black text-sm">${titulo}${m === mejor && sinTasa.length < vivas.length ? ' <span class="text-[10px] text-emerald-600">RECOMENDADO</span>' : ''}</div>
+                    <div class="font-black text-sm">${titulo}${m === mejor && hayDiferencia && sinTasa.length < vivas.length ? ' <span class="text-[10px] text-emerald-600">RECOMENDADO</span>' : ''}</div>
                     <div class="text-[11px] text-slate-500 mb-1">${desc}</div>
                     <div class="text-sm"><strong>${textoMeses(p.meses)}</strong></div>
                     <div class="text-[11px] text-slate-500">Intereses: ${ints(p)}</div>

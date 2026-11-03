@@ -27,6 +27,12 @@ otras ramas generan preview deploys).
   (`diaPago` 1-31 o `null`; lo usa `proximosPagos()` para la tarjeta "Próximos pagos" de los siguientes 10 días),
   `metasPersonalizadas{nombre,objetivo,actual,fechaMeta,aporteQuincenal}` (`fechaMeta` 'YYYY-MM-DD' o `null`;
   `planMeta()` calcula el aporte por quincena o la fecha de llegada, quincenas = día 15 y último del mes), `gbm{ticker,shares,target}` (inversiones; el nombre "gbm" es legado).
+- `movimientos{tipo,monto,fecha,nota,deuda?,aplicado?}`: **solo los del mes en curso** (registro rápido, botón "+").
+  `tipo` = gasto|hormiga|deuda|fondo|ingreso; un abono baja `deudas[deuda].total` (guarda `aplicado` para revertirlo al borrar),
+  `fondo` sube el fondo de emergencia. Al cargar en un mes nuevo, `cerrarMesesAnteriores()` resume los viejos en
+  `historial[mes].real` y los borra, para que el documento no crezca sin límite (sin subcolecciones ni cambios de reglas).
+- `historial{'YYYY-MM': {ingresos,gastos,sobrante,deudaTotal,fondo,real{…}}}`: `actualizarFotoDelMes()` la refresca en
+  cada `guardarAhora()`; al cambiar de mes queda congelada. Alimenta la gráfica "Tu progreso" (últimos 12 meses).
 - `normalizar()` en index.html rellena campos faltantes de documentos viejos: **cualquier campo nuevo debe agregarse
   ahí y en `datosPorDefecto()`**, porque ya hay usuarios con datos guardados.
 - La config web de Firebase en index.html es pública por diseño; la seguridad está en `firestore.rules`.
@@ -81,7 +87,8 @@ No hay tests automatizados ni servidor local configurado. Opciones:
 
 ## Estado y roadmap
 
-Hecho (rama `seguridad-y-bugs`): endpoint IA autenticado y con límite, XSS corregido, API key de Gemini del usuario
+Hecho (rama `seguridad-y-bugs`): asesor sin IA con plan avalancha/bola de nieve, próximos pagos, metas por quincena,
+frecuencia de ingreso, aguinaldo, MSI, registro rápido e historial; endpoint IA autenticado y con límite, XSS corregido, API key de Gemini del usuario
 eliminada, reglas de Firestore, validación de montos (sin NaN), modales que se limpian, guardado confiable,
 confirmación al borrar/cerrar sesión, modo oscuro persistente, editor genérico.
 
@@ -89,6 +96,6 @@ Pendiente (en orden sugerido):
 1. **Universalizar**: ~~frecuencia de ingreso~~ (hecho: semanal/quincenal/mensual; falta "variable") y varias fuentes de ingreso;
    más monedas + formato por locale; inversiones genéricas (tipo + valor en dinero) en vez de "GBM/títulos";
    categorías de gasto personalizables; ~~tasa de interés + avalancha~~ (hecho).
-2. **Historial**: registrar movimientos o cierres mensuales para ver tendencias (hoy es una foto de un solo mes).
+2. ~~**Historial**~~ (hecho: registro rápido + foto mensual). Siguiente: categorías en los movimientos y exportar.
 3. **Cuentas y privacidad**: login con correo, modo invitado, exportar datos (CSV/JSON), borrar cuenta, aviso de privacidad (LFPDPPP).
 4. **Calidad**: Tailwind por CDN no es para producción; límite de IA persistente (firebase-admin o Vercel KV); i18n.
