@@ -50,7 +50,11 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Aplicar el modo oscuro guardado antes de pintar, para evitar el parpadeo.
+        try { if (localStorage.getItem('fr4-dark') === '1') document.documentElement.classList.add('dark'); } catch (e) {}
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
@@ -145,10 +149,10 @@
         <!-- Barra Superior -->
         <div class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800 px-6 py-3">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <img src="logo.png" class="h-10 sm:h-12 w-auto object-contain dark:bg-white/95 dark:rounded-xl dark:p-2">
+                <img src="logo.png" alt="fr4finance" class="h-10 sm:h-12 w-auto object-contain dark:bg-white/95 dark:rounded-xl dark:p-2">
                 <div class="flex items-center gap-4">
-                    <button id="settings-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">⚙️</button>
-                    <button id="dark-mode-btn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">🌙</button>
+                    <button id="settings-btn" aria-label="Configuración" title="Configuración" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">⚙️</button>
+                    <button id="dark-mode-btn" aria-label="Cambiar modo oscuro" title="Modo oscuro" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">🌙</button>
                     <div id="auth-container"></div>
                 </div>
             </div>
@@ -190,7 +194,7 @@
 
             <!-- PILAR 1: AHORRO -->
             <div class="card mb-8 border-emerald-100 dark:border-emerald-900/30">
-                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-black flex items-center gap-2">🔋 Ahorro</h2><button onclick="document.getElementById('ahorro-modal').style.display='block'" class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 px-4 py-2 rounded-full text-xs font-black">Gestionar</button></div>
+                <div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-black flex items-center gap-2">🔋 Ahorro</h2><button id="ahorro-btn" class="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 px-4 py-2 rounded-full text-xs font-black">Gestionar</button></div>
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <div class="text-center md:text-left min-w-[200px]"><p class="text-xs text-slate-400">Fondo Emergencia</p><p id="ahorro-actual-text" class="text-4xl font-black text-emerald-600">$0</p><p id="ahorro-meta-text" class="text-xs text-slate-500 mt-1"></p></div>
                     <div class="flex-1 w-full"><div class="h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div id="ahorro-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-700" style="width: 0%"></div></div></div>
@@ -259,7 +263,7 @@
     <!-- Modal IA -->
     <div id="ai-modal" class="modal">
         <div class="modal-content max-w-2xl">
-            <div class="flex justify-between items-center mb-4"><h3 class="text-2xl font-black">🧠 Asesor IA de FinAI</h3><button onclick="closeModal('ai-modal')" class="text-3xl text-slate-400">&times;</button></div>
+            <div class="flex justify-between items-center mb-4"><h3 class="text-2xl font-black">🧠 Asesor IA de FinAI</h3><button onclick="closeModal('ai-modal')" aria-label="Cerrar" class="text-3xl text-slate-400">&times;</button></div>
             <div id="ai-loading" class="text-center py-10 hidden"><div class="animate-spin w-12 h-12 border-4 border-frcyan border-t-transparent rounded-full mx-auto mb-4"></div><p>Analizando...</p></div>
             <div id="ai-content" class="text-slate-700 dark:text-slate-300 space-y-4 hidden"></div>
         </div>
@@ -273,16 +277,17 @@
     <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-6" placeholder="Monto"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
-    <div id="ahorro-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🔋 Fondo</h3><input type="number" id="ahorro-meta" class="budget-input mb-4" placeholder="Meta"><input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="Abonar"><button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
+    <div id="ahorro-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🔋 Fondo</h3><label for="ahorro-meta" class="text-xs text-slate-400">Meta</label><input type="number" min="0" id="ahorro-meta" class="budget-input mb-4" placeholder="Meta"><label for="ahorro-abono" class="text-xs text-slate-400">Abonar (usa un número negativo para retirar)</label><input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="0"><button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
     <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🎯 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-6" placeholder="Ahorrado"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
-    <div id="settings-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3><label class="text-xs text-slate-400">Moneda</label><select id="settings-currency" class="budget-input mb-4"><option value="MXN">MXN</option><option value="USD">USD</option></select><label class="text-xs text-slate-400">API Key Gemini</label><input type="password" id="settings-gemini" class="budget-input mb-6" placeholder="AIzaSy..."><button id="settings-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('settings-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
+    <div id="settings-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3><label class="text-xs text-slate-400">Moneda</label><select id="settings-currency" class="budget-input mb-4"><option value="MXN">MXN</option><option value="USD">USD</option></select><button id="settings-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('settings-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
 
     <!-- LÓGICA PRINCIPAL -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+        // La config web de Firebase es pública por diseño; la protección real está en firestore.rules.
         const firebaseConfig = {
             apiKey: "AIzaSyC6Y5_bfA2Gr-4rvLuUdRUoMzNUUpxmDuw",
             authDomain: "plan-maestro-2026-fea50.firebaseapp.com",
@@ -293,406 +298,465 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        // Caché offline que funciona con varias pestañas abiertas (reemplaza a enableIndexedDbPersistence, obsoleta).
+        const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        enableIndexedDbPersistence(db).catch(() => console.warn('Offline enabled'));
+        const $ = (id) => document.getElementById(id);
 
         let financialData = {};
         let myChart = null;
         let saveTimeout = null;
+        let hayCambiosPendientes = false;
         let currentUser = null;
 
-        // Global functions
-        window.cerrarSesion = () => {
-            signOut(auth).then(() => { showToast('Sesión cerrada'); window.location.reload(); }).catch(e => console.error(e));
-        };
-        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        // ---------- Utilidades ----------
+        // Escapa texto del usuario antes de meterlo en HTML (evita XSS).
+        function esc(s) {
+            return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+        // Convierte a número; vacío o inválido -> 0 (nunca NaN).
+        function num(v) {
+            const n = parseFloat(v);
+            return Number.isFinite(n) ? n : 0;
+        }
+        function sumar(obj, campo) {
+            return Object.values(obj || {}).reduce((acc, x) => acc + num(x?.[campo]), 0);
+        }
+        function nuevaClave() {
+            return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        }
 
         function showToast(m, type = 'success') {
             const t = document.createElement('div');
             t.className = `toast ${type === 'success' ? 'bg-emerald-500' : 'bg-red-500'} text-white`;
+            t.setAttribute('role', 'status');
             t.textContent = m;
             document.body.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
+            setTimeout(() => t.remove(), 3500);
         }
 
-        function showLoader(text) { document.getElementById('loader-text').textContent = text; document.getElementById('loader').style.display = 'flex'; document.getElementById('loader').style.opacity = '1'; }
-        function hideLoader() { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display = 'none', 500); }
+        function showLoader(text) { $('loader-text').textContent = text; $('loader').style.display = 'flex'; $('loader').style.opacity = '1'; }
+        function hideLoader() { $('loader').style.opacity = '0'; setTimeout(() => $('loader').style.display = 'none', 500); }
 
         function formatCurrency(v) {
             const cur = financialData.settings?.currency || 'MXN';
-            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(v);
+            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(num(v));
         }
 
-        async function saveData() {
-            if (!currentUser) return;
-            if (saveTimeout) clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
-                try { await setDoc(doc(db, "usuarios", currentUser.uid), financialData); } catch (e) { console.error(e); }
-            }, 1000);
+        // ---------- Modales ----------
+        window.closeModal = (id) => { $(id).style.display = 'none'; };
+        function openModal(id) { $(id).style.display = 'block'; }
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            document.querySelectorAll('.modal').forEach(m => { if (m.id !== 'welcome-modal') m.style.display = 'none'; });
+        });
+
+        window.cerrarSesion = async () => {
+            if (hayCambiosPendientes) guardarAhora();
+            try { await signOut(auth); window.location.reload(); }
+            catch (e) { console.error(e); showToast('No se pudo cerrar sesión', 'error'); }
+        };
+
+        // ---------- Datos ----------
+        function datosPorDefecto() {
+            return {
+                hasSeenTutorial: false,
+                settings: { currency: 'MXN' },
+                sueldoQuincenal: 0,
+                metas: { fondoEmergencia: { objetivo: 50000, actual: 0 } },
+                deudas: {}, gastosFijos: {}, gastosVariables: {}, gastosHormiga: {},
+                gbm: {}, ingresosExtras: { ventas: 0, bonos: 0, otros: 0 },
+                metasPersonalizadas: {}
+            };
         }
+        // Completa campos faltantes en documentos viejos para que la UI nunca truene.
+        function normalizar(d) {
+            const base = datosPorDefecto();
+            const out = { ...base, ...d };
+            out.settings = { ...base.settings, ...(d.settings || {}) };
+            delete out.settings.geminiApiKey; // ya no se usa; se borra de Firestore en el próximo guardado
+            out.metas = { ...base.metas, ...(d.metas || {}) };
+            out.metas.fondoEmergencia = { ...base.metas.fondoEmergencia, ...(out.metas.fondoEmergencia || {}) };
+            out.ingresosExtras = { ...base.ingresosExtras, ...(d.ingresosExtras || {}) };
+            for (const k of ['deudas', 'gastosFijos', 'gastosVariables', 'gastosHormiga', 'gbm', 'metasPersonalizadas']) out[k] = d[k] || {};
+            return out;
+        }
+
+        // Escribe ya. Firestore lo guarda primero en la caché local (sobrevive sin internet) y luego sincroniza.
+        function guardarAhora() {
+            if (!currentUser) return;
+            clearTimeout(saveTimeout);
+            saveTimeout = null;
+            hayCambiosPendientes = false;
+            setDoc(doc(db, 'usuarios', currentUser.uid), financialData).catch((e) => {
+                console.error(e);
+                hayCambiosPendientes = true;
+                showToast('No se pudieron guardar tus cambios. Revisa tu conexión.', 'error');
+            });
+        }
+        // Para inputs que cambian con cada tecla: espera a que el usuario deje de escribir.
+        function guardarConRetraso() {
+            hayCambiosPendientes = true;
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(guardarAhora, 800);
+        }
+        // Si cierra o cambia de pestaña antes de que se cumpla el retraso, guardar de inmediato.
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && hayCambiosPendientes) guardarAhora(); });
+        window.addEventListener('pagehide', () => { if (hayCambiosPendientes) guardarAhora(); });
 
         async function loadUserData(uid) {
             showLoader('SINCRONIZANDO...');
-            const snap = await getDoc(doc(db, "usuarios", uid));
-            if (snap.exists()) {
-                financialData = snap.data();
-                if (!financialData.gbm) financialData.gbm = {};
-            } else {
-                financialData = {
-                    hasSeenTutorial: false,
-                    settings: { currency: "MXN", geminiApiKey: "" },
-                    sueldoQuincenal: 0,
-                    metas: { fondoEmergencia: { objetivo: 50000, actual: 0 } },
-                    deudas: {}, gastosFijos: {}, gastosVariables: {}, gastosHormiga: {},
-                    gbm: {}, ingresosExtras: { ventas: 0, bonos: 0, otros: 0 },
-                    metasPersonalizadas: {}
-                };
-                await setDoc(doc(db, "usuarios", uid), financialData);
+            try {
+                const snap = await getDoc(doc(db, 'usuarios', uid));
+                if (snap.exists()) {
+                    financialData = normalizar(snap.data());
+                } else {
+                    financialData = datosPorDefecto();
+                    await setDoc(doc(db, 'usuarios', uid), financialData);
+                }
+                renderizarUI();
+                if (!financialData.hasSeenTutorial) openModal('welcome-modal');
+            } catch (e) {
+                console.error(e);
+                showToast('No se pudieron cargar tus datos. Recarga la página.', 'error');
+            } finally {
+                hideLoader();
             }
-            renderizarUI();
-            hideLoader();
-            if (!financialData.hasSeenTutorial) document.getElementById('welcome-modal').style.display = 'block';
         }
 
+        // ---------- Listas editables (deudas, gastos, metas, inversiones) ----------
+        // Un solo editor genérico. Convención de IDs: `${tipo}-modal`, `edit-${tipo}-key`,
+        // `${tipo}-save-btn`, `${tipo}-delete-btn`, `add-${tipo}-btn`.
+        // El primer campo de cada lista es el nombre (obligatorio).
+        const LISTAS = {
+            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], esPrioridad: ['debt-priority', 'check'] } },
+            fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'] } },
+            variable: { coleccion: 'gastosVariables',     campos: { nombre: ['variable-name', 'text'], monto: ['variable-amount', 'num'] } },
+            hormiga:  { coleccion: 'gastosHormiga',       campos: { nombre: ['hormiga-name', 'text'], monto: ['hormiga-amount', 'num'] } },
+            meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'] } },
+            gbm:      { coleccion: 'gbm',                 campos: { ticker: ['gbm-ticker', 'upper'], shares: ['gbm-shares', 'num'], target: ['gbm-target', 'num'] } },
+        };
+
+        function abrirEditor(tipo, key = '') {
+            const cfg = LISTAS[tipo];
+            const item = key ? financialData[cfg.coleccion][key] : null;
+            if (key && !item) return;
+            $(`edit-${tipo}-key`).value = key;
+            for (const [campo, [id, kind]] of Object.entries(cfg.campos)) {
+                const el = $(id);
+                if (kind === 'check') el.checked = !!item?.[campo];
+                else el.value = item?.[campo] ?? '';
+            }
+            $(`${tipo}-delete-btn`).classList.toggle('hidden', !key);
+            openModal(`${tipo}-modal`);
+            $(Object.values(cfg.campos)[0][0]).focus();
+        }
+
+        function guardarEditor(tipo) {
+            const cfg = LISTAS[tipo];
+            const item = {};
+            for (const [campo, [id, kind]] of Object.entries(cfg.campos)) {
+                const el = $(id);
+                if (kind === 'check') item[campo] = el.checked;
+                else if (kind === 'num') item[campo] = num(el.value);
+                else if (kind === 'upper') item[campo] = el.value.trim().toUpperCase();
+                else item[campo] = el.value.trim();
+            }
+            const [campoNombre, [idNombre]] = Object.entries(cfg.campos)[0];
+            if (!item[campoNombre]) { showToast('Escribe un nombre', 'error'); $(idNombre).focus(); return; }
+            const negativo = Object.entries(cfg.campos).find(([c, [, kind]]) => kind === 'num' && item[c] < 0);
+            if (negativo) { showToast('Los montos no pueden ser negativos', 'error'); $(negativo[1][0]).focus(); return; }
+
+            const key = $(`edit-${tipo}-key`).value || nuevaClave();
+            financialData[cfg.coleccion][key] = item;
+            guardarAhora();
+            renderizarUI();
+            closeModal(`${tipo}-modal`);
+        }
+
+        function eliminarDeEditor(tipo) {
+            const cfg = LISTAS[tipo];
+            const key = $(`edit-${tipo}-key`).value;
+            const item = financialData[cfg.coleccion][key];
+            if (!item) return;
+            const nombre = item[Object.keys(cfg.campos)[0]]; // Firestore no conserva el orden de campos
+            if (!confirm(`¿Eliminar "${nombre}"?`)) return;
+            delete financialData[cfg.coleccion][key];
+            guardarAhora();
+            renderizarUI();
+            closeModal(`${tipo}-modal`);
+        }
+
+        for (const tipo of Object.keys(LISTAS)) {
+            $(`add-${tipo}-btn`).addEventListener('click', () => abrirEditor(tipo));
+            $(`${tipo}-save-btn`).addEventListener('click', () => guardarEditor(tipo));
+            $(`${tipo}-delete-btn`).addEventListener('click', () => eliminarDeEditor(tipo));
+        }
+        // Delegación: cualquier elemento con data-editar abre su editor (sin onclick en línea).
+        document.addEventListener('click', (e) => {
+            const el = e.target.closest('[data-editar]');
+            if (el) abrirEditor(el.dataset.editar, el.dataset.key);
+        });
+
+        // ---------- Render ----------
         function renderizarUI() {
-            if (currentUser) document.getElementById('user-name').innerText = currentUser.displayName.split(' ')[0];
-            document.getElementById('sueldoQuincenalInput').value = financialData.sueldoQuincenal || '';
-            document.getElementById('extra-ventas').value = financialData.ingresosExtras.ventas || '';
-            document.getElementById('extra-bonos').value = financialData.ingresosExtras.bonos || '';
-            document.getElementById('extra-otros').value = financialData.ingresosExtras.otros || '';
+            const nombre = (currentUser?.displayName || '').trim().split(' ')[0];
+            $('user-name').textContent = nombre || 'Inversor';
+            $('sueldoQuincenalInput').value = financialData.sueldoQuincenal || '';
+            $('extra-ventas').value = financialData.ingresosExtras.ventas || '';
+            $('extra-bonos').value = financialData.ingresosExtras.bonos || '';
+            $('extra-otros').value = financialData.ingresosExtras.otros || '';
 
             const f = financialData.metas.fondoEmergencia;
-            document.getElementById('ahorro-actual-text').innerText = formatCurrency(f.actual);
-            document.getElementById('ahorro-meta-text').innerText = `Meta: ${formatCurrency(f.objetivo)}`;
-            const pct = f.objetivo > 0 ? (f.actual / f.objetivo) * 100 : 0;
-            document.getElementById('ahorro-progress-bar').style.width = `${Math.min(100, pct)}%`;
+            $('ahorro-actual-text').textContent = formatCurrency(f.actual);
+            $('ahorro-meta-text').textContent = `Meta: ${formatCurrency(f.objetivo)}`;
+            const pct = num(f.objetivo) > 0 ? (num(f.actual) / num(f.objetivo)) * 100 : 0;
+            $('ahorro-progress-bar').style.width = `${Math.min(100, pct)}%`;
 
             renderizarDeudas();
-            renderizarGastosFijos();
-            renderizarGastosVariables();
+            renderizarGastos('gastosFijos', 'gastos-fijos-container', 'fixed', 'flex justify-between items-center p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700');
+            renderizarGastos('gastosVariables', 'gastos-variables-container', 'variable', 'flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800');
             renderizarGastosHormiga();
             renderizarMetas();
             renderizarInversiones();
             calcularYActualizarTodo();
         }
 
+        function botonEditar(tipo, k, nombre) {
+            return `<button data-editar="${tipo}" data-key="${esc(k)}" aria-label="Editar ${esc(nombre)}">✏️</button>`;
+        }
+
         function renderizarDeudas() {
-            const c = document.getElementById('deudas-container');
-            c.innerHTML = '';
-            Object.entries(financialData.deudas).forEach(([k, d]) => {
-                const div = document.createElement('div');
-                div.className = `p-4 rounded-xl border ${d.esPrioridad ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'} dark:bg-slate-800`;
-                div.innerHTML = `<div class="flex justify-between"><div><p class="font-black text-sm">${d.nombre}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">AVALANCHA</span>' : ''}</div><button onclick="window.editarDeuda('${k}')">✏️</button></div><p class="mt-2 text-sm font-black">${formatCurrency(d.total)}</p>`;
-                c.appendChild(div);
-            });
+            $('deudas-container').innerHTML = Object.entries(financialData.deudas).map(([k, d]) => `
+                <div class="p-4 rounded-xl border ${d.esPrioridad ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'} dark:bg-slate-800">
+                    <div class="flex justify-between"><div><p class="font-black text-sm">${esc(d.nombre)}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">AVALANCHA</span>' : ''}</div>${botonEditar('debt', k, d.nombre)}</div>
+                    <p class="mt-2 text-sm font-black">${formatCurrency(d.total)}</p>
+                </div>`).join('');
         }
-        window.editarDeuda = (k) => {
-            const d = financialData.deudas[k];
-            document.getElementById('edit-debt-key').value = k;
-            document.getElementById('debt-name').value = d.nombre;
-            document.getElementById('debt-total').value = d.total;
-            document.getElementById('debt-min-payment').value = d.pagoMensual;
-            document.getElementById('debt-priority').checked = d.esPrioridad;
-            document.getElementById('debt-delete-btn').classList.remove('hidden');
-            document.getElementById('debt-modal').style.display = 'block';
-        };
 
-        function renderizarGastosFijos() {
-            const c = document.getElementById('gastos-fijos-container');
-            c.innerHTML = '';
-            Object.entries(financialData.gastosFijos).forEach(([k, g]) => {
-                const d = document.createElement('div');
-                d.className = 'flex justify-between items-center p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700';
-                d.innerHTML = `<span class="text-sm font-bold">${g.nombre}</span><div class="flex gap-2"><span class="font-black">${formatCurrency(g.monto)}</span><button onclick="window.editarFijo('${k}')">✏️</button></div>`;
-                c.appendChild(d);
-            });
+        function renderizarGastos(coleccion, contenedor, tipo, clases) {
+            $(contenedor).innerHTML = Object.entries(financialData[coleccion]).map(([k, g]) => `
+                <div class="${clases}"><span class="text-sm font-bold">${esc(g.nombre)}</span><div class="flex gap-2"><span class="font-black">${formatCurrency(g.monto)}</span>${botonEditar(tipo, k, g.nombre)}</div></div>`).join('');
         }
-        window.editarFijo = (k) => {
-            const g = financialData.gastosFijos[k];
-            document.getElementById('edit-fixed-key').value = k;
-            document.getElementById('fixed-name').value = g.nombre;
-            document.getElementById('fixed-amount').value = g.monto;
-            document.getElementById('fixed-delete-btn').classList.remove('hidden');
-            document.getElementById('fixed-modal').style.display = 'block';
-        };
-
-        function renderizarGastosVariables() {
-            const c = document.getElementById('gastos-variables-container');
-            c.innerHTML = '';
-            Object.entries(financialData.gastosVariables).forEach(([k, g]) => {
-                const d = document.createElement('div');
-                d.className = 'flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800';
-                d.innerHTML = `<span class="text-sm font-bold">${g.nombre}</span><div class="flex gap-2"><span class="font-black">${formatCurrency(g.monto)}</span><button onclick="window.editarVariable('${k}')">✏️</button></div>`;
-                c.appendChild(d);
-            });
-        }
-        window.editarVariable = (k) => {
-            const g = financialData.gastosVariables[k];
-            document.getElementById('edit-variable-key').value = k;
-            document.getElementById('variable-name').value = g.nombre;
-            document.getElementById('variable-amount').value = g.monto;
-            document.getElementById('variable-delete-btn').classList.remove('hidden');
-            document.getElementById('variable-modal').style.display = 'block';
-        };
 
         function renderizarGastosHormiga() {
-            const c = document.getElementById('hormiga-container');
-            c.innerHTML = '';
-            Object.entries(financialData.gastosHormiga).forEach(([k, g]) => {
-                const d = document.createElement('div');
-                d.className = 'p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-100 dark:border-orange-800';
-                d.innerHTML = `<div class="flex justify-between"><span class="text-[10px] font-bold truncate">${g.nombre}</span><button onclick="window.editarHormiga('${k}')">✏️</button></div><p class="font-black text-xs mt-1">${formatCurrency(g.monto)}</p>`;
-                c.appendChild(d);
-            });
+            $('hormiga-container').innerHTML = Object.entries(financialData.gastosHormiga).map(([k, g]) => `
+                <div class="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-100 dark:border-orange-800">
+                    <div class="flex justify-between"><span class="text-[10px] font-bold truncate">${esc(g.nombre)}</span>${botonEditar('hormiga', k, g.nombre)}</div>
+                    <p class="font-black text-xs mt-1">${formatCurrency(g.monto)}</p>
+                </div>`).join('');
         }
-        window.editarHormiga = (k) => {
-            const g = financialData.gastosHormiga[k];
-            document.getElementById('edit-hormiga-key').value = k;
-            document.getElementById('hormiga-name').value = g.nombre;
-            document.getElementById('hormiga-amount').value = g.monto;
-            document.getElementById('hormiga-delete-btn').classList.remove('hidden');
-            document.getElementById('hormiga-modal').style.display = 'block';
-        };
 
         function renderizarInversiones() {
-            const c = document.getElementById('gbm-container');
-            c.innerHTML = '';
-            Object.entries(financialData.gbm || {}).forEach(([k, inv]) => {
-                const p = inv.target > 0 ? (inv.shares / inv.target) * 100 : 0;
-                const div = document.createElement('div');
-                div.className = 'bg-slate-800/50 p-4 rounded-xl border border-slate-700 cursor-pointer';
-                div.onclick = () => window.editarInversion(k);
-                div.innerHTML = `<h4 class="text-frcyan font-black text-sm uppercase">${inv.ticker}</h4><span class="text-3xl font-black">${inv.shares}</span><p class="text-[10px] text-slate-400">Objetivo: ${inv.target}</p>`;
-                c.appendChild(div);
-            });
-        }
-        window.editarInversion = (k) => {
-            const inv = financialData.gbm[k];
-            document.getElementById('edit-gbm-key').value = k;
-            document.getElementById('gbm-ticker').value = inv.ticker;
-            document.getElementById('gbm-shares').value = inv.shares;
-            document.getElementById('gbm-target').value = inv.target || 0;
-            document.getElementById('gbm-delete-btn').classList.remove('hidden');
-            document.getElementById('gbm-modal').style.display = 'block';
+            $('gbm-container').innerHTML = Object.entries(financialData.gbm).map(([k, inv]) => `
+                <div data-editar="gbm" data-key="${esc(k)}" role="button" tabindex="0" class="bg-slate-800/50 p-4 rounded-xl border border-slate-700 cursor-pointer">
+                    <h4 class="text-frcyan font-black text-sm uppercase">${esc(inv.ticker)}</h4>
+                    <span class="text-3xl font-black">${num(inv.shares)}</span>
+                    <p class="text-[10px] text-slate-400">Objetivo: ${num(inv.target)}</p>
+                </div>`).join('');
         }
 
         function renderizarMetas() {
-            const c = document.getElementById('metas-container');
-            c.innerHTML = '';
-            Object.entries(financialData.metasPersonalizadas).forEach(([k, m]) => {
-                const p = m.objetivo > 0 ? (m.actual / m.objetivo) * 100 : 0;
-                const d = document.createElement('div');
-                d.className = 'p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 cursor-pointer';
-                d.onclick = () => window.editarMeta(k);
-                d.innerHTML = `<p class="text-xs font-bold mb-1">${m.nombre}</p><div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-frteal" style="width:${Math.min(100, p)}%"></div></div>`;
-                c.appendChild(d);
-            });
+            $('metas-container').innerHTML = Object.entries(financialData.metasPersonalizadas).map(([k, m]) => {
+                const p = num(m.objetivo) > 0 ? (num(m.actual) / num(m.objetivo)) * 100 : 0;
+                return `
+                <div data-editar="meta" data-key="${esc(k)}" role="button" tabindex="0" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 cursor-pointer">
+                    <p class="text-xs font-bold mb-1">${esc(m.nombre)}</p>
+                    <div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-frteal" style="width:${Math.min(100, p)}%"></div></div>
+                </div>`;
+            }).join('');
         }
-        window.editarMeta = (k) => {
-            const m = financialData.metasPersonalizadas[k];
-            document.getElementById('edit-meta-key').value = k;
-            document.getElementById('meta-name').value = m.nombre;
-            document.getElementById('meta-target').value = m.objetivo;
-            document.getElementById('meta-current').value = m.actual;
-            document.getElementById('meta-delete-btn').classList.remove('hidden');
-            document.getElementById('meta-modal').style.display = 'block';
-        };
+        // Tarjetas clicables también con teclado (Enter / Espacio).
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && e.target.matches?.('[data-editar][role="button"]')) {
+                e.preventDefault();
+                abrirEditor(e.target.dataset.editar, e.target.dataset.key);
+            }
+        });
+
+        // ---------- Cálculos ----------
+        function calcularTotales() {
+            const d = financialData;
+            const ingresos = num(d.sueldoQuincenal) * 2 + num(d.ingresosExtras.ventas) + num(d.ingresosExtras.bonos) + num(d.ingresosExtras.otros);
+            const fijos = sumar(d.gastosFijos, 'monto');
+            const variables = sumar(d.gastosVariables, 'monto');
+            const hormiga = sumar(d.gastosHormiga, 'monto');
+            const pagoDeudas = sumar(d.deudas, 'pagoMensual');
+            const deudaTotal = sumar(d.deudas, 'total');
+            const gastos = fijos + variables + hormiga + pagoDeudas;
+            const sobrante = ingresos - gastos;
+            return { ingresos, fijos, variables, hormiga, pagoDeudas, deudaTotal, gastos, sobrante };
+        }
 
         function calcularYActualizarTodo() {
-            const sueldo = (financialData.sueldoQuincenal || 0) * 2;
-            const extras = (financialData.ingresosExtras.ventas || 0) + (financialData.ingresosExtras.bonos || 0) + (financialData.ingresosExtras.otros || 0);
-            const ingresos = sueldo + extras;
-            let f = 0, v = 0, h = 0, dm = 0, dt = 0;
-            Object.values(financialData.gastosFijos).forEach(g => f += g.monto);
-            Object.values(financialData.gastosVariables).forEach(g => v += g.monto);
-            Object.values(financialData.gastosHormiga).forEach(g => h += g.monto);
-            Object.values(financialData.deudas).forEach(d => { dm += d.pagoMensual; dt += d.total; });
-            const totalG = f + v + h + dm;
-            const sobrante = ingresos - totalG;
-            const tasa = ingresos > 0 ? (Math.max(0, sobrante) / ingresos) * 100 : 0;
+            const t = calcularTotales();
+            const tasa = t.ingresos > 0 ? (Math.max(0, t.sobrante) / t.ingresos) * 100 : 0;
 
-            document.getElementById('statIngresos').innerText = formatCurrency(ingresos);
-            document.getElementById('statGastos').innerText = formatCurrency(totalG);
-            document.getElementById('statTasaAhorro').innerText = tasa.toFixed(1) + '%';
-            document.getElementById('statDeudaTotal').innerText = formatCurrency(dt);
-            document.getElementById('sobranteReal').innerText = formatCurrency(sobrante);
+            $('statIngresos').textContent = formatCurrency(t.ingresos);
+            $('statGastos').textContent = formatCurrency(t.gastos);
+            $('statTasaAhorro').textContent = tasa.toFixed(1) + '%';
+            $('statDeudaTotal').textContent = formatCurrency(t.deudaTotal);
+            $('sobranteReal').textContent = formatCurrency(t.sobrante);
 
-            const ctx = document.getElementById('flujoChart')?.getContext('2d');
-            if (ctx) {
-                if (myChart) myChart.destroy();
-                myChart = new Chart(ctx, { 
-                    type: 'doughnut', 
-                    data: { 
-                        labels: ['Gastos Fijos', 'Gastos Variables', 'Pago Deudas', 'Sobrante Libre'], 
-                        datasets: [{ 
-                            data: [f, v + h, dm, Math.max(0, sobrante)], 
-                            backgroundColor: ['#0f766e', '#3b82f6', '#ef4444', '#10b981'], 
-                            borderWidth: 0 
-                        }] 
-                    }, 
-                    options: { 
-                        cutout: '75%', 
-                        plugins: { legend: { position: 'bottom' } } 
-                    } 
-                });
+            const datos = [t.fijos, t.variables, t.hormiga, t.pagoDeudas, Math.max(0, t.sobrante)];
+            if (myChart) {
+                // Actualizar en lugar de destruir/recrear en cada tecla.
+                myChart.data.datasets[0].data = datos;
+                myChart.update('none');
+                return;
             }
+            const ctx = $('flujoChart')?.getContext('2d');
+            if (!ctx || typeof Chart === 'undefined') return;
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Gastos Fijos', 'Gastos Variables', 'Gastos Hormiga', 'Pago Deudas', 'Sobrante Libre'],
+                    datasets: [{ data: datos, backgroundColor: ['#0f766e', '#3b82f6', '#f97316', '#ef4444', '#10b981'], borderWidth: 0 }]
+                },
+                options: { cutout: '75%', plugins: { legend: { position: 'bottom' } } }
+            });
         }
 
-        async function callGeminiAI() {
-            const modal = document.getElementById('ai-modal');
-            const loading = document.getElementById('ai-loading');
-            const content = document.getElementById('ai-content');
-            modal.style.display = 'block'; loading.classList.remove('hidden'); content.classList.add('hidden');
+        // ---------- Asesor IA ----------
+        async function llamarAsesorIA() {
+            const btn = $('ai-advisor-btn');
+            const loading = $('ai-loading');
+            const content = $('ai-content');
+            openModal('ai-modal');
+            loading.classList.remove('hidden');
+            content.classList.add('hidden');
+            btn.disabled = true;
 
-            const sueldo = (financialData.sueldoQuincenal || 0) * 2;
-            const extras = (financialData.ingresosExtras.ventas || 0) + (financialData.ingresosExtras.bonos || 0) + (financialData.ingresosExtras.otros || 0);
-            const ingresos = sueldo + extras;
-            let f = 0, v = 0, h = 0, dm = 0, dt = 0;
-            Object.values(financialData.gastosFijos).forEach(g => f += g.monto);
-            Object.values(financialData.gastosVariables).forEach(g => v += g.monto);
-            Object.values(financialData.gastosHormiga).forEach(g => h += g.monto);
-            Object.values(financialData.deudas).forEach(d => { dm += d.pagoMensual; dt += d.total; });
-            const sobrante = ingresos - (f + v + h + dm);
-
-            const prompt = `Actúa como FinAI, asesor financiero experto. Analiza el perfil:
-- Ingresos: ${formatCurrency(ingresos)}
-- Gastos: ${formatCurrency(ingresos - sobrante)}
-- Sobrante: ${formatCurrency(sobrante)}
-- Deuda Total: ${formatCurrency(dt)}
-- Fondo: ${formatCurrency(financialData.metas.fondoEmergencia.actual)}
-
-Reglas:
-1. Responde ÚNICAMENTE usando etiquetas HTML <ul> y <li>.
-2. 3 consejos prácticos.
-3. No uses markdown.`;
-
+            const t = calcularTotales();
+            const fondo = financialData.metas.fondoEmergencia;
             try {
-                const response = await fetch('/api/gemini', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ prompt, customKey: financialData.settings?.geminiApiKey }) 
+                const token = await currentUser.getIdToken();
+                const response = await fetch('/api/gemini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    // Solo números; el servidor arma el prompt.
+                    body: JSON.stringify({
+                        moneda: financialData.settings.currency,
+                        ingresos: t.ingresos, gastos: t.gastos, sobrante: t.sobrante, deudaTotal: t.deudaTotal,
+                        fondoEmergencia: num(fondo.actual), metaFondo: num(fondo.objetivo)
+                    })
                 });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || `Error del servidor HTTP ${response.status}`);
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || `Error del servidor (HTTP ${response.status})`);
+                if (!Array.isArray(data.consejos) || !data.consejos.length) throw new Error('El asesor no devolvió consejos');
+
+                // La respuesta de la IA se pinta como texto, nunca como HTML.
+                const ul = document.createElement('ul');
+                ul.className = 'list-disc pl-5 space-y-3';
+                for (const consejo of data.consejos) {
+                    const li = document.createElement('li');
+                    li.textContent = consejo;
+                    ul.appendChild(li);
                 }
-                
-                loading.classList.add('hidden'); 
-                content.classList.remove('hidden'); 
-                content.innerHTML = data.text;
-                
+                content.replaceChildren(ul);
             } catch (error) {
-                console.error("ERROR IA:", error);
-                loading.classList.add('hidden'); 
-                content.classList.remove('hidden');
+                console.error('ERROR IA:', error);
                 content.innerHTML = `
                     <div class="bg-amber-50 p-4 border border-amber-200 rounded-xl text-amber-800 text-sm">
-                        <strong>⚠️ Falló la conexión IA. Motivo:</strong> ${error.message}
-                        <br><br>Mientras tanto, tu Sobrante Libre es de: <strong>${formatCurrency(sobrante)}</strong>.
-                    </div>
-                `;
+                        <strong>⚠️ No se pudo consultar al asesor:</strong> <span data-error></span>
+                        <br><br>Mientras tanto, tu Sobrante Libre es de: <strong>${formatCurrency(t.sobrante)}</strong>.
+                    </div>`;
+                content.querySelector('[data-error]').textContent = error.message;
+            } finally {
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+                btn.disabled = false;
             }
         }
 
-        // LISTENERS
-        document.getElementById('login-btn-main')?.addEventListener('click', () => signInWithPopup(auth, provider));
-        document.getElementById('dark-mode-btn')?.addEventListener('click', () => document.documentElement.classList.toggle('dark'));
-        document.getElementById('ai-advisor-btn')?.addEventListener('click', callGeminiAI);
-        document.getElementById('settings-btn')?.addEventListener('click', () => {
-            document.getElementById('settings-currency').value = financialData.settings?.currency || 'MXN';
-            document.getElementById('settings-gemini').value = financialData.settings?.geminiApiKey || '';
-            document.getElementById('settings-modal').style.display = 'block';
+        // ---------- Listeners generales ----------
+        $('login-btn-main').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch((e) => {
+                if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
+                    console.error(e);
+                    showToast('No se pudo iniciar sesión', 'error');
+                }
+            });
         });
-        document.getElementById('settings-save-btn')?.addEventListener('click', async () => {
-            if (!financialData.settings) financialData.settings = {};
-            financialData.settings.currency = document.getElementById('settings-currency').value;
-            financialData.settings.geminiApiKey = document.getElementById('settings-gemini').value.trim();
-            await saveData();
+        $('dark-mode-btn').addEventListener('click', () => {
+            const oscuro = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('fr4-dark', oscuro ? '1' : '0'); } catch (e) {}
+        });
+        $('ai-advisor-btn').addEventListener('click', llamarAsesorIA);
+
+        $('settings-btn').addEventListener('click', () => {
+            $('settings-currency').value = financialData.settings?.currency || 'MXN';
+            openModal('settings-modal');
+        });
+        $('settings-save-btn').addEventListener('click', () => {
+            financialData.settings.currency = $('settings-currency').value;
+            guardarAhora();
+            renderizarUI();
             showToast('Configuración guardada ✅');
             closeModal('settings-modal');
         });
 
-        // CRUD Event Listeners (GBM, Debt, Meta, etc)
-        document.getElementById('gbm-save-btn').addEventListener('click', async () => {
-            const k = document.getElementById('edit-gbm-key').value || Date.now().toString();
-            financialData.gbm[k] = { ticker: document.getElementById('gbm-ticker').value.toUpperCase(), shares: parseFloat(document.getElementById('gbm-shares').value) || 0, target: parseFloat(document.getElementById('gbm-target').value) || 0 };
-            await saveData(); renderizarUI(); closeModal('gbm-modal');
+        $('ahorro-btn').addEventListener('click', () => {
+            $('ahorro-meta').value = financialData.metas.fondoEmergencia.objetivo || '';
+            $('ahorro-abono').value = '';
+            openModal('ahorro-modal');
         });
-        document.getElementById('add-gbm-btn').onclick = () => { document.getElementById('edit-gbm-key').value=''; document.getElementById('gbm-modal').style.display='block'; };
-        document.getElementById('gbm-delete-btn').onclick = async () => { delete financialData.gbm[document.getElementById('edit-gbm-key').value]; await saveData(); renderizarUI(); closeModal('gbm-modal'); };
+        $('ahorro-save-btn').addEventListener('click', () => {
+            const f = financialData.metas.fondoEmergencia;
+            const metaTxt = $('ahorro-meta').value.trim();
+            if (metaTxt !== '' && num(metaTxt) < 0) { showToast('La meta no puede ser negativa', 'error'); return; }
+            if (metaTxt !== '') f.objetivo = num(metaTxt);
+            const abono = num($('ahorro-abono').value);
+            if (num(f.actual) + abono < 0) { showToast('No puedes retirar más de lo que tienes en el fondo', 'error'); return; }
+            f.actual = num(f.actual) + abono;
+            guardarAhora();
+            renderizarUI();
+            closeModal('ahorro-modal');
+        });
 
-        document.getElementById('debt-save-btn').addEventListener('click', async () => {
-            const k = document.getElementById('edit-debt-key').value || Date.now().toString();
-            financialData.deudas[k] = { nombre: document.getElementById('debt-name').value, total: parseFloat(document.getElementById('debt-total').value), pagoMensual: parseFloat(document.getElementById('debt-min-payment').value), esPrioridad: document.getElementById('debt-priority').checked };
-            await saveData(); renderizarUI(); closeModal('debt-modal');
-        });
-        document.getElementById('fixed-save-btn').addEventListener('click', async () => {
-            const k = document.getElementById('edit-fixed-key').value || Date.now().toString();
-            financialData.gastosFijos[k] = { nombre: document.getElementById('fixed-name').value, monto: parseFloat(document.getElementById('fixed-amount').value) };
-            await saveData(); renderizarUI(); closeModal('fixed-modal');
-        });
-        document.getElementById('variable-save-btn').addEventListener('click', async () => {
-            const k = document.getElementById('edit-variable-key').value || Date.now().toString();
-            financialData.gastosVariables[k] = { nombre: document.getElementById('variable-name').value, monto: parseFloat(document.getElementById('variable-amount').value) };
-            await saveData(); renderizarUI(); closeModal('variable-modal');
-        });
-        document.getElementById('hormiga-save-btn').addEventListener('click', async () => {
-            const k = document.getElementById('edit-hormiga-key').value || Date.now().toString();
-            financialData.gastosHormiga[k] = { nombre: document.getElementById('hormiga-name').value, monto: parseFloat(document.getElementById('hormiga-amount').value) };
-            await saveData(); renderizarUI(); closeModal('hormiga-modal');
-        });
-        document.getElementById('meta-save-btn').addEventListener('click', async () => {
-            const k = document.getElementById('edit-meta-key').value || Date.now().toString();
-            financialData.metasPersonalizadas[k] = { nombre: document.getElementById('meta-name').value, objetivo: parseFloat(document.getElementById('meta-target').value), actual: parseFloat(document.getElementById('meta-current').value) };
-            await saveData(); renderizarUI(); closeModal('meta-modal');
-        });
-        document.getElementById('ahorro-save-btn').addEventListener('click', async () => {
-            financialData.metas.fondoEmergencia.objetivo = parseFloat(document.getElementById('ahorro-meta').value);
-            financialData.metas.fondoEmergencia.actual += parseFloat(document.getElementById('ahorro-abono').value) || 0;
-            await saveData(); renderizarUI(); closeModal('ahorro-modal'); document.getElementById('ahorro-abono').value='';
-        });
-        document.getElementById('onboard-finish-btn').addEventListener('click', async () => {
+        $('onboard-finish-btn').addEventListener('click', () => {
             financialData.hasSeenTutorial = true;
-            financialData.settings.currency = document.getElementById('onboard-currency-input').value;
-            financialData.sueldoQuincenal = parseFloat(document.getElementById('onboard-sueldo-input').value) || 0;
-            await saveData(); renderizarUI(); closeModal('welcome-modal');
+            financialData.settings.currency = $('onboard-currency-input').value;
+            financialData.sueldoQuincenal = Math.max(0, num($('onboard-sueldo-input').value));
+            guardarAhora();
+            renderizarUI();
+            closeModal('welcome-modal');
         });
 
-        document.getElementById('add-debt-btn').onclick = () => { document.getElementById('edit-debt-key').value=''; document.getElementById('debt-modal').style.display='block'; };
-        document.getElementById('add-fixed-btn').onclick = () => { document.getElementById('edit-fixed-key').value=''; document.getElementById('fixed-modal').style.display='block'; };
-        document.getElementById('add-variable-btn').onclick = () => { document.getElementById('edit-variable-key').value=''; document.getElementById('variable-modal').style.display='block'; };
-        document.getElementById('add-hormiga-btn').onclick = () => { document.getElementById('edit-hormiga-key').value=''; document.getElementById('hormiga-modal').style.display='block'; };
-        document.getElementById('add-meta-btn').onclick = () => { document.getElementById('edit-meta-key').value=''; document.getElementById('meta-modal').style.display='block'; };
-
-        // Deletes
-        document.getElementById('debt-delete-btn').onclick = async () => { delete financialData.deudas[document.getElementById('edit-debt-key').value]; await saveData(); renderizarUI(); closeModal('debt-modal'); };
-        document.getElementById('fixed-delete-btn').onclick = async () => { delete financialData.gastosFijos[document.getElementById('edit-fixed-key').value]; await saveData(); renderizarUI(); closeModal('fixed-modal'); };
-        document.getElementById('variable-delete-btn').onclick = async () => { delete financialData.gastosVariables[document.getElementById('edit-variable-key').value]; await saveData(); renderizarUI(); closeModal('variable-modal'); };
-        document.getElementById('hormiga-delete-btn').onclick = async () => { delete financialData.gastosHormiga[document.getElementById('edit-hormiga-key').value]; await saveData(); renderizarUI(); closeModal('hormiga-modal'); };
-        document.getElementById('meta-delete-btn').onclick = async () => { delete financialData.metasPersonalizadas[document.getElementById('edit-meta-key').value]; await saveData(); renderizarUI(); closeModal('meta-modal'); };
-
-        // Inputs reactivos
-        document.getElementById('sueldoQuincenalInput').addEventListener('input', (e) => { financialData.sueldoQuincenal = parseFloat(e.target.value) || 0; calcularYActualizarTodo(); saveData(); });
-        ['extra-ventas', 'extra-bonos', 'extra-otros'].forEach(id => {
-            document.getElementById(id).addEventListener('input', (e) => { financialData.ingresosExtras[id.replace('extra-','')] = parseFloat(e.target.value) || 0; calcularYActualizarTodo(); saveData(); });
+        // Inputs reactivos (guardan con retraso)
+        $('sueldoQuincenalInput').addEventListener('input', (e) => {
+            financialData.sueldoQuincenal = Math.max(0, num(e.target.value));
+            calcularYActualizarTodo();
+            guardarConRetraso();
+        });
+        ['ventas', 'bonos', 'otros'].forEach(campo => {
+            $(`extra-${campo}`).addEventListener('input', (e) => {
+                financialData.ingresosExtras[campo] = Math.max(0, num(e.target.value));
+                calcularYActualizarTodo();
+                guardarConRetraso();
+            });
         });
 
-        // Auth
+        // ---------- Auth ----------
         onAuthStateChanged(auth, (user) => {
-            const lp = document.getElementById('landing-page');
-            const dp = document.getElementById('dashboard-page');
-            const ac = document.getElementById('auth-container');
+            const lp = $('landing-page');
+            const dp = $('dashboard-page');
+            const ac = $('auth-container');
             if (user) {
-                lp.style.display = 'none'; dp.style.display = 'block';
-                ac.innerHTML = `<img src="${user.photoURL || 'logo.png'}" class="w-8 h-8 rounded-full cursor-pointer hover:scale-110 transition" onclick="window.cerrarSesion()">`;
-                currentUser = user; loadUserData(user.uid);
+                lp.style.display = 'none';
+                dp.style.display = 'block';
+                ac.innerHTML = `<button id="logout-btn" title="Cerrar sesión" aria-label="Cerrar sesión" class="w-8 h-8 rounded-full overflow-hidden hover:scale-110 transition"><img src="${esc(user.photoURL || 'logo.png')}" alt="" referrerpolicy="no-referrer" class="w-8 h-8 object-cover"></button>`;
+                $('logout-btn').addEventListener('click', () => { if (confirm('¿Cerrar sesión?')) window.cerrarSesion(); });
+                currentUser = user;
+                loadUserData(user.uid);
             } else {
-                ac.innerHTML = ''; lp.style.display = 'flex'; dp.style.display = 'none'; hideLoader(); currentUser = null;
+                ac.innerHTML = '';
+                lp.style.display = 'flex';
+                dp.style.display = 'none';
+                hideLoader();
+                currentUser = null;
             }
         });
     </script>
