@@ -20,9 +20,10 @@ otras ramas generan preview deploys).
 
 - Proyecto Firebase: `plan-maestro-2026-fea50`. Auth: solo Google (`signInWithPopup`).
 - Firestore: **un documento por usuario** en `usuarios/{uid}` con todo su estado:
-  `settings.currency`, `sueldoQuincenal`, `ingresosExtras{ventas,bonos,otros}`, `metas.fondoEmergencia{objetivo,actual}`,
-  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaPago,esPrioridad}`
-  (`tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables|gastosHormiga{nombre,monto}`
+  `settings.currency`, `sueldoQuincenal` (monto **por pago**, nombre legado), `frecuenciaIngreso` ('semanal'|'quincenal'|'mensual'),
+  `aguinaldo` (anual, no entra al ingreso mensual), `ingresosExtras{ventas,bonos,otros}`, `metas.fondoEmergencia{objetivo,actual}`,
+  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaPago,esMSI,mesesRestantes,esPrioridad}`
+  (compra a MSI: `antesDeGuardar` pone tasa 0 y pago = total / mesesRestantes; `tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables|gastosHormiga{nombre,monto}`
   (`diaPago` 1-31 o `null`; lo usa `proximosPagos()` para la tarjeta "Próximos pagos" de los siguientes 10 días),
   `metasPersonalizadas{nombre,objetivo,actual,fechaMeta,aporteQuincenal}` (`fechaMeta` 'YYYY-MM-DD' o `null`;
   `planMeta()` calcula el aporte por quincena o la fecha de llegada, quincenas = día 15 y último del mes), `gbm{ticker,shares,target}` (inversiones; el nombre "gbm" es legado).
@@ -41,7 +42,9 @@ otras ramas generan preview deploys).
 - **Todo texto del usuario va por `esc()`** si se mete en `innerHTML`, o se usa `textContent`. Montos siempre por `num()` (nunca NaN).
 - Guardado: `guardarAhora()` tras acciones discretas (guardar en modal); `guardarConRetraso()` para inputs por tecla
   (se fuerza al ocultar/cerrar la pestaña). Firestore tiene caché offline persistente multi-pestaña.
-- Cálculos centralizados en `calcularTotales()` (ingreso mensual = sueldoQuincenal × 2 + extras).
+- Cálculos centralizados en `calcularTotales()` (ingreso mensual = sueldo × `FRECUENCIAS[frecuenciaIngreso]` + extras;
+  semanal = 52/12, quincenal = 2, mensual = 1).
+- Una entrada de `LISTAS` puede tener `antesDeGuardar(item)` para ajustar el item o devolver `[mensaje, idDelCampo]` como error.
 
 ## Asesor
 
@@ -49,6 +52,8 @@ otras ramas generan preview deploys).
   (déficit, deudas sin pago, % en deudas, fondo de emergencia, gastos hormiga, tasa de ahorro) y `planDeudas(deudas, extra, metodo)`
   simula mes a mes con intereses (tasa/12): `'nieve'` = menor saldo primero, `'avalancha'` = mayor tasa primero; las
   marcadas como prioridad van antes en ambos. El sobrante va a la primera deuda y los pagos liberados se acumulan.
+  Las compras a MSI van al final (adelantarlas no ahorra). `abonos` = pagos extraordinarios por mes; `abonosAguinaldo()`
+  los pone cada diciembre y `lineaAguinaldo()` muestra cuánto antes terminas si mandas el aguinaldo a la deuda.
   `pintarPlan()` muestra ambos métodos con meses e intereses y recomienda el de menor interés. Instantáneo y gratis.
 - Campos de lista tipo `'dia'` (entero 1-31 o `null`, validado al guardar) y `'numopt'` en `LISTAS`: vacío se guarda como `null` (desconocido), no como 0.
 - **IA opcional** (botón "segunda opinión"): solo se llama si el usuario lo pide; si falla, el diagnóstico sigue ahí.
@@ -81,7 +86,7 @@ eliminada, reglas de Firestore, validación de montos (sin NaN), modales que se 
 confirmación al borrar/cerrar sesión, modo oscuro persistente, editor genérico.
 
 Pendiente (en orden sugerido):
-1. **Universalizar**: frecuencia de ingreso (semanal/quincenal/mensual/variable) y varias fuentes de ingreso;
+1. **Universalizar**: ~~frecuencia de ingreso~~ (hecho: semanal/quincenal/mensual; falta "variable") y varias fuentes de ingreso;
    más monedas + formato por locale; inversiones genéricas (tipo + valor en dinero) en vez de "GBM/títulos";
    categorías de gasto personalizables; ~~tasa de interés + avalancha~~ (hecho).
 2. **Historial**: registrar movimientos o cierres mensuales para ver tendencias (hoy es una foto de un solo mes).

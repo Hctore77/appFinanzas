@@ -218,13 +218,14 @@
 
             <!-- PILAR 3: CONTROL -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <div class="card lg:col-span-1"><h3 class="font-black text-xl mb-4 text-frteal">💼 Sueldo Quincenal</h3><input type="number" id="sueldoQuincenalInput" class="budget-input text-2xl font-black" placeholder="0.00"></div>
+                <div class="card lg:col-span-1"><div class="flex justify-between items-center mb-4 gap-2"><h3 class="font-black text-xl text-frteal">💼 Sueldo</h3><select id="frecuenciaIngresoInput" aria-label="Cada cuánto te pagan" class="budget-input !w-auto text-sm py-1"><option value="semanal">Semanal</option><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option></select></div><input type="number" min="0" id="sueldoQuincenalInput" class="budget-input text-2xl font-black" placeholder="0.00" aria-label="Sueldo por periodo"><p id="sueldo-mensual-text" class="text-xs text-slate-400 mt-2"></p></div>
                 <div class="card lg:col-span-2">
                     <h3 class="font-black text-xl mb-4">💰 Ingresos Extras</h3>
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div><label class="text-[10px] font-bold text-slate-400">Ventas</label><input type="number" id="extra-ventas" class="budget-input"></div>
                         <div><label class="text-[10px] font-bold text-slate-400">Bonos</label><input type="number" id="extra-bonos" class="budget-input"></div>
                         <div><label class="text-[10px] font-bold text-slate-400">Otros</label><input type="number" id="extra-otros" class="budget-input"></div>
+                        <div><label for="aguinaldoInput" class="text-[10px] font-bold text-slate-400">🎁 Aguinaldo (anual)</label><input type="number" min="0" id="aguinaldoInput" class="budget-input" title="Se paga antes del 20 de diciembre; no se suma al ingreso mensual"></div>
                     </div>
                 </div>
             </div>
@@ -260,7 +261,8 @@
             <p class="text-slate-500 mb-8">Configura tus datos para comenzar.</p>
             <div class="space-y-4 text-left">
                 <div><label class="text-xs font-bold text-slate-400">Moneda</label><select id="onboard-currency-input" class="budget-input"><option value="MXN">MXN</option><option value="USD">USD</option></select></div>
-                <div><label class="text-xs font-bold text-slate-400">Sueldo Quincenal</label><input type="number" id="onboard-sueldo-input" class="budget-input"></div>
+                <div><label class="text-xs font-bold text-slate-400">¿Cada cuánto te pagan?</label><select id="onboard-frecuencia-input" class="budget-input"><option value="quincenal">Quincenal</option><option value="semanal">Semanal</option><option value="mensual">Mensual</option></select></div>
+                <div><label class="text-xs font-bold text-slate-400">Sueldo por pago</label><input type="number" min="0" id="onboard-sueldo-input" class="budget-input"></div>
                 <button id="onboard-finish-btn" class="bg-frnavy text-white px-8 py-4 rounded-xl font-black w-full mt-4">¡Ir al Dashboard!</button>
             </div>
         </div>
@@ -292,7 +294,7 @@
     <div id="gbm-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Activo Inversión</h3><input type="hidden" id="edit-gbm-key"><input type="text" id="gbm-ticker" class="budget-input mb-3 uppercase" placeholder="Ticker (Ej: VOO)"><input type="number" id="gbm-shares" class="budget-input mb-3" placeholder="Títulos"><input type="number" id="gbm-target" class="budget-input mb-6" placeholder="Meta"><button id="gbm-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="gbm-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('gbm-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
 
     <!-- Otros Modales -->
-    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><label for="debt-day" class="text-xs text-slate-400">Día límite de pago (1-31), para recordártelo</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input mb-4" placeholder="Ej: 15"><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><label for="debt-day" class="text-xs text-slate-400">Día límite de pago (1-31), para recordártelo</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input mb-4" placeholder="Ej: 15"><div class="rounded-xl bg-slate-50 dark:bg-slate-800 p-3 mb-4"><div class="flex items-center gap-2"><input type="checkbox" id="debt-msi" class="w-5 h-5"><label for="debt-msi" class="text-sm font-bold">🛍️ Es compra a meses sin intereses</label></div><div id="debt-msi-box" class="hidden mt-2"><label for="debt-msi-months" class="text-xs text-slate-400">Meses que te faltan (calculo el pago y pongo tasa 0)</label><input type="number" min="1" step="1" id="debt-msi-months" class="budget-input" placeholder="Ej: 9"></div></div><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-3" placeholder="Monto"><label for="fixed-day" class="text-xs text-slate-400">Día de pago (1-31, opcional)</label><input type="number" min="1" max="31" step="1" id="fixed-day" class="budget-input mb-6" placeholder="Ej: 5"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
@@ -379,11 +381,15 @@
         };
 
         // ---------- Datos ----------
+        // Pagos de sueldo por mes según la frecuencia.
+        const FRECUENCIAS = { semanal: 52 / 12, quincenal: 2, mensual: 1 };
         function datosPorDefecto() {
             return {
                 hasSeenTutorial: false,
                 settings: { currency: 'MXN' },
-                sueldoQuincenal: 0,
+                sueldoQuincenal: 0,          // monto por pago (nombre legado): se interpreta según frecuenciaIngreso
+                frecuenciaIngreso: 'quincenal',
+                aguinaldo: 0,                // anual, se paga en diciembre; no entra al ingreso mensual
                 metas: { fondoEmergencia: { objetivo: 50000, actual: 0 } },
                 deudas: {}, gastosFijos: {}, gastosVariables: {}, gastosHormiga: {},
                 gbm: {}, ingresosExtras: { ventas: 0, bonos: 0, otros: 0 },
@@ -399,6 +405,7 @@
             out.metas = { ...base.metas, ...(d.metas || {}) };
             out.metas.fondoEmergencia = { ...base.metas.fondoEmergencia, ...(out.metas.fondoEmergencia || {}) };
             out.ingresosExtras = { ...base.ingresosExtras, ...(d.ingresosExtras || {}) };
+            if (!FRECUENCIAS[out.frecuenciaIngreso]) out.frecuenciaIngreso = 'quincenal';
             for (const k of ['deudas', 'gastosFijos', 'gastosVariables', 'gastosHormiga', 'gbm', 'metasPersonalizadas']) out[k] = d[k] || {};
             return out;
         }
@@ -450,7 +457,15 @@
         // `${tipo}-save-btn`, `${tipo}-delete-btn`, `add-${tipo}-btn`.
         // El primer campo de cada lista es el nombre (obligatorio).
         const LISTAS = {
-            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], diaPago: ['debt-day', 'dia'], esPrioridad: ['debt-priority', 'check'] } },
+            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], diaPago: ['debt-day', 'dia'], esMSI: ['debt-msi', 'check'], mesesRestantes: ['debt-msi-months', 'numopt'], esPrioridad: ['debt-priority', 'check'] },
+                        // Compra a MSI: el pago sale del saldo entre los meses que faltan y no cobra intereses.
+                        antesDeGuardar(item) {
+                            if (!item.esMSI) { item.mesesRestantes = null; return; }
+                            if (!(item.mesesRestantes >= 1)) return ['Escribe cuántos meses te faltan', 'debt-msi-months'];
+                            item.mesesRestantes = Math.ceil(item.mesesRestantes);
+                            item.tasaAnual = 0;
+                            item.pagoMensual = Math.round(item.total / item.mesesRestantes * 100) / 100;
+                        } },
             fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'], diaPago: ['fixed-day', 'dia'] } },
             variable: { coleccion: 'gastosVariables',     campos: { nombre: ['variable-name', 'text'], monto: ['variable-amount', 'num'] } },
             hormiga:  { coleccion: 'gastosHormiga',       campos: { nombre: ['hormiga-name', 'text'], monto: ['hormiga-amount', 'num'] } },
@@ -469,6 +484,7 @@
                 else el.value = item?.[campo] ?? '';
             }
             $(`${tipo}-delete-btn`).classList.toggle('hidden', !key);
+            if (tipo === 'debt') $('debt-msi-box').classList.toggle('hidden', !$('debt-msi').checked);
             openModal(`${tipo}-modal`);
             $(Object.values(cfg.campos)[0][0]).focus();
         }
@@ -490,6 +506,8 @@
             if (!item[campoNombre]) { showToast('Escribe un nombre', 'error'); $(idNombre).focus(); return; }
             const negativo = Object.entries(cfg.campos).find(([c, [, kind]]) => (kind === 'num' || kind === 'numopt') && item[c] < 0);
             if (negativo) { showToast('Los montos no pueden ser negativos', 'error'); $(negativo[1][0]).focus(); return; }
+            const errorHook = cfg.antesDeGuardar?.(item);
+            if (errorHook) { showToast(errorHook[0], 'error'); $(errorHook[1]).focus(); return; }
             const diaMalo = Object.entries(cfg.campos).find(([c, [, kind]]) => kind === 'dia' && item[c] !== null && (item[c] < 1 || item[c] > 31));
             if (diaMalo) { showToast('El día de pago va del 1 al 31', 'error'); $(diaMalo[1][0]).focus(); return; }
 
@@ -513,6 +531,7 @@
             closeModal(`${tipo}-modal`);
         }
 
+        $('debt-msi').addEventListener('change', (e) => $('debt-msi-box').classList.toggle('hidden', !e.target.checked));
         for (const tipo of Object.keys(LISTAS)) {
             $(`add-${tipo}-btn`).addEventListener('click', () => abrirEditor(tipo));
             $(`${tipo}-save-btn`).addEventListener('click', () => guardarEditor(tipo));
@@ -529,6 +548,8 @@
             const nombre = (currentUser?.displayName || '').trim().split(' ')[0];
             $('user-name').textContent = nombre || 'Inversor';
             $('sueldoQuincenalInput').value = financialData.sueldoQuincenal || '';
+            $('frecuenciaIngresoInput').value = financialData.frecuenciaIngreso;
+            $('aguinaldoInput').value = financialData.aguinaldo || '';
             $('extra-ventas').value = financialData.ingresosExtras.ventas || '';
             $('extra-bonos').value = financialData.ingresosExtras.bonos || '';
             $('extra-otros').value = financialData.ingresosExtras.otros || '';
@@ -594,7 +615,7 @@
         function renderizarDeudas() {
             $('deudas-container').innerHTML = Object.entries(financialData.deudas).map(([k, d]) => `
                 <div class="p-4 rounded-xl border ${d.esPrioridad ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'} dark:bg-slate-800">
-                    <div class="flex justify-between"><div><p class="font-black text-sm">${esc(d.nombre)}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">PRIORIDAD</span>' : ''}</div>${botonEditar('debt', k, d.nombre)}</div>
+                    <div class="flex justify-between"><div><p class="font-black text-sm">${esc(d.nombre)}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">PRIORIDAD</span>' : ''}${d.esMSI ? `<span class="text-[9px] text-violet-600 font-bold ml-1">MSI · ${num(d.mesesRestantes)} meses</span>` : ''}</div>${botonEditar('debt', k, d.nombre)}</div>
                     <p class="mt-2 text-sm font-black">${formatCurrency(d.total)}</p>
                     <p class="text-[11px] text-slate-500">Mínimo ${formatCurrency(d.pagoMensual)}/mes${Number.isInteger(d.diaPago) ? ` (día ${d.diaPago})` : ''} · ${num(d.tasaAnual) > 0 ? `${num(d.tasaAnual)}% anual` : (d.tasaAnual == null || d.tasaAnual === '' ? '<span class="text-amber-600 font-bold">falta la tasa</span>' : 'sin intereses')}</p>
                 </div>`).join('');
@@ -682,7 +703,8 @@
         // ---------- Cálculos ----------
         function calcularTotales() {
             const d = financialData;
-            const ingresos = num(d.sueldoQuincenal) * 2 + num(d.ingresosExtras.ventas) + num(d.ingresosExtras.bonos) + num(d.ingresosExtras.otros);
+            const sueldoMensual = num(d.sueldoQuincenal) * (FRECUENCIAS[d.frecuenciaIngreso] || 2);
+            const ingresos = sueldoMensual + num(d.ingresosExtras.ventas) + num(d.ingresosExtras.bonos) + num(d.ingresosExtras.otros);
             const fijos = sumar(d.gastosFijos, 'monto');
             const variables = sumar(d.gastosVariables, 'monto');
             const hormiga = sumar(d.gastosHormiga, 'monto');
@@ -690,7 +712,7 @@
             const deudaTotal = sumar(d.deudas, 'total');
             const gastos = fijos + variables + hormiga + pagoDeudas;
             const sobrante = ingresos - gastos;
-            return { ingresos, fijos, variables, hormiga, pagoDeudas, deudaTotal, gastos, sobrante };
+            return { ingresos, sueldoMensual, fijos, variables, hormiga, pagoDeudas, deudaTotal, gastos, sobrante };
         }
 
         function calcularYActualizarTodo() {
@@ -698,6 +720,7 @@
             const tasa = t.ingresos > 0 ? (Math.max(0, t.sobrante) / t.ingresos) * 100 : 0;
 
             $('statIngresos').textContent = formatCurrency(t.ingresos);
+            $('sueldo-mensual-text').textContent = financialData.frecuenciaIngreso === 'mensual' ? '' : `≈ ${formatCurrency(t.sueldoMensual)} al mes`;
             $('statGastos').textContent = formatCurrency(t.gastos);
             $('statTasaAhorro').textContent = tasa.toFixed(1) + '%';
             $('statDeudaTotal').textContent = formatCurrency(t.deudaTotal);
@@ -747,6 +770,11 @@
             if (atrapada) {
                 out.push({ icono: '🚨', texto: `El pago de ${atrapada.nombre || 'una deuda'} (${fmt(num(atrapada.pagoMensual))}) no cubre ni los intereses del mes (${fmt(num(atrapada.total) * num(atrapada.tasaAnual) / 1200)}): pagando solo eso, nunca baja. Súbele el pago cuanto antes.` });
             }
+            const msi = Object.values(deudas || {}).filter(d => d.esMSI && num(d.total) > 0);
+            if (msi.length >= 2 || (msi.length && pct(msi.reduce((s, d) => s + num(d.pagoMensual), 0)) >= 10)) {
+                const pagoMsi = msi.reduce((s, d) => s + num(d.pagoMensual), 0);
+                out.push({ icono: '🛍️', texto: `Tienes ${msi.length} ${msi.length === 1 ? 'compra' : 'compras'} a meses sin intereses que suman ${fmt(pagoMsi)} al mes (${pct(pagoMsi)}% de tu ingreso). No son gratis para tu flujo: evita nuevas hasta que terminen.` });
+            }
             const cara = Object.values(deudas || {}).filter(d => num(d.total) > 0 && num(d.tasaAnual) >= 40).sort((a, b) => num(b.tasaAnual) - num(a.tasaAnual))[0];
             if (cara) {
                 out.push({ icono: '🔥', texto: `${cara.nombre || 'Una deuda'} cobra ${num(cara.tasaAnual)}% anual: cada mes te cuesta unos ${fmt(num(cara.total) * num(cara.tasaAnual) / 1200)} solo de intereses. Es la que más conviene atacar o pasar a una tasa menor.` });
@@ -781,11 +809,12 @@
         //   'nieve'     → menor saldo primero (motiva: liquidas rápido),
         //   'avalancha' → mayor tasa primero (pagas menos intereses).
         // Devuelve { orden: [{…, mes}], meses, interes } (meses = null si no se termina en 50 años).
-        function planDeudas(deudas, extra, metodo = 'nieve') {
+        function planDeudas(deudas, extra, metodo = 'nieve', abonos = {}) {
             const lista = Object.values(deudas || {})
-                .map(d => ({ nombre: d.nombre || 'Sin nombre', saldo: num(d.total), minimo: Math.max(0, num(d.pagoMensual)), tasa: Math.max(0, num(d.tasaAnual)), prioridad: !!d.esPrioridad }))
+                .map(d => ({ nombre: d.nombre || 'Sin nombre', saldo: num(d.total), minimo: Math.max(0, num(d.pagoMensual)), tasa: Math.max(0, num(d.tasaAnual)), prioridad: !!d.esPrioridad, msi: !!d.esMSI }))
                 .filter(d => d.saldo > 0)
-                .sort((a, b) => (b.prioridad - a.prioridad) || (metodo === 'avalancha' ? (b.tasa - a.tasa) || (a.saldo - b.saldo) : (a.saldo - b.saldo)));
+                // Las compras a MSI van al final: adelantarlas no ahorra intereses.
+                .sort((a, b) => (b.prioridad - a.prioridad) || (a.msi - b.msi) || (metodo === 'avalancha' ? (b.tasa - a.tasa) || (a.saldo - b.saldo) : (a.saldo - b.saldo)));
             if (!lista.length) return { orden: [], meses: 0, interes: 0 };
             const presupuesto = lista.reduce((s, d) => s + d.minimo, 0) + Math.max(0, extra);
             if (presupuesto <= 0) return { orden: lista.map(d => ({ ...d, mes: null })), meses: null, interes: null };
@@ -800,7 +829,7 @@
                     const cargo = saldos[i] * d.tasa / 100 / 12;
                     saldos[i] += cargo; interes += cargo;
                 });
-                let disponible = presupuesto;
+                let disponible = presupuesto + Math.max(0, num(abonos[mes]));
                 // 1) mínimos
                 lista.forEach((d, i) => {
                     if (saldos[i] <= 0) return;
@@ -829,6 +858,25 @@
             if (m === null) return '';
             const f = new Date(); f.setMonth(f.getMonth() + m);
             return f.toLocaleDateString('es-MX', { month: 'short', year: 'numeric' });
+        }
+
+        // Aguinaldo: por ley se paga antes del 20 de diciembre. Devuelve {mes: monto} para cada diciembre (mes 1 = el próximo mes).
+        function abonosAguinaldo(monto, hoy = new Date()) {
+            if (!(monto > 0)) return {};
+            const m = hoy.getMonth();
+            const primero = m < 11 ? 11 - m : (hoy.getDate() <= 20 ? 1 : 12);
+            const out = {};
+            for (let k = primero; k <= 600; k += 12) out[k] = monto;
+            return out;
+        }
+        function lineaAguinaldo(deudas, extra, metodo, plan) {
+            const ag = num(financialData.aguinaldo);
+            if (!(ag > 0) || plan.meses === null) return '';
+            const conAg = planDeudas(deudas, extra, metodo, abonosAguinaldo(ag));
+            const menos = plan.meses - conAg.meses;
+            const ahorro = (plan.interes ?? 0) - (conAg.interes ?? 0);
+            if (!(menos > 0) && !(ahorro > 1)) return '';
+            return `<p class="text-sm mt-2 rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3">🎁 Si mandas tu aguinaldo (<strong>${formatCurrency(ag)}</strong>) a la deuda cada diciembre, terminas en <strong>${textoMeses(conAg.meses)}</strong>${menos > 0 ? ` (${textoMeses(menos)} antes)` : ''}${ahorro > 1 ? ` y ahorras ${formatCurrency(ahorro)} de intereses` : ''}.</p>`;
         }
 
         // Pinta el plan en el modal del asesor. metodo = null → el que pague menos intereses.
@@ -873,6 +921,7 @@
                 <ol class="bg-slate-50 dark:bg-slate-800 rounded-xl px-4">${filas}</ol>
                 <p class="text-sm mt-3">Solo con pagos mínimos tardarías <strong>${textoMeses(soloMinimos.meses)}</strong>${soloMinimos.interes !== null ? ` y pagarías <strong>${formatCurrency(soloMinimos.interes)}</strong> de intereses` : ''}.</p>
                 ${ahorroMeses > 0 || ahorroInt > 1 ? `<p class="text-sm text-emerald-600 font-bold">Con este plan terminas ${ahorroMeses > 0 ? `${textoMeses(ahorroMeses)} antes` : 'igual de rápido'}${ahorroInt > 1 ? ` y te ahorras ${formatCurrency(ahorroInt)} de intereses` : ''}.</p>` : ''}
+                ${lineaAguinaldo(deudas, extra, metodo, plan)}
                 ${sinTasa.length ? `<p class="text-xs text-amber-600 mt-2">⚠️ Falta la tasa de interés en: <span data-sin-tasa></span>. Edita esas deudas para que el cálculo sea real (se tomaron como 0%).</p>` : ''}`;
             const st = cont.querySelector('[data-sin-tasa]');
             if (st) st.textContent = sinTasa.join(', ');
@@ -1010,6 +1059,7 @@
             financialData.hasSeenTutorial = true;
             financialData.settings.currency = $('onboard-currency-input').value;
             financialData.sueldoQuincenal = Math.max(0, num($('onboard-sueldo-input').value));
+            financialData.frecuenciaIngreso = $('onboard-frecuencia-input').value;
             guardarAhora();
             renderizarUI();
             closeModal('welcome-modal');
@@ -1019,6 +1069,15 @@
         $('sueldoQuincenalInput').addEventListener('input', (e) => {
             financialData.sueldoQuincenal = Math.max(0, num(e.target.value));
             calcularYActualizarTodo();
+            guardarConRetraso();
+        });
+        $('frecuenciaIngresoInput').addEventListener('change', (e) => {
+            financialData.frecuenciaIngreso = FRECUENCIAS[e.target.value] ? e.target.value : 'quincenal';
+            calcularYActualizarTodo();
+            guardarAhora();
+        });
+        $('aguinaldoInput').addEventListener('input', (e) => {
+            financialData.aguinaldo = Math.max(0, num(e.target.value));
             guardarConRetraso();
         });
         ['ventas', 'bonos', 'otros'].forEach(campo => {
