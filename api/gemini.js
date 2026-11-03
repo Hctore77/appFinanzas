@@ -6,13 +6,19 @@
 // La API key web de Firebase es pública por diseño (va en el index.html); se puede sobreescribir por env.
 const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyC6Y5_bfA2Gr-4rvLuUdRUoMzNUUpxmDuw';
 const LIMITE_DIARIO = Number(process.env.IA_LIMITE_DIARIO) || 10;
-// Google retira modelos viejos (gemini-2.0-flash ya no existe); se puede cambiar sin tocar código con GEMINI_MODEL.
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+// Google retira modelos viejos (gemini-2.0-flash ya no existe) y a veces satura los nuevos ("high demand").
+// Se prueban en orden; el primero se puede cambiar sin tocar código con GEMINI_MODEL.
+const GEMINI_MODELOS = [...new Set([process.env.GEMINI_MODEL || 'gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-3.5-flash-lite'])];
 
 // Límite por usuario "best effort": vive en la memoria de cada instancia serverless,
 // así que se reinicia si Vercel levanta una instancia nueva. Frena el abuso casual,
 // no a un atacante decidido (para eso: Firestore vía firebase-admin o Upstash/KV).
 const usos = new Map();
+
+function devolverCuota(uid) {
+    const u = usos.get(uid);
+    if (u && u.n > 0) u.n--;
+}
 
 function consumirCuota(uid) {
     const hoy = new Date().toISOString().slice(0, 10);
@@ -100,8 +106,8 @@ async function llamarDeepSeek(prompt, key) {
     return data.choices?.[0]?.message?.content;
 }
 
-async function llamarGemini(prompt, key) {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
+async function llamarGeminiModelo(modelo, prompt, key) {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify({
@@ -114,6 +120,22 @@ async function llamarGemini(prompt, key) {
     const data = await r.json();
     if (!r.ok) throw new Error(data.error?.message || `Gemini HTTP ${r.status}`);
     return data.candidates?.[0]?.content?.parts?.[0]?.text;
+}
+
+// Si un modelo está saturado, retirado o responde vacío, se intenta el siguiente de GEMINI_MODELOS.
+async function llamarGemini(prompt, key) {
+    let ultimoError;
+    for (const modelo of GEMINI_MODELOS) {
+        try {
+            const texto = await llamarGeminiModelo(modelo, prompt, key);
+            if (extraerConsejos(texto)) return texto;
+            ultimoError = new Error(`${modelo}: respuesta vacía`);
+        } catch (e) {
+            ultimoError = new Error(`${modelo}: ${e.message}`);
+        }
+        console.error('gemini', ultimoError.message);
+    }
+    throw ultimoError;
 }
 
 export default async function handler(req, res) {
@@ -150,6 +172,7 @@ export default async function handler(req, res) {
                 console.error(`${nombre} falló:`, e.message);
             }
         }
+        devolverCuota(uid); // si nadie respondió, no se cobra la consulta
         return res.status(502).json({ error: 'El asesor no está disponible en este momento. Intenta más tarde.' });
 
     } catch (error) {
