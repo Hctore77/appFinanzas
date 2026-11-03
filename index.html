@@ -297,7 +297,7 @@
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="ahorro-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🔋 Fondo</h3><label for="ahorro-meta" class="text-xs text-slate-400">Meta</label><input type="number" min="0" id="ahorro-meta" class="budget-input mb-4" placeholder="Meta"><label for="ahorro-abono" class="text-xs text-slate-400">Abonar (usa un número negativo para retirar)</label><input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="0"><button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
-    <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🎯 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-6" placeholder="Ahorrado"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🎯 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-3" placeholder="Ahorrado"><p class="text-xs text-slate-400 mb-2">Llena uno de los dos y te calculo el otro:</p><label for="meta-date" class="text-xs text-slate-400">¿Para cuándo la quieres?</label><input type="date" id="meta-date" class="budget-input mb-3"><label for="meta-aporte" class="text-xs text-slate-400">o ¿cuánto puedes apartar por quincena?</label><input type="number" min="0" id="meta-aporte" class="budget-input mb-6" placeholder="Ej: 500"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="settings-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3><label class="text-xs text-slate-400">Moneda</label><select id="settings-currency" class="budget-input mb-4"><option value="MXN">MXN</option><option value="USD">USD</option></select><button id="settings-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('settings-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
 
     <!-- LÓGICA PRINCIPAL -->
@@ -454,7 +454,7 @@
             fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'], diaPago: ['fixed-day', 'dia'] } },
             variable: { coleccion: 'gastosVariables',     campos: { nombre: ['variable-name', 'text'], monto: ['variable-amount', 'num'] } },
             hormiga:  { coleccion: 'gastosHormiga',       campos: { nombre: ['hormiga-name', 'text'], monto: ['hormiga-amount', 'num'] } },
-            meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'] } },
+            meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'], fechaMeta: ['meta-date', 'fecha'], aporteQuincenal: ['meta-aporte', 'numopt'] } },
             gbm:      { coleccion: 'gbm',                 campos: { ticker: ['gbm-ticker', 'upper'], shares: ['gbm-shares', 'num'], target: ['gbm-target', 'num'] } },
         };
 
@@ -480,6 +480,7 @@
                 const el = $(id);
                 if (kind === 'check') item[campo] = el.checked;
                 else if (kind === 'num') item[campo] = num(el.value);
+                else if (kind === 'fecha') item[campo] = /^\d{4}-\d{2}-\d{2}$/.test(el.value) ? el.value : null;
                 else if (kind === 'dia') item[campo] = el.value.trim() === '' ? null : Math.trunc(num(el.value));
                 else if (kind === 'numopt') item[campo] = el.value.trim() === '' ? null : num(el.value); // vacío = "no lo sé" (≠ 0)
                 else if (kind === 'upper') item[campo] = el.value.trim().toUpperCase();
@@ -621,13 +622,52 @@
                 </div>`).join('');
         }
 
+        // Días de pago de quincena: el 15 y el último día de cada mes.
+        function siguienteQuincena(f) {
+            const d = new Date(f.getFullYear(), f.getMonth(), f.getDate());
+            const ultimo = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+            if (d.getDate() < 15) return new Date(d.getFullYear(), d.getMonth(), 15);
+            if (d.getDate() < ultimo) return new Date(d.getFullYear(), d.getMonth(), ultimo);
+            return new Date(d.getFullYear(), d.getMonth() + 1, 15);
+        }
+        // Plan de una meta: con fecha → cuánto apartar por quincena; con aporte → en qué fecha llegas.
+        // Devuelve { falta, cumplida, quincenas, aporte, fecha, vencida } (campos null si no hay con qué calcular).
+        function planMeta(m, hoy = new Date()) {
+            const falta = Math.max(0, num(m.objetivo) - num(m.actual));
+            if (num(m.objetivo) > 0 && falta === 0) return { falta, cumplida: true };
+            const r = { falta, cumplida: false, quincenas: null, aporte: null, fecha: null, vencida: false };
+            if (m.fechaMeta) {
+                const [y, mo, d] = m.fechaMeta.split('-').map(Number);
+                const meta = new Date(y, mo - 1, d);
+                let q = 0;
+                for (let f = siguienteQuincena(hoy); f <= meta && q < 1000; f = siguienteQuincena(f)) q++;
+                r.fecha = meta;
+                if (q === 0) { r.vencida = true; return r; }
+                r.quincenas = q; r.aporte = falta / q;
+            } else if (num(m.aporteQuincenal) > 0) {
+                r.aporte = num(m.aporteQuincenal);
+                r.quincenas = Math.ceil(falta / r.aporte);
+                let f = new Date(hoy);
+                for (let i = 0; i < r.quincenas && i < 1000; i++) f = siguienteQuincena(f);
+                r.fecha = f;
+            }
+            return r;
+        }
+
         function renderizarMetas() {
+            const fechaCorta = (f) => f.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
             $('metas-container').innerHTML = Object.entries(financialData.metasPersonalizadas).map(([k, m]) => {
                 const p = num(m.objetivo) > 0 ? (num(m.actual) / num(m.objetivo)) * 100 : 0;
+                const plan = planMeta(m);
+                const nota = plan.cumplida ? '🎉 ¡Meta cumplida!'
+                    : plan.vencida ? `⚠️ La fecha ya pasó; te faltan ${formatCurrency(plan.falta)}`
+                    : plan.aporte ? `Aparta <strong>${formatCurrency(Math.ceil(plan.aporte))}</strong>/quincena → ${fechaCorta(plan.fecha)}`
+                    : 'Ponle fecha o aporte para calcular tu plan';
                 return `
-                <div data-editar="meta" data-key="${esc(k)}" role="button" tabindex="0" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 cursor-pointer">
-                    <p class="text-xs font-bold mb-1">${esc(m.nombre)}</p>
+                <div data-editar="meta" data-key="${esc(k)}" role="button" tabindex="0" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer">
+                    <div class="flex justify-between text-xs mb-1"><span class="font-bold">${esc(m.nombre)}</span><span class="text-slate-500">${formatCurrency(m.actual)} / ${formatCurrency(m.objetivo)}</span></div>
                     <div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-frteal" style="width:${Math.min(100, p)}%"></div></div>
+                    <p class="text-[11px] text-slate-500 mt-1">${nota}</p>
                 </div>`;
             }).join('');
         }
@@ -721,6 +761,10 @@
             }
             if (pct(t.hormiga) >= 5) {
                 out.push({ icono: '🐜', texto: `Tus gastos hormiga son ${fmt(t.hormiga)} al mes (${pct(t.hormiga)}% de tu ingreso), ${fmt(t.hormiga * 12)} al año. Recortar la mitad te libera ${fmt(t.hormiga / 2)} al mes.` });
+            }
+            const aportesMetas = Object.values(financialData.metasPersonalizadas || {}).map(m => planMeta(m)).filter(r => r.aporte && !r.cumplida).reduce((s, r) => s + r.aporte * 2, 0);
+            if (aportesMetas > 0 && aportesMetas > Math.max(0, t.sobrante)) {
+                out.push({ icono: '🎯', texto: `Tus metas piden ${fmt(aportesMetas)} al mes, pero te sobran ${fmt(Math.max(0, t.sobrante))}. Mueve alguna fecha o baja un aporte para que el plan sea realista.` });
             }
             if (t.sobrante > 0) {
                 const tasa = pct(t.sobrante);

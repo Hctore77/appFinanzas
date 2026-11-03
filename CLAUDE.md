@@ -24,7 +24,8 @@ otras ramas generan preview deploys).
   y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaPago,esPrioridad}`
   (`tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables|gastosHormiga{nombre,monto}`
   (`diaPago` 1-31 o `null`; lo usa `proximosPagos()` para la tarjeta "Próximos pagos" de los siguientes 10 días),
-  `metasPersonalizadas{nombre,objetivo,actual}`, `gbm{ticker,shares,target}` (inversiones; el nombre "gbm" es legado).
+  `metasPersonalizadas{nombre,objetivo,actual,fechaMeta,aporteQuincenal}` (`fechaMeta` 'YYYY-MM-DD' o `null`;
+  `planMeta()` calcula el aporte por quincena o la fecha de llegada, quincenas = día 15 y último del mes), `gbm{ticker,shares,target}` (inversiones; el nombre "gbm" es legado).
 - `normalizar()` en index.html rellena campos faltantes de documentos viejos: **cualquier campo nuevo debe agregarse
   ahí y en `datosPorDefecto()`**, porque ya hay usuarios con datos guardados.
 - La config web de Firebase en index.html es pública por diseño; la seguridad está en `firestore.rules`.
