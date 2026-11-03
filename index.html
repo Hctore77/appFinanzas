@@ -397,7 +397,40 @@
     </div></div>
 
     <!-- Otros Modales -->
-    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><div class="grid grid-cols-2 gap-3 mb-1"><div><label for="debt-cut" class="text-xs text-slate-400">✂️ Día de corte</label><input type="number" min="1" max="31" step="1" id="debt-cut" class="budget-input" placeholder="Ej: 28"></div><div><label for="debt-day" class="text-xs text-slate-400">📅 Día límite de pago</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input" placeholder="Ej: 18"></div></div><p class="text-[11px] text-slate-400 mb-4">Vienen en tu estado de cuenta. Te aviso antes de cada una.</p><div class="rounded-xl bg-slate-50 dark:bg-slate-800 p-3 mb-4"><div class="flex items-center gap-2"><input type="checkbox" id="debt-msi" class="w-5 h-5"><label for="debt-msi" class="text-sm font-bold">🛍️ Es compra a meses sin intereses</label></div><div id="debt-msi-box" class="hidden mt-2"><label for="debt-msi-months" class="text-xs text-slate-400">Meses que te faltan (calculo el pago y pongo tasa 0)</label><input type="number" min="1" step="1" id="debt-msi-months" class="budget-input" placeholder="Ej: 9"></div></div><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="debt-modal" class="modal"><div class="modal-content">
+        <h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3>
+        <input type="hidden" id="edit-debt-key">
+        <label for="debt-tipo" class="text-xs text-slate-400">Tipo de deuda</label>
+        <select id="debt-tipo" class="budget-input mb-3"><option value="tarjeta">💳 Tarjeta, banco o tienda</option><option value="personal">🤝 Familiar o amigo</option><option value="msi">🛍️ Compra a meses sin intereses</option></select>
+        <input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre (ej: Banamex, Simón)">
+        <input type="number" min="0" id="debt-total" class="budget-input mb-3" placeholder="¿Cuánto debes hoy?">
+        <!-- Tarjeta / banco -->
+        <div data-debt-tipo="tarjeta">
+            <input type="number" min="0" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual">
+            <label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta</label>
+            <input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45">
+            <div class="grid grid-cols-2 gap-3 mb-1"><div><label for="debt-cut" class="text-xs text-slate-400">✂️ Día de corte</label><input type="number" min="1" max="31" step="1" id="debt-cut" class="budget-input" placeholder="Ej: 28"></div><div><label for="debt-day" class="text-xs text-slate-400">📅 Día límite de pago</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input" placeholder="Ej: 18"></div></div>
+            <p class="text-[11px] text-slate-400 mb-4">Vienen en tu estado de cuenta. Te aviso antes de cada una.</p>
+        </div>
+        <!-- Familiar o amigo -->
+        <div data-debt-tipo="personal" class="hidden">
+            <label class="text-xs text-slate-400">¿Cómo quedaron de pagarle?</label>
+            <div class="grid grid-cols-2 gap-2 mb-3" role="radiogroup" aria-label="Tipo de acuerdo">
+                <button type="button" data-acuerdo="pagos" class="acuerdo-btn rounded-xl p-2 text-sm font-bold border-2">📆 En pagos</button>
+                <button type="button" data-acuerdo="unico" class="acuerdo-btn rounded-xl p-2 text-sm font-bold border-2">🗓️ Un solo pago</button>
+            </div>
+            <input type="hidden" id="debt-acuerdo" value="pagos">
+            <div id="debt-acuerdo-pagos" class="grid grid-cols-2 gap-3 mb-3"><div><label for="debt-pagos" class="text-xs text-slate-400">¿Cuántos pagos faltan?</label><input type="number" min="1" step="1" id="debt-pagos" class="budget-input" placeholder="Ej: 6"></div><div><label for="debt-pagos-frec" class="text-xs text-slate-400">¿Cada cuánto?</label><select id="debt-pagos-frec" class="budget-input"><option value="quincenal">Cada quincena</option><option value="mensual">Cada mes</option><option value="semanal">Cada semana</option></select></div></div>
+            <div id="debt-acuerdo-unico" class="hidden mb-3"><label for="debt-fecha-unica" class="text-xs text-slate-400">¿Qué día quedaron?</label><input type="date" id="debt-fecha-unica" class="budget-input"></div>
+            <p class="text-[11px] text-slate-400 mb-4">🤝 Cumplir lo acordado también cuida la relación. Te aviso cuando se acerque cada pago.</p>
+        </div>
+        <!-- MSI -->
+        <div data-debt-tipo="msi" class="hidden mb-4"><label for="debt-msi-months" class="text-xs text-slate-400">Meses que te faltan (calculo el pago, sin intereses)</label><input type="number" min="1" step="1" id="debt-msi-months" class="budget-input" placeholder="Ej: 9"></div>
+        <div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div>
+        <button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button>
+        <button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button>
+        <button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button>
+    </div></div>
     <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-3" placeholder="Monto"><label for="fixed-day" class="text-xs text-slate-400">Día de pago (1-31, opcional)</label><input type="number" min="1" max="31" step="1" id="fixed-day" class="budget-input mb-6" placeholder="Ej: 5"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
@@ -552,6 +585,7 @@
                 }
                 // Hitos ya alcanzados antes de esta versión: se marcan sin celebrar para no llenar de festejos.
                 for (const m of Object.values(financialData.metasPersonalizadas)) if (m.hito == null) m.hito = hitoDe(m);
+                for (const d of Object.values(financialData.deudas)) if (tipoDeuda(d) === 'personal' && d.acuerdo === 'unico') recalcularAcuerdo(d);
                 const cambio = cerrarMesesAnteriores() | revisarHitosRetos();
                 if (cambio) guardarAhora();
                 renderizarUI();
@@ -1019,6 +1053,7 @@
                 mov.deuda = k;
                 d.total = Math.round((num(d.total) - mov.aplicado) * 100) / 100;
                 if (d.esMSI && num(d.pagoMensual) > 0) d.mesesRestantes = Math.max(0, Math.ceil(d.total / num(d.pagoMensual)));
+                aplicarAbonoAcuerdo(d);
                 if (d.total === 0) showToast(`🎉 ¡Liquidaste ${d.nombre}!`);
             }
             if (tipo === 'fondo') {
@@ -1050,6 +1085,7 @@
                 const d = financialData.deudas[m.deuda];
                 d.total = Math.round((num(d.total) + num(m.aplicado ?? m.monto)) * 100) / 100;
                 if (d.esMSI && num(d.pagoMensual) > 0) d.mesesRestantes = Math.ceil(d.total / num(d.pagoMensual));
+                aplicarAbonoAcuerdo(d);
             }
             if (m.tipo === 'fondo') {
                 const f = financialData.metas.fondoEmergencia;
@@ -1140,19 +1176,101 @@
         $('mov-monto').addEventListener('keydown', (e) => { if (e.key === 'Enter') guardarMovimiento(); });
         $('mes-movimientos').addEventListener('click', (e) => { const b = e.target.closest('[data-borrar-mov]'); if (b) eliminarMovimiento(b.dataset.borrarMov); });
 
+        // ---------- Deudas con familiares o amigos (acuerdos) ----------
+        const TIPOS_DEUDA = ['tarjeta', 'personal', 'msi'];
+        const tipoDeuda = (d) => d.tipoDeuda || (d.esMSI ? 'msi' : 'tarjeta');
+        function mesesHasta(fechaYmd, hoy = new Date()) {
+            const [y, m, d] = fechaYmd.split('-').map(Number);
+            const meses = (y - hoy.getFullYear()) * 12 + (m - 1 - hoy.getMonth()) + (d >= hoy.getDate() ? 0 : -1);
+            return Math.max(1, meses + 1); // el mes en curso cuenta para ir apartando
+        }
+        // Pago mensual equivalente según el acuerdo:
+        //   en pagos → monto de cada pago × pagos por mes; pago único → lo que hay que apartar al mes para llegar a la fecha.
+        function recalcularAcuerdo(d, hoy = new Date()) {
+            if (tipoDeuda(d) !== 'personal') return;
+            const total = num(d.total);
+            if (d.acuerdo === 'unico' && d.fechaUnica) {
+                d.montoPorPago = total;
+                d.pagoMensual = total > 0 ? Math.round(total / mesesHasta(d.fechaUnica, hoy) * 100) / 100 : 0;
+            } else if (num(d.pagosRestantes) >= 1) {
+                d.montoPorPago = Math.round(total / num(d.pagosRestantes) * 100) / 100;
+                d.pagoMensual = Math.round(d.montoPorPago * (FRECUENCIAS[d.frecuenciaPagos] || 2) * 100) / 100;
+            }
+        }
+        // Tras un abono: en pagos se descuentan los pagos que cubrió; en pago único se recalcula lo que hay que apartar.
+        function aplicarAbonoAcuerdo(d) {
+            if (tipoDeuda(d) !== 'personal') return;
+            if (d.acuerdo === 'pagos' && num(d.montoPorPago) > 0) d.pagosRestantes = num(d.total) > 0 ? Math.max(1, Math.ceil(num(d.total) / num(d.montoPorPago) - 1e-9)) : 0;
+            if (d.acuerdo === 'pagos' && num(d.total) > 0) d.pagoMensual = Math.round(Math.min(num(d.total), num(d.montoPorPago)) * (FRECUENCIAS[d.frecuenciaPagos] || 2) * 100) / 100;
+            if (d.acuerdo === 'unico') recalcularAcuerdo(d);
+        }
+        function textoAcuerdo(d) {
+            const fechaTxt = (f) => { const [y, m, dd] = f.split('-').map(Number); return new Date(y, m - 1, dd).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }); };
+            if (d.acuerdo === 'unico' && d.fechaUnica) {
+                const dias = -diasDesde(d.fechaUnica);
+                const cuando = dias > 0 ? `en ${dias} ${dias === 1 ? 'día' : 'días'}` : dias === 0 ? 'hoy' : `hace ${-dias} días`;
+                return `🗓️ Pago único: ${fechaTxt(d.fechaUnica)} (${cuando})${dias >= 0 && num(d.total) > 0 ? ` · aparta ${formatCurrency(Math.ceil(num(d.pagoMensual) / 2))}/quincena` : ''}`;
+            }
+            const frec = { quincenal: 'quincenales', mensual: 'mensuales', semanal: 'semanales' }[d.frecuenciaPagos] || 'quincenales';
+            return `📆 Acuerdo: ${num(d.pagosRestantes)} ${num(d.pagosRestantes) === 1 ? 'pago' : 'pagos'} ${num(d.pagosRestantes) === 1 ? frec.replace(/es$/, '') : frec} de ${formatCurrency(d.montoPorPago)}`;
+        }
+
+        // Modal de deuda: muestra los campos del tipo elegido.
+        function elegirAcuerdo(a) {
+            $('debt-acuerdo').value = a;
+            document.querySelectorAll('.acuerdo-btn').forEach(b => {
+                const on = b.dataset.acuerdo === a;
+                b.setAttribute('aria-pressed', on);
+                b.className = `acuerdo-btn rounded-xl p-2 text-sm font-bold border-2 ${on ? 'border-frteal bg-teal-50 dark:bg-teal-900/30' : 'border-slate-200 dark:border-slate-700'}`;
+            });
+            $('debt-acuerdo-pagos').classList.toggle('hidden', a !== 'pagos');
+            $('debt-acuerdo-unico').classList.toggle('hidden', a !== 'unico');
+        }
+        function actualizarModalDeuda() {
+            const t = $('debt-tipo').value;
+            document.querySelectorAll('[data-debt-tipo]').forEach(x => x.classList.toggle('hidden', x.dataset.debtTipo !== t));
+            if (t === 'personal') elegirAcuerdo($('debt-acuerdo').value === 'unico' ? 'unico' : 'pagos');
+        }
+        $('debt-tipo').addEventListener('change', actualizarModalDeuda);
+        document.querySelectorAll('.acuerdo-btn').forEach(b => b.addEventListener('click', () => elegirAcuerdo(b.dataset.acuerdo)));
+
         // ---------- Listas editables (deudas, gastos, metas, inversiones) ----------
         // Un solo editor genérico. Convención de IDs: `${tipo}-modal`, `edit-${tipo}-key`,
         // `${tipo}-save-btn`, `${tipo}-delete-btn`, `add-${tipo}-btn`.
         // El primer campo de cada lista es el nombre (obligatorio).
         const LISTAS = {
-            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], diaCorte: ['debt-cut', 'dia'], diaPago: ['debt-day', 'dia'], esMSI: ['debt-msi', 'check'], mesesRestantes: ['debt-msi-months', 'numopt'], esPrioridad: ['debt-priority', 'check'] },
+            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], diaCorte: ['debt-cut', 'dia'], diaPago: ['debt-day', 'dia'], tipoDeuda: ['debt-tipo', 'text'], mesesRestantes: ['debt-msi-months', 'numopt'],
+                                  acuerdo: ['debt-acuerdo', 'text'], pagosRestantes: ['debt-pagos', 'numopt'], frecuenciaPagos: ['debt-pagos-frec', 'text'], fechaUnica: ['debt-fecha-unica', 'fecha'], esPrioridad: ['debt-priority', 'check'] },
                         // Compra a MSI: el pago sale del saldo entre los meses que faltan y no cobra intereses.
+                        // Cada tipo usa sus campos y limpia los demás (para que no queden datos viejos de otro tipo).
                         antesDeGuardar(item) {
-                            if (!item.esMSI) { item.mesesRestantes = null; return; }
-                            if (!(item.mesesRestantes >= 1)) return ['Escribe cuántos meses te faltan', 'debt-msi-months'];
-                            item.mesesRestantes = Math.ceil(item.mesesRestantes);
-                            item.tasaAnual = 0;
-                            item.pagoMensual = Math.round(item.total / item.mesesRestantes * 100) / 100;
+                            const tipo = TIPOS_DEUDA.includes(item.tipoDeuda) ? item.tipoDeuda : 'tarjeta';
+                            item.tipoDeuda = tipo;
+                            item.esMSI = tipo === 'msi';
+                            if (tipo !== 'msi') item.mesesRestantes = null;
+                            if (tipo !== 'personal') { item.acuerdo = null; item.pagosRestantes = null; item.frecuenciaPagos = null; item.fechaUnica = null; item.montoPorPago = null; }
+                            if (tipo !== 'tarjeta') item.diaCorte = null;
+                            if (tipo === 'msi') {
+                                if (!(item.mesesRestantes >= 1)) return ['Escribe cuántos meses te faltan', 'debt-msi-months'];
+                                item.mesesRestantes = Math.ceil(item.mesesRestantes);
+                                item.tasaAnual = 0;
+                                item.diaPago = item.diaPago ?? null;
+                                item.pagoMensual = Math.round(item.total / item.mesesRestantes * 100) / 100;
+                            }
+                            if (tipo === 'personal') {
+                                item.tasaAnual = 0;
+                                item.acuerdo = item.acuerdo === 'unico' ? 'unico' : 'pagos';
+                                if (item.acuerdo === 'pagos') {
+                                    if (!(item.pagosRestantes >= 1)) return ['Escribe cuántos pagos faltan', 'debt-pagos'];
+                                    item.pagosRestantes = Math.ceil(item.pagosRestantes);
+                                    item.frecuenciaPagos = FRECUENCIAS[item.frecuenciaPagos] ? item.frecuenciaPagos : 'quincenal';
+                                    item.fechaUnica = null;
+                                } else {
+                                    if (!item.fechaUnica) return ['Elige la fecha que acordaron', 'debt-fecha-unica'];
+                                    item.pagosRestantes = null; item.frecuenciaPagos = null;
+                                }
+                                recalcularAcuerdo(item);
+                            }
                         } },
             fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'], diaPago: ['fixed-day', 'dia'] } },
             variable: { coleccion: 'gastosVariables',     campos: { nombre: ['variable-name', 'text'], monto: ['variable-amount', 'num'] } },
@@ -1173,7 +1291,12 @@
                 else el.value = item?.[campo] ?? (el.tagName === 'SELECT' ? el.options[0]?.value ?? '' : '');
             }
             $(`${tipo}-delete-btn`).classList.toggle('hidden', !key);
-            if (tipo === 'debt') $('debt-msi-box').classList.toggle('hidden', !$('debt-msi').checked);
+            if (tipo === 'debt') {
+                $('debt-tipo').value = item ? tipoDeuda(item) : 'tarjeta';
+                if (!item?.acuerdo) $('debt-acuerdo').value = 'pagos';
+                if (!item?.frecuenciaPagos) $('debt-pagos-frec').value = 'quincenal';
+                actualizarModalDeuda();
+            }
             openModal(`${tipo}-modal`);
             $(Object.values(cfg.campos)[0][0]).focus();
         }
@@ -1222,7 +1345,6 @@
             closeModal(`${tipo}-modal`);
         }
 
-        $('debt-msi').addEventListener('change', (e) => $('debt-msi-box').classList.toggle('hidden', !e.target.checked));
         for (const tipo of Object.keys(LISTAS)) {
             $(`add-${tipo}-btn`).addEventListener('click', () => abrirEditor(tipo));
             $(`${tipo}-save-btn`).addEventListener('click', () => guardarEditor(tipo));
@@ -1277,14 +1399,20 @@
                 }
             };
             const items = [
-                ...Object.entries(data.deudas || {}).filter(([, d]) => num(d.total) > 0).map(([k, d]) => ({ k, tipo: 'debt', nombre: d.nombre, monto: num(d.pagoMensual), dia: d.diaPago })),
+                ...Object.entries(data.deudas || {}).filter(([, d]) => num(d.total) > 0 && tipoDeuda(d) !== 'personal').map(([k, d]) => ({ k, tipo: 'debt', nombre: d.nombre, monto: num(d.pagoMensual), dia: d.diaPago })),
                 ...Object.entries(data.deudas || {}).filter(([, d]) => num(d.total) > 0 && !d.esMSI).map(([k, d]) => ({ k, tipo: 'debt', corte: true, nombre: d.nombre, monto: 0, dia: d.diaCorte })),
                 ...Object.entries(data.gastosFijos || {}).map(([k, g]) => ({ k, tipo: 'fixed', nombre: g.nombre, monto: num(g.monto), dia: g.diaPago })),
             ].filter(x => Number.isInteger(x.dia) && x.dia >= 1 && x.dia <= 31);
-            return items.map(x => {
-                const fecha = vence(x.dia);
-                return { ...x, fecha, faltan: Math.round((fecha - base) / 864e5) };
-            }).filter(x => x.faltan <= dias).sort((a, b) => a.faltan - b.faltan || a.corte - b.corte || b.monto - a.monto);
+            // Deudas con familiares o amigos: fecha única, o el siguiente día de pago según la frecuencia acordada.
+            const acuerdos = Object.entries(data.deudas || {}).filter(([, d]) => num(d.total) > 0 && tipoDeuda(d) === 'personal' && d.acuerdo).map(([k, d]) => {
+                let fecha;
+                if (d.acuerdo === 'unico' && d.fechaUnica) { const [y, m, dd] = d.fechaUnica.split('-').map(Number); fecha = new Date(y, m - 1, dd); }
+                else if (d.frecuenciaPagos === 'semanal') { fecha = new Date(base); fecha.setDate(base.getDate() + ((5 - base.getDay() + 7) % 7)); } // viernes
+                else if (d.frecuenciaPagos === 'mensual') fecha = vence(new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate());
+                else fecha = (base.getDate() === 15 || base.getDate() === new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate()) ? base : siguienteQuincena(base);
+                return { k, tipo: 'debt', personal: true, nombre: d.nombre, monto: num(d.acuerdo === 'unico' ? d.total : Math.min(num(d.total), num(d.montoPorPago))), fecha };
+            }).filter(x => x.fecha >= new Date(base.getTime() - 30 * 864e5)); // un pago único vencido se sigue mostrando un mes
+            return [...items.map(x => ({ ...x, fecha: vence(x.dia) })), ...acuerdos].map(x => ({ ...x, faltan: Math.round((x.fecha - base) / 864e5) })).filter(x => x.faltan <= dias).sort((a, b) => a.faltan - b.faltan || a.corte - b.corte || b.monto - a.monto);
         }
 
         function renderizarProximosPagos() {
@@ -1298,8 +1426,8 @@
             const cuando = (n) => n === 0 ? 'Hoy' : n === 1 ? 'Mañana' : `En ${n} días`;
             cont.innerHTML = lista.map(x => `
                 <div data-editar="${x.tipo}" data-key="${esc(x.k)}" role="button" tabindex="0" class="flex justify-between items-center p-3 rounded-xl border cursor-pointer ${x.corte ? 'bg-sky-50 border-sky-200 dark:bg-sky-900/20 dark:border-sky-800' : x.faltan <= 2 ? 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800' : 'bg-slate-50 border-slate-100 dark:bg-slate-800 dark:border-slate-700'}">
-                    <div><p class="text-sm font-bold">${x.corte ? '✂️ Corte de' : x.tipo === 'debt' ? '💳' : '🏠'} ${esc(x.nombre)}</p>
-                    <p class="text-[11px] ${x.faltan <= 2 && !x.corte ? 'text-red-600 font-bold' : 'text-slate-500'}">${cuando(x.faltan)} · ${x.fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}${x.corte ? ' · compra mejor después' : ''}</p></div>
+                    <div><p class="text-sm font-bold">${x.corte ? '✂️ Corte de' : x.personal ? '🤝' : x.tipo === 'debt' ? '💳' : '🏠'} ${esc(x.nombre)}</p>
+                    <p class="text-[11px] ${x.faltan <= 2 && !x.corte ? 'text-red-600 font-bold' : 'text-slate-500'}">${x.faltan < 0 ? `Venció hace ${-x.faltan} ${x.faltan === -1 ? 'día' : 'días'}` : cuando(x.faltan)} · ${x.fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}${x.corte ? ' · compra mejor después' : ''}</p></div>
                     <span class="font-black text-sm">${x.corte ? '' : x.monto > 0 ? formatCurrency(x.monto) : '—'}</span>
                 </div>`).join('');
         }
@@ -1323,8 +1451,9 @@
                 <div class="p-4 rounded-xl border ${d.esPrioridad ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'} dark:bg-slate-800">
                     <div class="flex justify-between"><div><p class="font-black text-sm">${esc(d.nombre)}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">PRIORIDAD</span>' : ''}${d.esMSI ? `<span class="text-[9px] text-violet-600 font-bold ml-1">MSI · ${num(d.mesesRestantes)} meses</span>` : ''}</div>${botonEditar('debt', k, d.nombre)}</div>
                     <p class="mt-2 text-sm font-black">${formatCurrency(d.total)}</p>
+                    ${tipoDeuda(d) === 'personal' ? `<p class="text-[11px] text-slate-600 dark:text-slate-300">🤝 Familiar o amigo</p><p class="text-[11px] text-slate-600 dark:text-slate-300 mt-1">${d.acuerdo ? textoAcuerdo(d) : '<span class="text-amber-600 font-bold">Anota cómo quedaron de pagarle (✏️)</span>'}</p>` : `
                     <p class="text-[11px] text-slate-500">Mínimo ${formatCurrency(d.pagoMensual)}/mes · ${num(d.tasaAnual) > 0 ? `${num(d.tasaAnual)}% anual` : (d.tasaAnual == null || d.tasaAnual === '' ? '<span class="text-amber-600 font-bold">falta la tasa</span>' : 'sin intereses')}</p>
-                    ${fechasDeuda(d)}
+                    ${fechasDeuda(d)}`}
                 </div>`).join('');
         }
 
@@ -1468,7 +1597,9 @@
             const fondoActual = num(fondo.actual);
             const mesesFondo = esenciales > 0 ? fondoActual / esenciales : 0;
             const pct = (x) => ing > 0 ? Math.round((x / ing) * 100) : 0;
-            const sinPago = Object.values(deudas || {}).filter(d => num(d.total) > 0 && num(d.pagoMensual) <= 0);
+            const sinPago = Object.values(deudas || {}).filter(d => num(d.total) > 0 && num(d.pagoMensual) <= 0 && !(d.tipoDeuda === 'personal' && d.acuerdo));
+            const vencida = Object.values(deudas || {}).find(d => num(d.total) > 0 && d.tipoDeuda === 'personal' && d.acuerdo === 'unico' && d.fechaUnica && diasDesde(d.fechaUnica) > 0);
+            if (vencida) out.push({ icono: '🤝', texto: `La fecha que acordaste con ${vencida.nombre || 'esa persona'} ya pasó y quedan ${fmt(num(vencida.total))}. Si ya le pagaste, regístralo con "+"; si no, platica con ${vencida.nombre || 'esa persona'} y acuerden una fecha nueva.` });
 
             if (ing <= 0) {
                 return [{ icono: 'ℹ️', texto: 'Registra tu sueldo e ingresos para poder darte un diagnóstico.' }];
@@ -1477,7 +1608,7 @@
                 out.push({ icono: '🚨', texto: `Gastas ${fmt(-t.sobrante)} más de lo que ganas al mes. Lo primero es recortar esa cantidad: empieza por gastos hormiga (${fmt(t.hormiga)}) y variables (${fmt(t.variables)}).` });
             }
             if (sinPago.length) {
-                out.push({ icono: '⚠️', texto: `${sinPago.length === 1 ? 'Tienes 1 deuda' : `Tienes ${sinPago.length} deudas`} sin pago mensual asignado (${sinPago.map(d => d.nombre || 'sin nombre').join(', ')}). Ponle al menos el pago mínimo para que no crezcan los intereses.` });
+                out.push({ icono: '⚠️', texto: `${sinPago.length === 1 ? 'Tienes 1 deuda' : `Tienes ${sinPago.length} deudas`} sin pago asignado (${sinPago.map(d => d.nombre || 'sin nombre').join(', ')}). Ponle el pago mínimo o, si es con un familiar o amigo, anota cómo quedaron de pagarle.` });
             }
             const atrapada = Object.values(deudas || {}).find(d => num(d.total) > 0 && num(d.pagoMensual) > 0 && num(d.pagoMensual) <= num(d.total) * num(d.tasaAnual) / 1200);
             if (atrapada) {
@@ -1524,7 +1655,7 @@
         // Devuelve { orden: [{…, mes}], meses, interes } (meses = null si no se termina en 50 años).
         function planDeudas(deudas, extra, metodo = 'nieve', abonos = {}) {
             const lista = Object.values(deudas || {})
-                .map(d => ({ nombre: d.nombre || 'Sin nombre', saldo: num(d.total), minimo: Math.max(0, num(d.pagoMensual)), tasa: Math.max(0, num(d.tasaAnual)), prioridad: !!d.esPrioridad, msi: !!d.esMSI, sinTasa: d.tasaAnual == null || d.tasaAnual === '' }))
+                .map(d => ({ nombre: d.nombre || 'Sin nombre', saldo: num(d.total), minimo: Math.max(0, num(d.pagoMensual)), tasa: Math.max(0, num(d.tasaAnual)), prioridad: !!d.esPrioridad, msi: !!d.esMSI, sinTasa: (d.tasaAnual == null || d.tasaAnual === '') && d.tipoDeuda !== 'personal' }))
                 .filter(d => d.saldo > 0)
                 // Las compras a MSI van al final: adelantarlas no ahorra intereses.
                 .sort((a, b) => (b.prioridad - a.prioridad) || (a.msi - b.msi) || (metodo === 'avalancha' ? (b.tasa - a.tasa) || (a.saldo - b.saldo) : (a.saldo - b.saldo)));
@@ -1617,7 +1748,7 @@
             if (!nieve.orden.length) { cont.innerHTML = '<p class="text-sm">🎉 No tienes deudas registradas.</p>'; return; }
             const avalancha = planDeudas(deudas, extra, 'avalancha');
             const vivas = Object.values(deudas).filter(d => num(d.total) > 0);
-            const sinTasa = vivas.filter(d => d.tasaAnual == null || d.tasaAnual === '').map(d => d.nombre || 'Sin nombre');
+            const sinTasa = vivas.filter(d => (d.tasaAnual == null || d.tasaAnual === '') && d.tipoDeuda !== 'personal').map(d => d.nombre || 'Sin nombre');
             const mejor = (avalancha.interes ?? Infinity) < (nieve.interes ?? Infinity) - 1 ? 'avalancha' : 'nieve';
             // Solo se recomienda si de verdad hay diferencia (con prioridades o sin tasas, ambos pueden dar igual).
             const hayDiferencia = Math.abs((avalancha.interes ?? 0) - (nieve.interes ?? 0)) > 1 || avalancha.meses !== nieve.meses;

@@ -22,7 +22,11 @@ otras ramas generan preview deploys).
 - Firestore: **un documento por usuario** en `usuarios/{uid}` con todo su estado:
   `settings.currency`, `sueldoQuincenal` (monto **por pago**, nombre legado), `frecuenciaIngreso` ('semanal'|'quincenal'|'mensual'),
   `aguinaldo` (anual, no entra al ingreso mensual), `ingresosExtras{ventas,bonos,otros}`, `metas.fondoEmergencia{objetivo,actual}`,
-  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaCorte,diaPago,esMSI,mesesRestantes,esPrioridad}`
+  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaCorte,diaPago,tipoDeuda,esMSI,mesesRestantes,acuerdo,pagosRestantes,frecuenciaPagos,fechaUnica,montoPorPago,esPrioridad}`
+  (`tipoDeuda` = tarjeta|personal|msi; deudas viejas sin él se leen con `tipoDeuda(d)`: msi si `esMSI`, si no tarjeta.
+  Personal = familiar o amigo, sin tasa ni corte: `acuerdo` 'pagos' (pagosRestantes × frecuenciaPagos, `montoPorPago` = total / pagos)
+  o 'unico' (`fechaUnica`; `pagoMensual` = lo que hay que apartar al mes, se recalcula al cargar). `recalcularAcuerdo()` /
+  `aplicarAbonoAcuerdo()` mantienen pagos restantes y pago mensual tras abonos)
   (`diaCorte` y `diaPago` = día de corte y día límite de pago, 1-31 o `null`; `proximosPagos()` incluye los cortes como
   avisos sin monto; `fechasDeuda()` los muestra en la tarjeta con el consejo de comprar justo después del corte)
   (compra a MSI: `antesDeGuardar` pone tasa 0 y pago = total / mesesRestantes; `tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables{nombre,monto}`,
@@ -60,6 +64,8 @@ otras ramas generan preview deploys).
   semanal = 52/12, quincenal = 2, mensual = 1).
 - `guardarEditor` **mezcla** con el item existente (`{...viejo, ...nuevo}`) para no perder campos que el modal no muestra
   (hábito, reto, hito).
+- El modal de deuda muestra solo los campos de su tipo (`[data-debt-tipo]`, `actualizarModalDeuda()`); `antesDeGuardar` limpia
+  los campos de los otros tipos.
 - Una entrada de `LISTAS` puede tener `antesDeGuardar(item)` para ajustar el item o devolver `[mensaje, idDelCampo]` como error.
 
 ## Asesor
