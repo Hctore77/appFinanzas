@@ -89,6 +89,9 @@ otras ramas generan preview deploys).
 
 - Exige `Authorization: Bearer <Firebase idToken>`; se verifica con `identitytoolkit accounts:lookup` (sin dependencias).
 - El cliente manda **solo números**; el servidor valida y arma el prompt (no aceptar texto libre del cliente).
+  Incluye opcionalmente `gastosEsenciales` y `plan` (`planParaIA()`: el método que el usuario ve en el modal, meses,
+  intereses y por deuda saldo/mínimo/tasa(null = no registrada)/mes/prioridad/msi, **sin nombres**). El prompt
+  (`construirPrompt`, exportada para pruebas) le pide a la IA complementar ese plan sin contradecirlo ni inventar tasas.
 - Responde `{ consejos: string[] }` en texto plano; el cliente lo pinta con `textContent`.
 - Proveedores en orden con fallback: DeepSeek (`DEEPSEEK_API_KEY`) → Gemini (`GEMINI_API_KEY`), env vars en Vercel.
   Modelos de Gemini en orden con fallback (`GEMINI_MODEL`, default `gemini-3.8-flash` → `gemini-3.6-flash` →
