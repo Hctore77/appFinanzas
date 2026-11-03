@@ -6,6 +6,8 @@
 // La API key web de Firebase es pública por diseño (va en el index.html); se puede sobreescribir por env.
 const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyC6Y5_bfA2Gr-4rvLuUdRUoMzNUUpxmDuw';
 const LIMITE_DIARIO = Number(process.env.IA_LIMITE_DIARIO) || 10;
+// Google retira modelos viejos (gemini-2.0-flash ya no existe); se puede cambiar sin tocar código con GEMINI_MODEL.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 
 // Límite por usuario "best effort": vive en la memoria de cada instancia serverless,
 // así que se reinicia si Vercel levanta una instancia nueva. Frena el abuso casual,
@@ -99,12 +101,14 @@ async function llamarDeepSeek(prompt, key) {
 }
 
 async function llamarGemini(prompt, key) {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 600, responseMimeType: 'application/json' }
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            // Los modelos Gemini 3 ignoran temperature y el "thinking" cuenta dentro de maxOutputTokens:
+            // pensamiento bajo y margen de tokens para que el JSON no salga cortado.
+            generationConfig: { maxOutputTokens: 2048, responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } }
         })
     });
     const data = await r.json();

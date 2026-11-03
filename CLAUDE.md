@@ -46,6 +46,8 @@ otras ramas generan preview deploys).
 - El cliente manda **solo números**; el servidor valida y arma el prompt (no aceptar texto libre del cliente).
 - Responde `{ consejos: string[] }` en texto plano; el cliente lo pinta con `textContent`.
 - Proveedores en orden con fallback: DeepSeek (`DEEPSEEK_API_KEY`) → Gemini (`GEMINI_API_KEY`), env vars en Vercel.
+  Modelo de Gemini en `GEMINI_MODEL` (default `gemini-3.8-flash`); Google retira modelos viejos, si el asesor dice
+  "no disponible" revisar los runtime logs de Vercel.
 - Límite diario por usuario (`IA_LIMITE_DIARIO`, default 10) en memoria: best-effort, se reinicia por instancia.
 
 ## Cómo probar
