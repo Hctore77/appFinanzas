@@ -21,8 +21,9 @@ otras ramas generan preview deploys).
 - Proyecto Firebase: `plan-maestro-2026-fea50`. Auth: solo Google (`signInWithPopup`).
 - Firestore: **un documento por usuario** en `usuarios/{uid}` con todo su estado:
   `settings.currency`, `sueldoQuincenal`, `ingresosExtras{ventas,bonos,otros}`, `metas.fondoEmergencia{objetivo,actual}`,
-  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,esPrioridad}`
-  (`tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos|gastosVariables|gastosHormiga{nombre,monto}`,
+  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaPago,esPrioridad}`
+  (`tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables|gastosHormiga{nombre,monto}`
+  (`diaPago` 1-31 o `null`; lo usa `proximosPagos()` para la tarjeta "Próximos pagos" de los siguientes 10 días),
   `metasPersonalizadas{nombre,objetivo,actual}`, `gbm{ticker,shares,target}` (inversiones; el nombre "gbm" es legado).
 - `normalizar()` en index.html rellena campos faltantes de documentos viejos: **cualquier campo nuevo debe agregarse
   ahí y en `datosPorDefecto()`**, porque ya hay usuarios con datos guardados.
@@ -48,7 +49,7 @@ otras ramas generan preview deploys).
   simula mes a mes con intereses (tasa/12): `'nieve'` = menor saldo primero, `'avalancha'` = mayor tasa primero; las
   marcadas como prioridad van antes en ambos. El sobrante va a la primera deuda y los pagos liberados se acumulan.
   `pintarPlan()` muestra ambos métodos con meses e intereses y recomienda el de menor interés. Instantáneo y gratis.
-- Campos de lista tipo `'numopt'` en `LISTAS`: vacío se guarda como `null` (desconocido), no como 0.
+- Campos de lista tipo `'dia'` (entero 1-31 o `null`, validado al guardar) y `'numopt'` en `LISTAS`: vacío se guarda como `null` (desconocido), no como 0.
 - **IA opcional** (botón "segunda opinión"): solo se llama si el usuario lo pide; si falla, el diagnóstico sigue ahí.
 - Que cada usuario use "su" Gemini con su login de Google no es viable: el login de Firebase solo da identidad,
   no acceso a la API de Gemini (que requiere API key/proyecto con facturación).

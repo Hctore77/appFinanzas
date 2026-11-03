@@ -180,6 +180,12 @@
                 <div class="card text-center p-4"><p class="text-xs text-slate-400 uppercase">Deuda</p><p id="statDeudaTotal" class="text-2xl font-black text-orange-500">$0</p></div>
             </div>
 
+            <!-- Próximos pagos -->
+            <div class="card mb-8 p-5">
+                <div class="flex justify-between items-center mb-3"><h3 class="font-black text-lg">📅 Próximos pagos</h3><span class="text-xs text-slate-400">siguientes 10 días</span></div>
+                <div id="proximos-pagos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+            </div>
+
             <!-- Gráfico y Metas -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 <div class="card lg:col-span-2">
@@ -286,8 +292,8 @@
     <div id="gbm-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Activo Inversión</h3><input type="hidden" id="edit-gbm-key"><input type="text" id="gbm-ticker" class="budget-input mb-3 uppercase" placeholder="Ticker (Ej: VOO)"><input type="number" id="gbm-shares" class="budget-input mb-3" placeholder="Títulos"><input type="number" id="gbm-target" class="budget-input mb-6" placeholder="Meta"><button id="gbm-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="gbm-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('gbm-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
 
     <!-- Otros Modales -->
-    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-4" placeholder="Ej: 45"><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
-    <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-6" placeholder="Monto"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><label for="debt-day" class="text-xs text-slate-400">Día límite de pago (1-31), para recordártelo</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input mb-4" placeholder="Ej: 15"><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-3" placeholder="Monto"><label for="fixed-day" class="text-xs text-slate-400">Día de pago (1-31, opcional)</label><input type="number" min="1" max="31" step="1" id="fixed-day" class="budget-input mb-6" placeholder="Ej: 5"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="ahorro-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🔋 Fondo</h3><label for="ahorro-meta" class="text-xs text-slate-400">Meta</label><input type="number" min="0" id="ahorro-meta" class="budget-input mb-4" placeholder="Meta"><label for="ahorro-abono" class="text-xs text-slate-400">Abonar (usa un número negativo para retirar)</label><input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="0"><button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
@@ -444,8 +450,8 @@
         // `${tipo}-save-btn`, `${tipo}-delete-btn`, `add-${tipo}-btn`.
         // El primer campo de cada lista es el nombre (obligatorio).
         const LISTAS = {
-            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], esPrioridad: ['debt-priority', 'check'] } },
-            fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'] } },
+            debt:     { coleccion: 'deudas',              campos: { nombre: ['debt-name', 'text'], total: ['debt-total', 'num'], pagoMensual: ['debt-min-payment', 'num'], tasaAnual: ['debt-rate', 'numopt'], diaPago: ['debt-day', 'dia'], esPrioridad: ['debt-priority', 'check'] } },
+            fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'], diaPago: ['fixed-day', 'dia'] } },
             variable: { coleccion: 'gastosVariables',     campos: { nombre: ['variable-name', 'text'], monto: ['variable-amount', 'num'] } },
             hormiga:  { coleccion: 'gastosHormiga',       campos: { nombre: ['hormiga-name', 'text'], monto: ['hormiga-amount', 'num'] } },
             meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'] } },
@@ -474,6 +480,7 @@
                 const el = $(id);
                 if (kind === 'check') item[campo] = el.checked;
                 else if (kind === 'num') item[campo] = num(el.value);
+                else if (kind === 'dia') item[campo] = el.value.trim() === '' ? null : Math.trunc(num(el.value));
                 else if (kind === 'numopt') item[campo] = el.value.trim() === '' ? null : num(el.value); // vacío = "no lo sé" (≠ 0)
                 else if (kind === 'upper') item[campo] = el.value.trim().toUpperCase();
                 else item[campo] = el.value.trim();
@@ -482,6 +489,8 @@
             if (!item[campoNombre]) { showToast('Escribe un nombre', 'error'); $(idNombre).focus(); return; }
             const negativo = Object.entries(cfg.campos).find(([c, [, kind]]) => (kind === 'num' || kind === 'numopt') && item[c] < 0);
             if (negativo) { showToast('Los montos no pueden ser negativos', 'error'); $(negativo[1][0]).focus(); return; }
+            const diaMalo = Object.entries(cfg.campos).find(([c, [, kind]]) => kind === 'dia' && item[c] !== null && (item[c] < 1 || item[c] > 31));
+            if (diaMalo) { showToast('El día de pago va del 1 al 31', 'error'); $(diaMalo[1][0]).focus(); return; }
 
             const key = $(`edit-${tipo}-key`).value || nuevaClave();
             financialData[cfg.coleccion][key] = item;
@@ -535,7 +544,46 @@
             renderizarGastosHormiga();
             renderizarMetas();
             renderizarInversiones();
+            renderizarProximosPagos();
             calcularYActualizarTodo();
+        }
+
+        // Pagos con día configurado que vencen en los próximos `dias` días (incluye hoy).
+        // Un día 31 en un mes más corto cae en el último día de ese mes. Devuelve [{nombre, monto, tipo, faltan, fecha}].
+        function proximosPagos(data, hoy = new Date(), dias = 10) {
+            const base = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+            const vence = (dia) => {
+                for (let m = 0; m <= 1; m++) {
+                    const ultimo = new Date(base.getFullYear(), base.getMonth() + m + 1, 0).getDate();
+                    const f = new Date(base.getFullYear(), base.getMonth() + m, Math.min(dia, ultimo));
+                    if (f >= base) return f;
+                }
+            };
+            const items = [
+                ...Object.entries(data.deudas || {}).filter(([, d]) => num(d.total) > 0).map(([k, d]) => ({ k, tipo: 'debt', nombre: d.nombre, monto: num(d.pagoMensual), dia: d.diaPago })),
+                ...Object.entries(data.gastosFijos || {}).map(([k, g]) => ({ k, tipo: 'fixed', nombre: g.nombre, monto: num(g.monto), dia: g.diaPago })),
+            ].filter(x => Number.isInteger(x.dia) && x.dia >= 1 && x.dia <= 31);
+            return items.map(x => {
+                const fecha = vence(x.dia);
+                return { ...x, fecha, faltan: Math.round((fecha - base) / 864e5) };
+            }).filter(x => x.faltan <= dias).sort((a, b) => a.faltan - b.faltan || b.monto - a.monto);
+        }
+
+        function renderizarProximosPagos() {
+            const cont = $('proximos-pagos');
+            const tieneDias = [...Object.values(financialData.deudas), ...Object.values(financialData.gastosFijos)].some(x => Number.isInteger(x.diaPago));
+            const lista = proximosPagos(financialData);
+            if (!lista.length) {
+                cont.innerHTML = `<p class="text-sm text-slate-500 md:col-span-3">${tieneDias ? '✅ Nada vence en los próximos 10 días.' : 'Agrega el día de pago a tus deudas y gastos fijos (botón ✏️) y aquí verás lo que vence pronto.'}</p>`;
+                return;
+            }
+            const cuando = (n) => n === 0 ? 'Hoy' : n === 1 ? 'Mañana' : `En ${n} días`;
+            cont.innerHTML = lista.map(x => `
+                <div data-editar="${x.tipo}" data-key="${esc(x.k)}" role="button" tabindex="0" class="flex justify-between items-center p-3 rounded-xl border cursor-pointer ${x.faltan <= 2 ? 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800' : 'bg-slate-50 border-slate-100 dark:bg-slate-800 dark:border-slate-700'}">
+                    <div><p class="text-sm font-bold">${x.tipo === 'debt' ? '💳' : '🏠'} ${esc(x.nombre)}</p>
+                    <p class="text-[11px] ${x.faltan <= 2 ? 'text-red-600 font-bold' : 'text-slate-500'}">${cuando(x.faltan)} · ${x.fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}</p></div>
+                    <span class="font-black text-sm">${x.monto > 0 ? formatCurrency(x.monto) : '—'}</span>
+                </div>`).join('');
         }
 
         function botonEditar(tipo, k, nombre) {
@@ -547,7 +595,7 @@
                 <div class="p-4 rounded-xl border ${d.esPrioridad ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-100'} dark:bg-slate-800">
                     <div class="flex justify-between"><div><p class="font-black text-sm">${esc(d.nombre)}</p>${d.esPrioridad ? '<span class="text-[9px] text-red-500 font-bold">PRIORIDAD</span>' : ''}</div>${botonEditar('debt', k, d.nombre)}</div>
                     <p class="mt-2 text-sm font-black">${formatCurrency(d.total)}</p>
-                    <p class="text-[11px] text-slate-500">Mínimo ${formatCurrency(d.pagoMensual)}/mes · ${num(d.tasaAnual) > 0 ? `${num(d.tasaAnual)}% anual` : (d.tasaAnual == null || d.tasaAnual === '' ? '<span class="text-amber-600 font-bold">falta la tasa</span>' : 'sin intereses')}</p>
+                    <p class="text-[11px] text-slate-500">Mínimo ${formatCurrency(d.pagoMensual)}/mes${Number.isInteger(d.diaPago) ? ` (día ${d.diaPago})` : ''} · ${num(d.tasaAnual) > 0 ? `${num(d.tasaAnual)}% anual` : (d.tasaAnual == null || d.tasaAnual === '' ? '<span class="text-amber-600 font-bold">falta la tasa</span>' : 'sin intereses')}</p>
                 </div>`).join('');
         }
 
