@@ -8,6 +8,9 @@ const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyC6Y5_bfA2Gr-4rvL
 const LIMITE_DIARIO = Number(process.env.IA_LIMITE_DIARIO) || 10;
 // Google retira modelos viejos (gemini-2.0-flash ya no existe) y a veces satura los nuevos ("high demand").
 // Se prueban en orden; el primero se puede cambiar sin tocar código con GEMINI_MODEL.
+// Tiempo máximo por llamada a un proveedor: si Google se cuelga, se corta y se prueba el siguiente
+// (antes una llamada colgada llegaba al límite de 300 s de Vercel y el usuario veía un 504).
+const TIMEOUT_MS = 8000;
 const GEMINI_MODELOS = [...new Set([process.env.GEMINI_MODEL || 'gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-3.5-flash-lite'])];
 
 // Límite por usuario "best effort": vive en la memoria de cada instancia serverless,
@@ -92,6 +95,7 @@ function extraerConsejos(texto) {
 async function llamarDeepSeek(prompt, key) {
     const r = await fetch('https://api.deepseek.com/chat/completions', {
         method: 'POST',
+        signal: AbortSignal.timeout(TIMEOUT_MS),
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
         body: JSON.stringify({
             model: 'deepseek-chat',
@@ -109,6 +113,7 @@ async function llamarDeepSeek(prompt, key) {
 async function llamarGeminiModelo(modelo, prompt, key) {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
         method: 'POST',
+        signal: AbortSignal.timeout(TIMEOUT_MS),
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify({
             contents: [{ role: 'user', parts: [{ text: prompt }] }],

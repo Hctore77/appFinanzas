@@ -40,7 +40,17 @@ otras ramas generan preview deploys).
   (se fuerza al ocultar/cerrar la pestaña). Firestore tiene caché offline persistente multi-pestaña.
 - Cálculos centralizados en `calcularTotales()` (ingreso mensual = sueldoQuincenal × 2 + extras).
 
-## Asesor IA (`api/gemini.js`)
+## Asesor
+
+- **Principal, sin IA (en index.html)**: `diagnosticoLocal()` da consejos por reglas con los números del usuario
+  (déficit, deudas sin pago, % en deudas, fondo de emergencia, gastos hormiga, tasa de ahorro) y `planDeudas()`
+  calcula un plan bola de nieve (prioridad primero, luego menor saldo; el sobrante va a la primera deuda y los pagos
+  liberados se acumulan). Instantáneo y gratis; los plazos son estimados porque aún no se registran tasas de interés.
+- **IA opcional** (botón "segunda opinión"): solo se llama si el usuario lo pide; si falla, el diagnóstico sigue ahí.
+- Que cada usuario use "su" Gemini con su login de Google no es viable: el login de Firebase solo da identidad,
+  no acceso a la API de Gemini (que requiere API key/proyecto con facturación).
+
+## IA (`api/gemini.js`)
 
 - Exige `Authorization: Bearer <Firebase idToken>`; se verifica con `identitytoolkit accounts:lookup` (sin dependencias).
 - El cliente manda **solo números**; el servidor valida y arma el prompt (no aceptar texto libre del cliente).
@@ -49,6 +59,7 @@ otras ramas generan preview deploys).
   Modelos de Gemini en orden con fallback (`GEMINI_MODEL`, default `gemini-3.8-flash` → `gemini-3.6-flash` →
   `gemini-3.5-flash-lite`): Google retira modelos y a veces los satura. Si el asesor dice "no disponible", revisar
   los runtime logs de Vercel (Hobby guarda solo 1 hora). Si nadie responde, la consulta no cuenta para el límite.
+- Timeout de 8 s por llamada a cada proveedor/modelo (peor caso ~24 s); el cliente corta a los 30 s.
 - Límite diario por usuario (`IA_LIMITE_DIARIO`, default 10) en memoria: best-effort, se reinicia por instancia.
 
 ## Cómo probar
@@ -67,7 +78,7 @@ confirmación al borrar/cerrar sesión, modo oscuro persistente, editor genéric
 Pendiente (en orden sugerido):
 1. **Universalizar**: frecuencia de ingreso (semanal/quincenal/mensual/variable) y varias fuentes de ingreso;
    más monedas + formato por locale; inversiones genéricas (tipo + valor en dinero) en vez de "GBM/títulos";
-   categorías de gasto personalizables; tasa de interés en deudas y plan avalancha/bola de nieve calculado.
+   categorías de gasto personalizables; tasa de interés en deudas (con eso, plan avalancha y plazos reales; la bola de nieve ya existe).
 2. **Historial**: registrar movimientos o cierres mensuales para ver tendencias (hoy es una foto de un solo mes).
 3. **Cuentas y privacidad**: login con correo, modo invitado, exportar datos (CSV/JSON), borrar cuenta, aviso de privacidad (LFPDPPP).
 4. **Calidad**: Tailwind por CDN no es para producción; límite de IA persistente (firebase-admin o Vercel KV); i18n.

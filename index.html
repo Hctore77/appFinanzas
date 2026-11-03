@@ -167,7 +167,7 @@
                         <h2 id="user-name" class="text-3xl font-black">Inversor</h2>
                     </div>
                     <button id="ai-advisor-btn" class="bg-white/20 hover:bg-white/30 px-6 py-3 rounded-full text-sm font-bold flex items-center gap-2">
-                        <span>🧠</span> Hablar con mi Asesor IA
+                        <span>🧠</span> Ver mi diagnóstico y plan
                     </button>
                 </div>
             </div>
@@ -260,12 +260,25 @@
         </div>
     </div>
 
-    <!-- Modal IA -->
+    <!-- Modal Asesor (diagnóstico local + plan de deudas; IA opcional) -->
     <div id="ai-modal" class="modal">
         <div class="modal-content max-w-2xl">
-            <div class="flex justify-between items-center mb-4"><h3 class="text-2xl font-black">🧠 Asesor IA de FinAI</h3><button onclick="closeModal('ai-modal')" aria-label="Cerrar" class="text-3xl text-slate-400">&times;</button></div>
-            <div id="ai-loading" class="text-center py-10 hidden"><div class="animate-spin w-12 h-12 border-4 border-frcyan border-t-transparent rounded-full mx-auto mb-4"></div><p>Analizando...</p></div>
-            <div id="ai-content" class="text-slate-700 dark:text-slate-300 space-y-4 hidden"></div>
+            <div class="flex justify-between items-center mb-4"><h3 class="text-2xl font-black">🧠 Tu Asesor FinAI</h3><button onclick="closeModal('ai-modal')" aria-label="Cerrar" class="text-3xl text-slate-400">&times;</button></div>
+            <div class="space-y-6 text-slate-700 dark:text-slate-300">
+                <section>
+                    <h4 class="font-black text-lg mb-2">📋 Diagnóstico</h4>
+                    <ul id="asesor-diagnostico" class="space-y-2"></ul>
+                </section>
+                <section>
+                    <h4 class="font-black text-lg mb-1">🎯 Plan para salir de deudas</h4>
+                    <div id="asesor-plan"></div>
+                </section>
+                <section class="border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <button id="ai-extra-btn" class="w-full py-3 rounded-xl font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700">✨ Pedir una segunda opinión a la IA</button>
+                    <div id="ai-loading" class="text-center py-6 hidden"><div class="animate-spin w-10 h-10 border-4 border-frcyan border-t-transparent rounded-full mx-auto mb-3"></div><p class="text-sm">Consultando a la IA (máx. 30 s)...</p></div>
+                    <div id="ai-content" class="mt-3 hidden"></div>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -619,22 +632,160 @@
             });
         }
 
-        // ---------- Asesor IA ----------
-        async function llamarAsesorIA() {
-            const btn = $('ai-advisor-btn');
+        // ---------- Asesor (sin IA) ----------
+        // Diagnóstico por reglas con los números del usuario: instantáneo, gratis y siempre disponible.
+        // Devuelve [{ icono, texto }] ordenado por importancia (máx. 5).
+        function diagnosticoLocal(t, fondo, deudas, fmt) {
+            const out = [];
+            const ing = t.ingresos;
+            const esenciales = t.fijos + t.variables;              // lo que cuesta vivir un mes sin deudas
+            const fondoActual = num(fondo.actual);
+            const mesesFondo = esenciales > 0 ? fondoActual / esenciales : 0;
+            const pct = (x) => ing > 0 ? Math.round((x / ing) * 100) : 0;
+            const sinPago = Object.values(deudas || {}).filter(d => num(d.total) > 0 && num(d.pagoMensual) <= 0);
+
+            if (ing <= 0) {
+                return [{ icono: 'ℹ️', texto: 'Registra tu sueldo e ingresos para poder darte un diagnóstico.' }];
+            }
+            if (t.sobrante < 0) {
+                out.push({ icono: '🚨', texto: `Gastas ${fmt(-t.sobrante)} más de lo que ganas al mes. Lo primero es recortar esa cantidad: empieza por gastos hormiga (${fmt(t.hormiga)}) y variables (${fmt(t.variables)}).` });
+            }
+            if (sinPago.length) {
+                out.push({ icono: '⚠️', texto: `${sinPago.length === 1 ? 'Tienes 1 deuda' : `Tienes ${sinPago.length} deudas`} sin pago mensual asignado (${sinPago.map(d => d.nombre || 'sin nombre').join(', ')}). Ponle al menos el pago mínimo para que no crezcan los intereses.` });
+            }
+            if (pct(t.pagoDeudas) > 30) {
+                out.push({ icono: '💳', texto: `El ${pct(t.pagoDeudas)}% de tu ingreso se va en deudas (lo sano es menos de 30%). Evita nuevas compras a crédito hasta bajarlo.` });
+            }
+            if (t.deudaTotal > 0 && fondoActual < esenciales) {
+                out.push({ icono: '🛟', texto: `Antes de acelerar deudas, junta un mini fondo de 1 mes de gastos (${fmt(esenciales)}). Hoy llevas ${fmt(fondoActual)}; así un imprevisto no te regresa a la tarjeta.` });
+            } else if (esenciales > 0 && mesesFondo < 3) {
+                out.push({ icono: '🛟', texto: `Tu fondo de emergencia cubre ${mesesFondo.toFixed(1)} meses de gastos. La meta recomendada es de 3 a 6 meses (${fmt(esenciales * 3)} a ${fmt(esenciales * 6)}).` });
+            }
+            if (pct(t.hormiga) >= 5) {
+                out.push({ icono: '🐜', texto: `Tus gastos hormiga son ${fmt(t.hormiga)} al mes (${pct(t.hormiga)}% de tu ingreso), ${fmt(t.hormiga * 12)} al año. Recortar la mitad te libera ${fmt(t.hormiga / 2)} al mes.` });
+            }
+            if (t.sobrante > 0) {
+                const tasa = pct(t.sobrante);
+                if (tasa < 10) out.push({ icono: '📈', texto: `Te sobra el ${tasa}% de tu ingreso. Intenta llegar al 10%-20% (${fmt(ing * 0.1)} a ${fmt(ing * 0.2)} al mes).` });
+                else if (t.deudaTotal > 0) out.push({ icono: '✅', texto: `Buen margen: te sobran ${fmt(t.sobrante)} al mes (${tasa}%). Destinarlo a tus deudas es lo que más rápido mejora tu situación (mira el plan abajo).` });
+                else out.push({ icono: '✅', texto: `Sin deudas y con ${fmt(t.sobrante)} libres al mes (${tasa}%). Cuando tu fondo llegue a 3-6 meses, empieza a invertir lo que sobra.` });
+            }
+            return out.length ? out.slice(0, 5) : [{ icono: '✅', texto: 'Tus números están en orden. Mantén el registro al día y revisa este diagnóstico cada mes.' }];
+        }
+
+        // Plan "bola de nieve": deudas marcadas como prioridad primero y luego de menor a mayor saldo.
+        // Cada mes se paga el mínimo de todas y lo extra va a la primera; al liquidar una, su pago se suma a la siguiente.
+        // Sin tasas de interés registradas, los plazos son estimados (los reales serán algo mayores).
+        function planDeudas(deudas, extra) {
+            const lista = Object.values(deudas || {})
+                .map(d => ({ nombre: d.nombre || 'Sin nombre', saldo: num(d.total), minimo: Math.max(0, num(d.pagoMensual)), prioridad: !!d.esPrioridad }))
+                .filter(d => d.saldo > 0)
+                .sort((a, b) => (b.prioridad - a.prioridad) || (a.saldo - b.saldo));
+            if (!lista.length) return { orden: [], meses: 0 };
+            const presupuesto = lista.reduce((s, d) => s + d.minimo, 0) + Math.max(0, extra);
+            if (presupuesto <= 0) return { orden: lista.map(d => ({ ...d, mes: null })), meses: null };
+
+            const saldos = lista.map(d => d.saldo);
+            const mesPagada = lista.map(() => null);
+            for (let mes = 1; mes <= 600 && mesPagada.includes(null); mes++) {
+                let disponible = presupuesto;
+                // 1) mínimos
+                lista.forEach((d, i) => {
+                    if (saldos[i] <= 0) return;
+                    const pago = Math.min(d.minimo, saldos[i], disponible);
+                    saldos[i] -= pago; disponible -= pago;
+                });
+                // 2) lo que sobra (extra + pagos liberados) a la primera deuda viva del orden
+                for (let i = 0; i < lista.length && disponible > 0; i++) {
+                    if (saldos[i] <= 0) continue;
+                    const pago = Math.min(saldos[i], disponible);
+                    saldos[i] -= pago; disponible -= pago;
+                }
+                saldos.forEach((s, i) => { if (s <= 0.005 && mesPagada[i] === null) mesPagada[i] = mes; });
+            }
+            const orden = lista.map((d, i) => ({ ...d, mes: mesPagada[i] }));
+            return { orden, meses: mesPagada.includes(null) ? null : Math.max(...mesPagada), presupuesto };
+        }
+
+        function textoMeses(m) {
+            if (m === null) return 'más de 50 años';
+            if (m < 12) return `${m} ${m === 1 ? 'mes' : 'meses'}`;
+            const a = Math.floor(m / 12), r = m % 12;
+            return `${a} ${a === 1 ? 'año' : 'años'}${r ? ` y ${r} ${r === 1 ? 'mes' : 'meses'}` : ''}`;
+        }
+        function fechaEnMeses(m) {
+            if (m === null) return '';
+            const f = new Date(); f.setMonth(f.getMonth() + m);
+            return f.toLocaleDateString('es-MX', { month: 'short', year: 'numeric' });
+        }
+
+        function abrirAsesor() {
+            const t = calcularTotales();
+            const fondo = financialData.metas.fondoEmergencia;
+
+            // Diagnóstico (texto generado con números; igual se pinta con textContent).
+            const ul = $('asesor-diagnostico');
+            ul.replaceChildren(...diagnosticoLocal(t, fondo, financialData.deudas, formatCurrency).map(c => {
+                const li = document.createElement('li');
+                li.className = 'flex gap-2';
+                const i = document.createElement('span'); i.textContent = c.icono;
+                const p = document.createElement('span'); p.textContent = c.texto;
+                li.append(i, p);
+                return li;
+            }));
+
+            // Plan de deudas: con pagos mínimos vs. sumando el sobrante.
+            const cont = $('asesor-plan');
+            const extra = Math.max(0, t.sobrante);
+            const conExtra = planDeudas(financialData.deudas, extra);
+            if (!conExtra.orden.length) {
+                cont.innerHTML = '<p class="text-sm">🎉 No tienes deudas registradas.</p>';
+            } else {
+                const soloMinimos = planDeudas(financialData.deudas, 0);
+                const filas = conExtra.orden.map((d, n) => `
+                    <li class="flex justify-between gap-3 py-2 border-b border-slate-100 dark:border-slate-700 last:border-0">
+                        <span><strong>${n + 1}. ${esc(d.nombre)}</strong>${d.prioridad ? ' <span class="text-xs text-red-500 font-bold">PRIORIDAD</span>' : ''}<br>
+                        <span class="text-xs text-slate-500">${formatCurrency(d.saldo)} · mínimo ${formatCurrency(d.minimo)}</span></span>
+                        <span class="text-right text-sm whitespace-nowrap">${d.mes === null ? '—' : `Mes ${d.mes}<br><span class="text-xs text-slate-500">${fechaEnMeses(d.mes)}</span>`}</span>
+                    </li>`).join('');
+                const ahorro = (soloMinimos.meses === null || conExtra.meses === null) ? null : soloMinimos.meses - conExtra.meses;
+                cont.innerHTML = `
+                    <p class="text-sm mb-3">Paga el mínimo de todas y manda ${extra > 0 ? `tu sobrante (<strong>${formatCurrency(extra)}</strong>/mes)` : 'cualquier dinero extra'} a la primera de la lista.
+                    Al liquidarla, su pago se suma a la siguiente (bola de nieve).</p>
+                    <ol class="bg-slate-50 dark:bg-slate-800 rounded-xl px-4">${filas}</ol>
+                    <div class="grid grid-cols-2 gap-3 mt-3 text-center text-sm">
+                        <div class="rounded-xl p-3 bg-slate-100 dark:bg-slate-800"><div class="text-xs text-slate-500">Solo pagos mínimos</div><strong>${textoMeses(soloMinimos.meses)}</strong></div>
+                        <div class="rounded-xl p-3 bg-emerald-50 dark:bg-emerald-900/30"><div class="text-xs text-slate-500">${extra > 0 ? 'Con tu sobrante' : 'Con tu presupuesto actual'}</div><strong class="text-emerald-600">${textoMeses(conExtra.meses)}</strong></div>
+                    </div>
+                    ${ahorro > 0 ? `<p class="text-sm mt-2 text-emerald-600 font-bold">Terminas ${textoMeses(ahorro)} antes.</p>` : ''}
+                    <p class="text-xs text-slate-500 mt-2">Estimado sin intereses (la app aún no los registra); el plazo real será un poco mayor.</p>`;
+            }
+
+            $('ai-content').classList.add('hidden');
+            $('ai-content').replaceChildren();
+            $('ai-extra-btn').textContent = '✨ Pedir una segunda opinión a la IA';
+            $('ai-extra-btn').classList.remove('hidden');
+            openModal('ai-modal');
+        }
+
+        // ---------- IA opcional (segunda opinión, bajo demanda) ----------
+        async function pedirOpinionIA() {
+            const btn = $('ai-extra-btn');
             const loading = $('ai-loading');
             const content = $('ai-content');
-            openModal('ai-modal');
+            btn.classList.add('hidden');
             loading.classList.remove('hidden');
             content.classList.add('hidden');
-            btn.disabled = true;
 
             const t = calcularTotales();
             const fondo = financialData.metas.fondoEmergencia;
+            const corte = new AbortController();
+            const reloj = setTimeout(() => corte.abort(), 30000);
             try {
                 const token = await currentUser.getIdToken();
                 const response = await fetch('/api/gemini', {
                     method: 'POST',
+                    signal: corte.signal,
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     // Solo números; el servidor arma el prompt.
                     body: JSON.stringify({
@@ -644,12 +795,12 @@
                     })
                 });
                 const data = await response.json().catch(() => ({}));
-                if (!response.ok) throw new Error(data.error || `Error del servidor (HTTP ${response.status})`);
-                if (!Array.isArray(data.consejos) || !data.consejos.length) throw new Error('El asesor no devolvió consejos');
+                if (!response.ok) throw new Error(data.error || 'La IA no respondió.');
+                if (!Array.isArray(data.consejos) || !data.consejos.length) throw new Error('La IA no devolvió consejos.');
 
                 // La respuesta de la IA se pinta como texto, nunca como HTML.
                 const ul = document.createElement('ul');
-                ul.className = 'list-disc pl-5 space-y-3';
+                ul.className = 'list-disc pl-5 space-y-2';
                 for (const consejo of data.consejos) {
                     const li = document.createElement('li');
                     li.textContent = consejo;
@@ -658,16 +809,16 @@
                 content.replaceChildren(ul);
             } catch (error) {
                 console.error('ERROR IA:', error);
-                content.innerHTML = `
-                    <div class="bg-amber-50 p-4 border border-amber-200 rounded-xl text-amber-800 text-sm">
-                        <strong>⚠️ No se pudo consultar al asesor:</strong> <span data-error></span>
-                        <br><br>Mientras tanto, tu Sobrante Libre es de: <strong>${formatCurrency(t.sobrante)}</strong>.
-                    </div>`;
-                content.querySelector('[data-error]').textContent = error.message;
+                const p = document.createElement('p');
+                p.className = 'text-sm text-amber-700 dark:text-amber-400';
+                p.textContent = `⚠️ ${error.name === 'AbortError' ? 'La IA tardó demasiado.' : error.message} Tu diagnóstico y plan de arriba no dependen de ella.`;
+                content.replaceChildren(p);
+                btn.textContent = '🔁 Intentar de nuevo';
+                btn.classList.remove('hidden');
             } finally {
+                clearTimeout(reloj);
                 loading.classList.add('hidden');
                 content.classList.remove('hidden');
-                btn.disabled = false;
             }
         }
 
@@ -684,7 +835,8 @@
             const oscuro = document.documentElement.classList.toggle('dark');
             try { localStorage.setItem('fr4-dark', oscuro ? '1' : '0'); } catch (e) {}
         });
-        $('ai-advisor-btn').addEventListener('click', llamarAsesorIA);
+        $('ai-advisor-btn').addEventListener('click', abrirAsesor);
+        $('ai-extra-btn').addEventListener('click', pedirOpinionIA);
 
         $('settings-btn').addEventListener('click', () => {
             $('settings-currency').value = financialData.settings?.currency || 'MXN';
