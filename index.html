@@ -208,9 +208,16 @@
                     <div class="relative h-80 w-full flex justify-center p-2"><canvas id="flujoChart"></canvas></div>
                 </div>
                 <div class="card flex flex-col h-full">
-                    <div class="flex justify-between items-center mb-4"><h3 class="font-black text-lg">🎯 Metas Personales</h3><button id="add-meta-btn" class="bg-frteal/10 text-frteal px-3 py-1 rounded-full font-bold text-xs">➕</button></div>
-                    <div id="metas-container" class="space-y-3 flex-1 overflow-y-auto max-h-[220px]"></div>
+                    <div class="flex justify-between items-center mb-4"><h3 class="font-black text-lg">🌟 Mis sueños</h3><button id="add-meta-btn" class="bg-frteal/10 text-frteal px-3 py-1 rounded-full font-bold text-xs">➕</button></div>
+                    <div id="metas-container" class="space-y-3 flex-1 overflow-y-auto max-h-[260px]"></div>
                 </div>
+            </div>
+
+            <!-- Retos y hábitos -->
+            <div class="card mb-8">
+                <div class="flex justify-between items-center mb-1 gap-2 flex-wrap"><h3 class="font-black text-lg">💪 Retos y hábitos</h3><span id="racha-txt" class="text-xs font-bold"></span></div>
+                <p class="text-xs text-slate-500 mb-4">Lo que dejas de gastar en un hábito puede ir directo a tu sueño.</p>
+                <div id="retos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
             </div>
 
             <!-- PILAR 1: AHORRO -->
@@ -271,16 +278,41 @@
     <!-- MODALES -->
     <!-- Modal Welcome -->
     <div id="welcome-modal" class="modal">
-        <div class="modal-content !max-w-2xl text-center">
-            <h2 class="text-3xl font-black mb-4">¡Bienvenido! 🎉</h2>
-            <p class="text-slate-500 mb-8">Configura tus datos para comenzar.</p>
-            <div class="space-y-4 text-left">
-                <div><label class="text-xs font-bold text-slate-400">Moneda</label><select id="onboard-currency-input" class="budget-input"><option value="MXN">MXN</option><option value="USD">USD</option></select></div>
-                <div><label class="text-xs font-bold text-slate-400">¿Cada cuánto te pagan?</label><select id="onboard-frecuencia-input" class="budget-input"><option value="quincenal">Quincenal</option><option value="semanal">Semanal</option><option value="mensual">Mensual</option></select></div>
-                <div><label class="text-xs font-bold text-slate-400">Sueldo por pago</label><input type="number" min="0" id="onboard-sueldo-input" class="budget-input"></div>
-                <button id="onboard-finish-btn" class="bg-frnavy text-white px-8 py-4 rounded-xl font-black w-full mt-4">¡Ir al Dashboard!</button>
+        <div class="modal-content !max-w-2xl">
+            <div class="flex justify-between items-center mb-2"><p id="cuest-paso-txt" class="text-xs font-bold text-slate-400">Paso 1 de 3</p><button id="cuest-cerrar" class="text-sm text-slate-400 hidden">Cerrar</button></div>
+            <!-- Paso 1: dinero -->
+            <section data-paso="1" class="space-y-4">
+                <h2 class="text-3xl font-black text-center">¡Bienvenido! 🎉</h2>
+                <p class="text-slate-500 text-center">Tres preguntas rápidas para armar tu plan.</p>
+                <div><label for="onboard-currency-input" class="text-xs font-bold text-slate-400">Moneda</label><select id="onboard-currency-input" class="budget-input"><option value="MXN">MXN</option><option value="USD">USD</option></select></div>
+                <div><label for="onboard-frecuencia-input" class="text-xs font-bold text-slate-400">¿Cada cuánto te pagan?</label><select id="onboard-frecuencia-input" class="budget-input"><option value="quincenal">Quincenal</option><option value="semanal">Semanal</option><option value="mensual">Mensual</option></select></div>
+                <div><label for="onboard-sueldo-input" class="text-xs font-bold text-slate-400">Sueldo por pago</label><input type="number" min="0" id="onboard-sueldo-input" class="budget-input"></div>
+            </section>
+            <!-- Paso 2: sueño -->
+            <section data-paso="2" class="space-y-4 hidden">
+                <h2 class="text-2xl font-black">🌟 ¿Para qué quieres ahorrar?</h2>
+                <p class="text-slate-500 text-sm">Elige tu sueño. Te digo cuánto apartar por quincena para lograrlo.</p>
+                <div id="cuest-suenos" class="grid grid-cols-3 md:grid-cols-5 gap-2"></div>
+                <div id="cuest-sueno-datos" class="hidden space-y-3">
+                    <p id="cuest-sueno-guia" class="text-xs text-slate-500"></p>
+                    <div><label for="cuest-sueno-monto" class="text-xs font-bold text-slate-400">¿Cuánto necesitas?</label><input type="number" min="0" id="cuest-sueno-monto" class="budget-input" placeholder="Ej: 25000"></div>
+                    <div><label for="cuest-sueno-fecha" class="text-xs font-bold text-slate-400">¿Para cuándo? (opcional)</label><input type="date" id="cuest-sueno-fecha" class="budget-input"></div>
+                </div>
+            </section>
+            <!-- Paso 3: hábitos -->
+            <section data-paso="3" class="space-y-3 hidden">
+                <h2 class="text-2xl font-black">🔍 ¿En qué se te va el dinero sin darte cuenta?</h2>
+                <p class="text-slate-500 text-sm">Marca los que apliquen y cuánto gastas <strong>a la semana</strong>. Sin juicios: es solo para calcular cuánto te acercaría a tu sueño.</p>
+                <div id="cuest-habitos" class="space-y-2"></div>
+                <p class="text-[11px] text-slate-400">🔒 Tus respuestas solo se guardan en tu cuenta y se usan para tus cálculos. Puedes saltar cualquier pregunta o borrarlas después.</p>
+            </section>
+            <div class="flex gap-3 mt-6">
+                <button id="cuest-atras" class="flex-1 py-3 rounded-xl font-bold bg-slate-100 dark:bg-slate-800 hidden">Atrás</button>
+                <button id="cuest-siguiente" class="flex-[2] bg-frnavy text-white py-3 rounded-xl font-black">Siguiente</button>
             </div>
+            <button id="cuest-saltar" class="w-full mt-2 text-slate-400 text-sm py-2">Saltar este paso</button>
         </div>
+    </div>
     </div>
 
     <!-- Modal Asesor (diagnóstico local + plan de deudas; IA opcional) -->
@@ -316,10 +348,12 @@
             <button type="button" data-mov-tipo="hormiga" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">🐜<br>Hormiga</button>
             <button type="button" data-mov-tipo="deuda" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">💳<br>Abono deuda</button>
             <button type="button" data-mov-tipo="fondo" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">🔋<br>Al fondo</button>
+            <button type="button" data-mov-tipo="meta" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">🌟<br>A mi sueño</button>
             <button type="button" data-mov-tipo="ingreso" class="mov-tipo rounded-xl p-2 text-xs font-bold border-2">💰<br>Ingreso</button>
         </div>
         <label for="mov-monto" class="text-xs text-slate-400">Monto</label>
         <input type="number" min="0" step="0.01" inputmode="decimal" id="mov-monto" class="budget-input text-2xl font-black mb-3" placeholder="0">
+        <div id="mov-meta-box" class="hidden"><label for="mov-meta" class="text-xs text-slate-400">¿A qué sueño?</label><select id="mov-meta" class="budget-input mb-3"></select></div>
         <div id="mov-deuda-box" class="hidden"><label for="mov-deuda" class="text-xs text-slate-400">¿A qué deuda?</label><select id="mov-deuda" class="budget-input mb-3"></select></div>
         <label for="mov-nota" class="text-xs text-slate-400">Nota (opcional)</label>
         <input type="text" maxlength="60" id="mov-nota" class="budget-input mb-3" placeholder="Ej: súper, gasolina, café">
@@ -329,13 +363,35 @@
         <button onclick="closeModal('mov-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button>
     </div></div>
 
+    <!-- Modal Reto -->
+    <div id="reto-modal" class="modal"><div class="modal-content">
+        <h3 id="reto-titulo" class="text-2xl font-black mb-2">💪 Reto</h3>
+        <p id="reto-desc" class="text-sm text-slate-500 mb-4"></p>
+        <input type="hidden" id="reto-key">
+        <div class="grid grid-cols-2 gap-2 mb-3" role="radiogroup" aria-label="Tipo de reto">
+            <button type="button" data-reto-modo="dejar" class="reto-modo rounded-xl p-3 text-sm font-bold border-2">🚫 Dejarlo</button>
+            <button type="button" data-reto-modo="reducir" class="reto-modo rounded-xl p-3 text-sm font-bold border-2">📉 Reducirlo</button>
+        </div>
+        <div id="reto-reducir-box" class="hidden"><label for="reto-nuevo" class="text-xs text-slate-400">¿Cuánto vas a gastar ahora a la semana?</label><input type="number" min="0" id="reto-nuevo" class="budget-input mb-3"></div>
+        <button id="reto-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black mt-2">¡Empezar hoy!</button>
+        <button onclick="closeModal('reto-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button>
+    </div></div>
+
+    <!-- Modal Celebración -->
+    <div id="celebra-modal" class="modal"><div class="modal-content text-center">
+        <div id="celebra-emoji" class="text-7xl mb-3" aria-hidden="true">🎉</div>
+        <h3 id="celebra-titulo" class="text-2xl font-black mb-2"></h3>
+        <p id="celebra-texto" class="text-slate-500 mb-6"></p>
+        <button onclick="closeModal('celebra-modal')" class="btn-primary w-full py-3 rounded-xl text-white font-black">¡Seguimos! 💪</button>
+    </div></div>
+
     <!-- Otros Modales -->
     <div id="debt-modal" class="modal"><div class="modal-content"><h3 id="debt-modal-title" class="text-2xl font-black mb-4">Deuda</h3><input type="hidden" id="edit-debt-key"><input type="text" id="debt-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="debt-total" class="budget-input mb-3" placeholder="Saldo"><input type="number" id="debt-min-payment" class="budget-input mb-3" placeholder="Pago mínimo mensual"><label for="debt-rate" class="text-xs text-slate-400">Tasa de interés anual (%) — viene en tu estado de cuenta; 0 si es a meses sin intereses</label><input type="number" min="0" step="0.01" id="debt-rate" class="budget-input mb-3" placeholder="Ej: 45"><label for="debt-day" class="text-xs text-slate-400">Día límite de pago (1-31), para recordártelo</label><input type="number" min="1" max="31" step="1" id="debt-day" class="budget-input mb-4" placeholder="Ej: 15"><div class="rounded-xl bg-slate-50 dark:bg-slate-800 p-3 mb-4"><div class="flex items-center gap-2"><input type="checkbox" id="debt-msi" class="w-5 h-5"><label for="debt-msi" class="text-sm font-bold">🛍️ Es compra a meses sin intereses</label></div><div id="debt-msi-box" class="hidden mt-2"><label for="debt-msi-months" class="text-xs text-slate-400">Meses que te faltan (calculo el pago y pongo tasa 0)</label><input type="number" min="1" step="1" id="debt-msi-months" class="budget-input" placeholder="Ej: 9"></div></div><div class="flex items-center gap-2 mb-6"><input type="checkbox" id="debt-priority" class="w-5 h-5"><label for="debt-priority" class="text-sm font-bold">🔥 Pagar primero (prioridad)</label></div><button id="debt-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="debt-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('debt-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="fixed-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Fijo</h3><input type="hidden" id="edit-fixed-key"><input type="text" id="fixed-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="fixed-amount" class="budget-input mb-3" placeholder="Monto"><label for="fixed-day" class="text-xs text-slate-400">Día de pago (1-31, opcional)</label><input type="number" min="1" max="31" step="1" id="fixed-day" class="budget-input mb-6" placeholder="Ej: 5"><button id="fixed-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="fixed-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('fixed-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="ahorro-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🔋 Fondo</h3><label for="ahorro-meta" class="text-xs text-slate-400">Meta</label><input type="number" min="0" id="ahorro-meta" class="budget-input mb-4" placeholder="Meta"><label for="ahorro-abono" class="text-xs text-slate-400">Abonar (usa un número negativo para retirar)</label><input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="0"><button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
-    <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🎯 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-3" placeholder="Ahorrado"><p class="text-xs text-slate-400 mb-2">Llena uno de los dos y te calculo el otro:</p><label for="meta-date" class="text-xs text-slate-400">¿Para cuándo la quieres?</label><input type="date" id="meta-date" class="budget-input mb-3"><label for="meta-aporte" class="text-xs text-slate-400">o ¿cuánto puedes apartar por quincena?</label><input type="number" min="0" id="meta-aporte" class="budget-input mb-6" placeholder="Ej: 500"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🌟 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><label for="meta-tipo" class="text-xs text-slate-400">Tipo de sueño</label><select id="meta-tipo" class="budget-input mb-3"></select><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-3" placeholder="Ahorrado"><p class="text-xs text-slate-400 mb-2">Llena uno de los dos y te calculo el otro:</p><label for="meta-date" class="text-xs text-slate-400">¿Para cuándo la quieres?</label><input type="date" id="meta-date" class="budget-input mb-3"><label for="meta-aporte" class="text-xs text-slate-400">o ¿cuánto puedes apartar por quincena?</label><input type="number" min="0" id="meta-aporte" class="budget-input mb-6" placeholder="Ej: 500"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="settings-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3><label class="text-xs text-slate-400">Moneda</label><select id="settings-currency" class="budget-input mb-4"><option value="MXN">MXN</option><option value="USD">USD</option></select><button id="settings-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('settings-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
 
     <!-- LÓGICA PRINCIPAL -->
@@ -407,7 +463,7 @@
         function openModal(id) { $(id).style.display = 'block'; }
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'Escape') return;
-            document.querySelectorAll('.modal').forEach(m => { if (m.id !== 'welcome-modal') m.style.display = 'none'; });
+            document.querySelectorAll('.modal').forEach(m => { if (m.id !== 'welcome-modal' || financialData.hasSeenTutorial) m.style.display = 'none'; });
         });
 
         window.cerrarSesion = async () => {
@@ -430,6 +486,7 @@
                 deudas: {}, gastosFijos: {}, gastosVariables: {}, gastosHormiga: {},
                 gbm: {}, ingresosExtras: { ventas: 0, bonos: 0, otros: 0 },
                 metasPersonalizadas: {},
+                racha: { quincena: null, cuenta: 0 }, // quincenas seguidas apartando (fondo o sueño)
                 movimientos: {},             // solo los del mes en curso; al cambiar de mes se resumen en historial
                 historial: {}                // { 'YYYY-MM': foto del mes + gasto real por tipo }
             };
@@ -444,6 +501,7 @@
             out.metas.fondoEmergencia = { ...base.metas.fondoEmergencia, ...(out.metas.fondoEmergencia || {}) };
             out.ingresosExtras = { ...base.ingresosExtras, ...(d.ingresosExtras || {}) };
             if (!FRECUENCIAS[out.frecuenciaIngreso]) out.frecuenciaIngreso = 'quincenal';
+            out.racha = { ...base.racha, ...(d.racha || {}) };
             for (const k of ['deudas', 'gastosFijos', 'gastosVariables', 'gastosHormiga', 'gbm', 'metasPersonalizadas', 'movimientos', 'historial']) out[k] = d[k] || {};
             return out;
         }
@@ -481,9 +539,12 @@
                     financialData = datosPorDefecto();
                     await setDoc(doc(db, 'usuarios', uid), financialData);
                 }
-                if (cerrarMesesAnteriores()) guardarAhora();
+                // Hitos ya alcanzados antes de esta versión: se marcan sin celebrar para no llenar de festejos.
+                for (const m of Object.values(financialData.metasPersonalizadas)) if (m.hito == null) m.hito = hitoDe(m);
+                const cambio = cerrarMesesAnteriores() | revisarHitosRetos();
+                if (cambio) guardarAhora();
                 renderizarUI();
-                if (!financialData.hasSeenTutorial) openModal('welcome-modal');
+                if (!financialData.hasSeenTutorial) abrirCuestionario(1);
             } catch (e) {
                 console.error(e);
                 showToast('No se pudieron cargar tus datos. Recarga la página.', 'error');
@@ -492,12 +553,319 @@
             }
         }
 
+        // ---------- Sueños, hábitos, retos y racha ----------
+        const SUENOS = {
+            f1:       { emoji: '🏎️', nombre: 'Boletos para la F1',  guia: 'Suma boletos, transporte, hospedaje y comida del fin de semana.' },
+            casa:     { emoji: '🏠', nombre: 'Enganche de mi casa', guia: 'El enganche suele ser una parte del valor de la casa; pregunta en tu banco o Infonavit cuánto te piden.' },
+            auto:     { emoji: '🚗', nombre: 'Mi auto',             guia: 'Considera enganche, seguro del primer año y trámites.' },
+            viaje:    { emoji: '✈️', nombre: 'Viaje',               guia: 'Vuelos, hospedaje y un colchón para gastos allá.' },
+            boda:     { emoji: '💍', nombre: 'Boda',                guia: 'Lugar, comida y lo que no quieras financiar con tarjeta.' },
+            estudios: { emoji: '🎓', nombre: 'Estudios',            guia: 'Inscripción, colegiaturas y materiales.' },
+            gadget:   { emoji: '📱', nombre: 'Celular o compu',     guia: 'Comprarlo de contado te ahorra intereses y meses sin intereses.' },
+            negocio:  { emoji: '🏪', nombre: 'Mi negocio',          guia: 'Inversión inicial y unos meses de gastos mientras arranca.' },
+            otro:     { emoji: '⭐', nombre: 'Otro sueño',          guia: '' },
+        };
+        const HABITOS = {
+            cigarro:   { emoji: '🚬', nombre: 'Cigarros' },
+            alcohol:   { emoji: '🍺', nombre: 'Alcohol' },
+            delivery:  { emoji: '🛵', nombre: 'Comida a domicilio' },
+            cafe:      { emoji: '☕', nombre: 'Café para llevar' },
+            antojos:   { emoji: '🍟', nombre: 'Antojos y refrescos' },
+            transporte:{ emoji: '🚕', nombre: 'Apps de transporte' },
+            apuestas:  { emoji: '🎰', nombre: 'Apuestas' },
+            subs:      { emoji: '📺', nombre: 'Suscripciones' },
+        };
+        const SEMANAS_POR_MES = 52 / 12;
+        const DIA_MS = 864e5;
+        const sueno = (m) => SUENOS[m?.tipo] || SUENOS.otro;
+        function diasDesde(fechaYmd, hoy = new Date()) {
+            if (!fechaYmd) return 0;
+            const [y, mo, d] = fechaYmd.split('-').map(Number);
+            const base = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+            return Math.max(0, Math.round((base - new Date(y, mo - 1, d)) / DIA_MS));
+        }
+        // Dinero que el reto evitó gastar: días × (gasto mensual antes − ahora) × 12/365.
+        function ahorroReto(h, hoy = new Date()) {
+            if (!h?.reto) return { dias: 0, acumulado: 0, disponible: 0 };
+            const dias = diasDesde(h.reto.inicio, hoy);
+            const acumulado = Math.max(0, num(h.reto.montoAntes) - num(h.monto)) * 12 / 365 * dias;
+            return { dias, acumulado, disponible: Math.max(0, acumulado - num(h.reto.apartado)) };
+        }
+        // Meta principal: el primer sueño sin cumplir (para traducir hábitos a "quincenas de tu sueño").
+        function metaPrincipal() {
+            return Object.entries(financialData.metasPersonalizadas).find(([, m]) => num(m.objetivo) > num(m.actual));
+        }
+        // Quincenas que te ahorraría mandar `mensual` a la meta (o en cuántas llegarías solo con eso).
+        function efectoEnMeta(mensual, m) {
+            const plan = planMeta(m);
+            const extraQ = mensual / 2;
+            if (!(extraQ > 0) || !(plan.falta > 0)) return null;
+            if (plan.aporte > 0) {
+                const antes = Math.ceil(plan.falta / plan.aporte), despues = Math.ceil(plan.falta / (plan.aporte + extraQ));
+                return { tipo: 'antes', quincenas: antes - despues };
+            }
+            return { tipo: 'solo', quincenas: Math.ceil(plan.falta / extraQ) };
+        }
+
+        // Racha: quincenas seguidas con al menos un ahorro registrado (al fondo o a un sueño).
+        const idQuincena = (ymdTxt) => `${ymdTxt.slice(0, 7)}-${Number(ymdTxt.slice(8)) <= 15 ? 1 : 2}`;
+        function quincenaSiguiente(id) {
+            const [y, m, q] = id.split('-').map(Number);
+            if (q === 1) return `${y}-${String(m).padStart(2, '0')}-2`;
+            const f = new Date(y, m, 1);
+            return `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-1`;
+        }
+        function registrarRacha(fecha) {
+            const r = financialData.racha, q = idQuincena(fecha);
+            if (r.quincena === q) return;
+            r.cuenta = r.quincena && quincenaSiguiente(r.quincena) === q ? r.cuenta + 1 : 1;
+            r.quincena = q;
+            if ([3, 6, 12, 24].includes(r.cuenta)) celebrar('🔥', `¡${r.cuenta} quincenas seguidas ahorrando!`, 'La constancia es lo que hace que los sueños lleguen. No rompas la racha.');
+        }
+        // La racha sigue viva si el último ahorro fue en esta quincena o en la anterior.
+        function rachaVigente(hoy = new Date()) {
+            const r = financialData.racha;
+            if (!r.quincena || !r.cuenta) return 0;
+            const actual = idQuincena(ymd(hoy));
+            return r.quincena === actual || quincenaSiguiente(r.quincena) === actual ? r.cuenta : 0;
+        }
+
+        // Celebraciones (una a la vez; si llegan varias, se muestra la última).
+        function celebrar(emoji, titulo, texto) {
+            $('celebra-emoji').textContent = emoji;
+            $('celebra-titulo').textContent = titulo;
+            $('celebra-texto').textContent = texto;
+            openModal('celebra-modal');
+        }
+        const hitoDe = (m) => num(m.objetivo) > 0 ? Math.min(100, Math.floor(num(m.actual) / num(m.objetivo) * 4) * 25) : 0;
+        function revisarHitosMeta(k) {
+            const m = financialData.metasPersonalizadas[k];
+            if (!m) return;
+            const h = hitoDe(m);
+            if (h > num(m.hito)) {
+                const s = sueno(m);
+                if (h === 100) celebrar(s.emoji, `¡Lo lograste: ${m.nombre}!`, `Juntaste ${formatCurrency(m.objetivo)}. Disfrútalo: te lo ganaste quincena a quincena.`);
+                else celebrar(s.emoji, `¡Vas en ${h}% de ${m.nombre}!`, `Llevas ${formatCurrency(m.actual)} de ${formatCurrency(m.objetivo)}. ${h === 50 ? 'Ya es más lo que llevas que lo que te falta.' : 'Sigue así.'}`);
+            }
+            m.hito = Math.max(num(m.hito), h); // bajar (retirar) no vuelve a celebrar el mismo hito
+        }
+        const HITOS_RETO = [7, 30, 90, 180, 365];
+        function revisarHitosRetos() {
+            for (const h of Object.values(financialData.gastosHormiga)) {
+                if (!h.reto) continue;
+                const { dias, acumulado } = ahorroReto(h);
+                const hito = [...HITOS_RETO].reverse().find(d => dias >= d) || 0;
+                if (hito > num(h.reto.hito)) {
+                    h.reto.hito = hito;
+                    const hb = HABITOS[h.habito] || { emoji: '💪', nombre: h.nombre };
+                    celebrar(hb.emoji, `¡${hito} días ${h.reto.modo === 'reducir' ? 'gastando menos en' : 'sin'} ${hb.nombre.toLowerCase()}!`,
+                        `Son ${formatCurrency(acumulado)} que no gastaste. Mándalos a tu sueño desde "Retos y hábitos" para que se vuelvan ahorro de verdad.`);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // ----- Cuestionario (bienvenida y reabrible) -----
+        let pasoCuest = 1, primerPasoCuest = 1, suenoElegido = null;
+        function abrirCuestionario(desde = 1) {
+            primerPasoCuest = desde;
+            suenoElegido = null;
+            $('cuest-suenos').innerHTML = Object.entries(SUENOS).map(([k, v]) => `
+                <button type="button" data-sueno="${k}" class="cuest-sueno rounded-xl p-2 text-xs font-bold border-2 border-slate-200 dark:border-slate-700"><span class="text-2xl block">${v.emoji}</span>${esc(v.nombre)}</button>`).join('');
+            $('cuest-sueno-datos').classList.add('hidden');
+            $('cuest-sueno-monto').value = ''; $('cuest-sueno-fecha').value = '';
+            const actuales = Object.fromEntries(Object.values(financialData.gastosHormiga).filter(h => h.habito).map(h => [h.habito, h]));
+            $('cuest-habitos').innerHTML = Object.entries(HABITOS).map(([k, v]) => `
+                <div class="flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-800">
+                    <input type="checkbox" id="hab-${k}" data-habito="${k}" class="w-5 h-5" ${actuales[k] ? 'checked' : ''}>
+                    <label for="hab-${k}" class="flex-1 text-sm font-bold">${v.emoji} ${esc(v.nombre)}</label>
+                    <input type="number" min="0" id="hab-${k}-monto" aria-label="Gasto semanal en ${esc(v.nombre)}" class="budget-input !w-28 text-sm" placeholder="$/semana" value="${actuales[k] ? Math.round(num(actuales[k].reto ? actuales[k].reto.montoAntes : actuales[k].monto) / SEMANAS_POR_MES) : ''}">
+                </div>`).join('');
+            $('cuest-cerrar').classList.toggle('hidden', desde === 1);
+            irAPaso(desde);
+            openModal('welcome-modal');
+        }
+        function irAPaso(n) {
+            pasoCuest = n;
+            document.querySelectorAll('#welcome-modal [data-paso]').forEach(sec => sec.classList.toggle('hidden', Number(sec.dataset.paso) !== n));
+            const total = 3 - primerPasoCuest + 1;
+            $('cuest-paso-txt').textContent = `Paso ${n - primerPasoCuest + 1} de ${total}`;
+            $('cuest-atras').classList.toggle('hidden', n === primerPasoCuest);
+            $('cuest-saltar').classList.toggle('hidden', n === 1);
+            $('cuest-siguiente').textContent = n === 3 ? '¡Listo, ver mi plan!' : 'Siguiente';
+        }
+        function terminarCuestionario() {
+            // Paso 1 (solo en la bienvenida)
+            if (primerPasoCuest === 1) {
+                financialData.settings.currency = $('onboard-currency-input').value;
+                financialData.sueldoQuincenal = Math.max(0, num($('onboard-sueldo-input').value));
+                financialData.frecuenciaIngreso = $('onboard-frecuencia-input').value;
+            }
+            // Paso 2: el sueño se vuelve meta
+            const monto = Math.max(0, num($('cuest-sueno-monto').value));
+            if (suenoElegido && monto > 0) {
+                const fecha = $('cuest-sueno-fecha').value;
+                financialData.metasPersonalizadas[nuevaClave()] = { nombre: SUENOS[suenoElegido].nombre, tipo: suenoElegido, objetivo: monto, actual: 0,
+                    fechaMeta: /^\d{4}-\d{2}-\d{2}$/.test(fecha) ? fecha : null, aporteQuincenal: null, hito: 0 };
+            }
+            // Paso 3: hábitos → gastos hormiga (mensuales) ligados al hábito
+            const porHabito = Object.fromEntries(Object.entries(financialData.gastosHormiga).filter(([, h]) => h.habito).map(([k, h]) => [h.habito, k]));
+            for (const [k, v] of Object.entries(HABITOS)) {
+                const marcado = $(`hab-${k}`)?.checked;
+                const semanal = Math.max(0, num($(`hab-${k}-monto`)?.value));
+                const existente = porHabito[k] && financialData.gastosHormiga[porHabito[k]];
+                if (marcado && semanal > 0) {
+                    const mensual = Math.round(semanal * SEMANAS_POR_MES);
+                    if (existente) {
+                        if (existente.reto) existente.reto.montoAntes = mensual; // en reto: se corrige el "antes", no lo que gasta hoy
+                        else existente.monto = mensual;
+                    } else {
+                        financialData.gastosHormiga[nuevaClave()] = { nombre: v.nombre, monto: mensual, habito: k };
+                    }
+                }
+            }
+            financialData.hasSeenTutorial = true;
+            guardarAhora();
+            renderizarUI();
+            closeModal('welcome-modal');
+            const principal = metaPrincipal();
+            const habitos = Object.values(financialData.gastosHormiga).filter(h => h.habito && !h.reto);
+            const totalHab = habitos.reduce((s, h) => s + num(h.monto), 0);
+            if (principal && totalHab > 0) {
+                const ef = efectoEnMeta(totalHab, principal[1]);
+                if (ef) celebrar(sueno(principal[1]).emoji, 'Tu plan está listo',
+                    `Tus hábitos marcados suman ${formatCurrency(totalHab)} al mes (${formatCurrency(totalHab * 12)} al año). ` +
+                    (ef.tipo === 'antes' ? `Mandarlos a "${principal[1].nombre}" te haría llegar ${ef.quincenas} quincenas antes.` : `Solo con eso llegarías a "${principal[1].nombre}" en ${ef.quincenas} quincenas.`) +
+                    ' Empieza un reto en "Retos y hábitos".');
+            }
+        }
+        $('cuest-suenos').addEventListener('click', (e) => {
+            const b = e.target.closest('[data-sueno]');
+            if (!b) return;
+            suenoElegido = b.dataset.sueno;
+            document.querySelectorAll('.cuest-sueno').forEach(x => x.classList.toggle('border-frteal', x === b));
+            $('cuest-sueno-guia').textContent = SUENOS[suenoElegido].guia;
+            $('cuest-sueno-datos').classList.remove('hidden');
+            $('cuest-sueno-monto').focus();
+        });
+        $('cuest-siguiente').addEventListener('click', () => pasoCuest < 3 ? irAPaso(pasoCuest + 1) : terminarCuestionario());
+        $('cuest-atras').addEventListener('click', () => irAPaso(Math.max(primerPasoCuest, pasoCuest - 1)));
+        $('cuest-saltar').addEventListener('click', () => {
+            if (pasoCuest === 2) { suenoElegido = null; irAPaso(3); }
+            else { document.querySelectorAll('#cuest-habitos [data-habito]').forEach(c => { c.checked = false; }); terminarCuestionario(); }
+        });
+        $('cuest-cerrar').addEventListener('click', () => closeModal('welcome-modal'));
+
+        // ----- Retos -----
+        let modoReto = 'dejar';
+        function elegirModoReto(m) {
+            modoReto = m;
+            document.querySelectorAll('.reto-modo').forEach(b => {
+                const on = b.dataset.retoModo === m;
+                b.setAttribute('aria-pressed', on);
+                b.className = `reto-modo rounded-xl p-3 text-sm font-bold border-2 ${on ? 'border-frteal bg-teal-50 dark:bg-teal-900/30' : 'border-slate-200 dark:border-slate-700'}`;
+            });
+            $('reto-reducir-box').classList.toggle('hidden', m !== 'reducir');
+        }
+        function abrirReto(k) {
+            const h = financialData.gastosHormiga[k];
+            if (!h) return;
+            const hb = HABITOS[h.habito] || { emoji: '💪', nombre: h.nombre };
+            $('reto-key').value = k;
+            $('reto-titulo').textContent = `${hb.emoji} Reto: ${h.nombre}`;
+            $('reto-desc').textContent = `Hoy gastas ${formatCurrency(h.monto)} al mes en esto. Desde hoy cuento los días y el dinero que dejas de gastar.`;
+            $('reto-nuevo').value = '';
+            elegirModoReto('dejar');
+            openModal('reto-modal');
+        }
+        function empezarReto() {
+            const h = financialData.gastosHormiga[$('reto-key').value];
+            if (!h) return;
+            const antes = num(h.monto);
+            let ahora = 0;
+            if (modoReto === 'reducir') {
+                ahora = Math.round(Math.max(0, num($('reto-nuevo').value)) * SEMANAS_POR_MES);
+                if (!(ahora < antes)) { showToast('Para reducirlo, el nuevo gasto debe ser menor al actual', 'error'); $('reto-nuevo').focus(); return; }
+            }
+            h.reto = { inicio: ymd(new Date()), modo: modoReto, montoAntes: antes, apartado: 0, hito: 0 };
+            h.monto = ahora; // el presupuesto refleja lo que gastas ahora: tu sobrante sube
+            guardarAhora();
+            renderizarUI();
+            closeModal('reto-modal');
+            showToast('¡Reto iniciado! 💪');
+        }
+        function reiniciarReto(k) {
+            const h = financialData.gastosHormiga[k];
+            if (!h?.reto || !confirm('¿Reiniciar el contador? Pasa, lo importante es volver a intentarlo. Lo que ya mandaste a tu sueño se queda ahí.')) return;
+            h.reto = { ...h.reto, inicio: ymd(new Date()), apartado: 0, hito: 0 };
+            guardarAhora(); renderizarUI();
+        }
+        function quitarReto(k) {
+            const h = financialData.gastosHormiga[k];
+            if (!h?.reto || !confirm('¿Terminar este reto? El gasto vuelve a contar en tu presupuesto como antes.')) return;
+            h.monto = num(h.reto.montoAntes);
+            delete h.reto;
+            guardarAhora(); renderizarUI();
+        }
+
+        function renderizarRetos() {
+            const r = rachaVigente();
+            $('racha-txt').textContent = r >= 2 ? `🔥 ${r} quincenas seguidas ahorrando` : r === 1 ? '🔥 Racha: 1 quincena (¡ahorra la próxima!)' : '';
+            const principal = metaPrincipal();
+            const nombreMeta = principal ? `"${principal[1].nombre}"` : 'tu sueño';
+            const habitos = Object.entries(financialData.gastosHormiga).filter(([, h]) => h.habito || h.reto);
+            if (!habitos.length) {
+                $('retos-container').innerHTML = `<div class="md:col-span-2 lg:col-span-3 text-sm text-slate-500">Cuéntame tus hábitos de gasto y te digo cuánto te acercarían a ${esc(nombreMeta)}.
+                    <button data-cuestionario class="ml-1 font-bold text-frteal underline">Hacer el cuestionario (1 min)</button></div>`;
+                return;
+            }
+            $('retos-container').innerHTML = habitos.map(([k, h]) => {
+                const hb = HABITOS[h.habito] || { emoji: '💪', nombre: h.nombre };
+                if (h.reto) {
+                    const a = ahorroReto(h);
+                    return `<div class="p-4 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20">
+                        <div class="flex justify-between"><p class="font-black text-sm">${hb.emoji} ${h.reto.modo === 'reducir' ? 'Menos' : 'Sin'} ${esc(h.nombre.toLowerCase())}</p>
+                        <span class="flex gap-2 text-xs"><button data-reto-reiniciar="${esc(k)}" class="text-slate-400" title="Reiniciar contador">↺</button><button data-reto-quitar="${esc(k)}" class="text-slate-400" title="Terminar reto">✕</button></span></div>
+                        <p class="text-3xl font-black mt-1">${a.dias} <span class="text-sm font-bold">${a.dias === 1 ? 'día' : 'días'}</span></p>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">${formatCurrency(a.acumulado)} que no gastaste${num(h.reto.apartado) > 0 ? ` · ${formatCurrency(h.reto.apartado)} ya en tu sueño` : ''}</p>
+                        ${a.disponible >= 1 && principal ? `<button data-reto-mandar="${esc(k)}" class="mt-2 w-full py-2 rounded-lg bg-emerald-600 text-white text-xs font-black">🌟 Mandar ${formatCurrency(Math.floor(a.disponible))} a ${esc(principal[1].nombre)}</button>` : ''}
+                    </div>`;
+                }
+                const ef = principal ? efectoEnMeta(num(h.monto), principal[1]) : null;
+                const efecto = !ef ? '' : ef.tipo === 'antes' ? `Mandarlo a ${esc(nombreMeta)} te haría llegar <strong>${ef.quincenas} quincenas antes</strong>.` : `Solo con eso llegarías a ${esc(nombreMeta)} en <strong>${ef.quincenas} quincenas</strong>.`;
+                return `<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                    <p class="font-black text-sm">${hb.emoji} ${esc(h.nombre)}</p>
+                    <p class="text-xs text-slate-500 mt-1">${formatCurrency(h.monto)} al mes · <strong>${formatCurrency(num(h.monto) * 12)} al año</strong></p>
+                    ${efecto ? `<p class="text-xs mt-1">${efecto}</p>` : ''}
+                    <button data-reto-empezar="${esc(k)}" class="mt-2 w-full py-2 rounded-lg bg-frteal text-white text-xs font-black">💪 Empezar reto</button>
+                </div>`;
+            }).join('') + `<button data-cuestionario class="text-xs text-slate-400 underline text-left">Actualizar mis hábitos</button>`;
+        }
+        $('retos-container').addEventListener('click', (e) => {
+            const t = e.target.closest('button');
+            if (!t) return;
+            if (t.dataset.cuestionario !== undefined) abrirCuestionario(2);
+            else if (t.dataset.retoEmpezar) abrirReto(t.dataset.retoEmpezar);
+            else if (t.dataset.retoReiniciar) reiniciarReto(t.dataset.retoReiniciar);
+            else if (t.dataset.retoQuitar) quitarReto(t.dataset.retoQuitar);
+            else if (t.dataset.retoMandar) {
+                const h = financialData.gastosHormiga[t.dataset.retoMandar];
+                const principal = metaPrincipal();
+                if (!h?.reto || !principal) return;
+                abrirMovimiento('meta', { monto: Math.floor(ahorroReto(h).disponible), meta: principal[0], reto: t.dataset.retoMandar, nota: `Reto: ${h.nombre}` });
+            }
+        });
+        document.querySelectorAll('.reto-modo').forEach(b => b.addEventListener('click', () => elegirModoReto(b.dataset.retoModo)));
+        $('reto-save-btn').addEventListener('click', empezarReto);
+
         // ---------- Movimientos del mes e historial ----------
         const TIPOS_MOV = {
             gasto:   { icono: '💸', nombre: 'Gasto' },
             hormiga: { icono: '🐜', nombre: 'Hormiga' },
             deuda:   { icono: '💳', nombre: 'Abono a deuda' },
             fondo:   { icono: '🔋', nombre: 'Al fondo' },
+            meta:    { icono: '🌟', nombre: 'A mi sueño' },
             ingreso: { icono: '💰', nombre: 'Ingreso' },
         };
         const ymd = (f) => `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}-${String(f.getDate()).padStart(2, '0')}`;
@@ -505,7 +873,7 @@
 
         // Suma lo registrado en un mes por tipo: { gasto, hormiga, deuda, fondo, ingreso }.
         function sumasDelMes(movs, mes) {
-            const r = { gasto: 0, hormiga: 0, deuda: 0, fondo: 0, ingreso: 0 };
+            const r = { gasto: 0, hormiga: 0, deuda: 0, fondo: 0, meta: 0, ingreso: 0 };
             for (const m of Object.values(movs || {})) if ((m.fecha || '').startsWith(mes) && m.tipo in r) r[m.tipo] += num(m.monto);
             return r;
         }
@@ -533,12 +901,17 @@
             return true;
         }
 
-        function abrirMovimiento(tipo = 'gasto') {
+        let movReto = null; // si el movimiento viene de "mandar ahorro de un reto"
+        function abrirMovimiento(tipo = 'gasto', pre = {}) {
+            movReto = pre.reto || null;
+            const metas = Object.entries(financialData.metasPersonalizadas);
+            $('mov-meta').replaceChildren(...metas.map(([k, m]) => { const o = document.createElement('option'); o.value = k; o.textContent = `${sueno(m).emoji} ${m.nombre}`; return o; }));
+            if (pre.meta) $('mov-meta').value = pre.meta;
             const sel = $('mov-deuda');
             const vivas = Object.entries(financialData.deudas).filter(([, d]) => num(d.total) > 0);
             sel.replaceChildren(...vivas.map(([k, d]) => { const o = document.createElement('option'); o.value = k; o.textContent = `${d.nombre} (${formatCurrency(d.total)})`; return o; }));
-            $('mov-monto').value = '';
-            $('mov-nota').value = '';
+            $('mov-monto').value = pre.monto || '';
+            $('mov-nota').value = pre.nota || '';
             $('mov-fecha').value = ymd(new Date());
             elegirTipoMov(tipo);
             openModal('mov-modal');
@@ -552,6 +925,7 @@
                 b.className = `mov-tipo rounded-xl p-2 text-xs font-bold border-2 ${on ? 'border-frteal bg-teal-50 dark:bg-teal-900/30' : 'border-slate-200 dark:border-slate-700'}`;
             });
             $('mov-deuda-box').classList.toggle('hidden', tipo !== 'deuda');
+            $('mov-meta-box').classList.toggle('hidden', tipo !== 'meta');
         }
         function guardarMovimiento() {
             const tipo = $('mov-modal').dataset.tipo;
@@ -574,11 +948,23 @@
                 const f = financialData.metas.fondoEmergencia;
                 f.actual = num(f.actual) + monto;
             }
+            if (tipo === 'meta') {
+                const k = $('mov-meta').value;
+                const m = financialData.metasPersonalizadas[k];
+                if (!m) { showToast('Primero crea un sueño en "Mis sueños"', 'error'); return; }
+                mov.meta = k;
+                m.actual = Math.round((num(m.actual) + monto) * 100) / 100;
+                const h = movReto && financialData.gastosHormiga[movReto];
+                if (h?.reto) { mov.reto = movReto; h.reto.apartado = num(h.reto.apartado) + monto; }
+            }
+            if (tipo === 'fondo' || tipo === 'meta') registrarRacha(fecha);
             financialData.movimientos[nuevaClave()] = mov;
+            if (tipo === 'meta') revisarHitosMeta(mov.meta);
             guardarAhora();
             renderizarUI();
             closeModal('mov-modal');
-            if (tipo !== 'deuda') showToast('Registrado');
+            if (tipo !== 'deuda' && tipo !== 'meta') showToast('Registrado');
+            if (tipo === 'meta' && $('celebra-modal').style.display !== 'block') showToast(`🌟 ${formatCurrency(monto)} más cerca de tu sueño`);
         }
         function eliminarMovimiento(k) {
             const m = financialData.movimientos[k];
@@ -591,6 +977,12 @@
             if (m.tipo === 'fondo') {
                 const f = financialData.metas.fondoEmergencia;
                 f.actual = Math.max(0, num(f.actual) - num(m.monto));
+            }
+            if (m.tipo === 'meta' && financialData.metasPersonalizadas[m.meta]) {
+                const mt = financialData.metasPersonalizadas[m.meta];
+                mt.actual = Math.max(0, Math.round((num(mt.actual) - num(m.monto)) * 100) / 100);
+                const h = m.reto && financialData.gastosHormiga[m.reto];
+                if (h?.reto) h.reto.apartado = Math.max(0, num(h.reto.apartado) - num(m.monto));
             }
             delete financialData.movimientos[k];
             guardarAhora();
@@ -608,13 +1000,13 @@
             $('mes-resumen').innerHTML = `
                 <div class="flex justify-between text-sm mb-1"><span>Gastos variables y hormiga</span><span><strong class="${pasado ? 'text-red-600' : ''}">${formatCurrency(real)}</strong> de ${formatCurrency(plan)}</span></div>
                 <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full ${pasado ? 'bg-red-500' : 'bg-frteal'}" style="width:${pct}%"></div></div>
-                ${r.deuda || r.fondo || r.ingreso ? `<p class="text-xs text-slate-500 mt-2">${[r.deuda && `💳 ${formatCurrency(r.deuda)} abonado a deudas`, r.fondo && `🔋 ${formatCurrency(r.fondo)} al fondo`, r.ingreso && `💰 ${formatCurrency(r.ingreso)} de ingresos extra`].filter(Boolean).join(' · ')}</p>` : ''}`;
+                ${r.deuda || r.fondo || r.meta || r.ingreso ? `<p class="text-xs text-slate-500 mt-2">${[r.deuda && `💳 ${formatCurrency(r.deuda)} abonado a deudas`, r.fondo && `🔋 ${formatCurrency(r.fondo)} al fondo`, r.meta && `🌟 ${formatCurrency(r.meta)} a tus sueños`, r.ingreso && `💰 ${formatCurrency(r.ingreso)} de ingresos extra`].filter(Boolean).join(' · ')}</p>` : ''}`;
             const lista = Object.entries(financialData.movimientos)
                 .filter(([, m]) => (m.fecha || '').startsWith(mes))
                 .sort((a, b) => (b[1].fecha || '').localeCompare(a[1].fecha || '') || b[0].localeCompare(a[0]));
             $('mes-movimientos').innerHTML = lista.length ? lista.slice(0, 8).map(([k, m]) => {
                 const tipo = TIPOS_MOV[m.tipo] || { icono: '•', nombre: '' };
-                const detalle = m.tipo === 'deuda' ? (financialData.deudas[m.deuda]?.nombre || 'deuda') : (m.nota || tipo.nombre);
+                const detalle = m.tipo === 'deuda' ? (financialData.deudas[m.deuda]?.nombre || 'deuda') : m.tipo === 'meta' ? (financialData.metasPersonalizadas[m.meta]?.nombre || 'sueño') : (m.nota || tipo.nombre);
                 return `<li class="flex justify-between items-center text-sm p-2 rounded-lg bg-slate-50 dark:bg-slate-800">
                     <span>${tipo.icono} ${esc(detalle)} <span class="text-[11px] text-slate-400">${Number(m.fecha.slice(8))}</span></span>
                     <span class="flex items-center gap-2"><strong>${formatCurrency(m.monto)}</strong><button data-borrar-mov="${esc(k)}" aria-label="Borrar movimiento" class="text-slate-400 hover:text-red-500">✕</button></span></li>`;
@@ -688,7 +1080,7 @@
             fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'], diaPago: ['fixed-day', 'dia'] } },
             variable: { coleccion: 'gastosVariables',     campos: { nombre: ['variable-name', 'text'], monto: ['variable-amount', 'num'] } },
             hormiga:  { coleccion: 'gastosHormiga',       campos: { nombre: ['hormiga-name', 'text'], monto: ['hormiga-amount', 'num'] } },
-            meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'], fechaMeta: ['meta-date', 'fecha'], aporteQuincenal: ['meta-aporte', 'numopt'] } },
+            meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], tipo: ['meta-tipo', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'], fechaMeta: ['meta-date', 'fecha'], aporteQuincenal: ['meta-aporte', 'numopt'] } },
             gbm:      { coleccion: 'gbm',                 campos: { ticker: ['gbm-ticker', 'upper'], shares: ['gbm-shares', 'num'], target: ['gbm-target', 'num'] } },
         };
 
@@ -697,10 +1089,11 @@
             const item = key ? financialData[cfg.coleccion][key] : null;
             if (key && !item) return;
             $(`edit-${tipo}-key`).value = key;
+            if (tipo === 'meta' && !$('meta-tipo').options.length) $('meta-tipo').innerHTML = Object.entries(SUENOS).map(([k, v]) => `<option value="${k}">${v.emoji} ${esc(v.nombre)}</option>`).join('');
             for (const [campo, [id, kind]] of Object.entries(cfg.campos)) {
                 const el = $(id);
                 if (kind === 'check') el.checked = !!item?.[campo];
-                else el.value = item?.[campo] ?? '';
+                else el.value = item?.[campo] ?? (el.tagName === 'SELECT' ? el.options[0]?.value ?? '' : '');
             }
             $(`${tipo}-delete-btn`).classList.toggle('hidden', !key);
             if (tipo === 'debt') $('debt-msi-box').classList.toggle('hidden', !$('debt-msi').checked);
@@ -731,7 +1124,9 @@
             if (diaMalo) { showToast('El día de pago va del 1 al 31', 'error'); $(diaMalo[1][0]).focus(); return; }
 
             const key = $(`edit-${tipo}-key`).value || nuevaClave();
-            financialData[cfg.coleccion][key] = item;
+            // Se mezcla con lo que ya tenía: el modal no conoce campos como hábito, reto o hitos celebrados.
+            financialData[cfg.coleccion][key] = { ...(financialData[cfg.coleccion][key] || {}), ...item };
+            if (tipo === 'meta') revisarHitosMeta(key);
             guardarAhora();
             renderizarUI();
             closeModal(`${tipo}-modal`);
@@ -788,6 +1183,7 @@
             renderizarProximosPagos();
             renderizarMes();
             renderizarHistorial();
+            renderizarRetos();
             calcularYActualizarTodo();
         }
 
@@ -905,9 +1301,10 @@
                     : plan.vencida ? `⚠️ La fecha ya pasó; te faltan ${formatCurrency(plan.falta)}`
                     : plan.aporte ? `Aparta <strong>${formatCurrency(Math.ceil(plan.aporte))}</strong>/quincena → ${fechaCorta(plan.fecha)}`
                     : 'Ponle fecha o aporte para calcular tu plan';
+                const pctTxt = num(m.objetivo) > 0 ? ` · ${Math.min(100, Math.round(p))}%` : '';
                 return `
                 <div data-editar="meta" data-key="${esc(k)}" role="button" tabindex="0" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer">
-                    <div class="flex justify-between text-xs mb-1"><span class="font-bold">${esc(m.nombre)}</span><span class="text-slate-500">${formatCurrency(m.actual)} / ${formatCurrency(m.objetivo)}</span></div>
+                    <div class="flex justify-between text-xs mb-1"><span class="font-bold">${sueno(m).emoji} ${esc(m.nombre)}</span><span class="text-slate-500">${formatCurrency(m.actual)} / ${formatCurrency(m.objetivo)}${pctTxt}</span></div>
                     <div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-frteal" style="width:${Math.min(100, p)}%"></div></div>
                     <p class="text-[11px] text-slate-500 mt-1">${nota}</p>
                 </div>`;
@@ -1278,15 +1675,6 @@
             closeModal('ahorro-modal');
         });
 
-        $('onboard-finish-btn').addEventListener('click', () => {
-            financialData.hasSeenTutorial = true;
-            financialData.settings.currency = $('onboard-currency-input').value;
-            financialData.sueldoQuincenal = Math.max(0, num($('onboard-sueldo-input').value));
-            financialData.frecuenciaIngreso = $('onboard-frecuencia-input').value;
-            guardarAhora();
-            renderizarUI();
-            closeModal('welcome-modal');
-        });
 
         // Inputs reactivos (guardan con retraso)
         $('sueldoQuincenalInput').addEventListener('input', (e) => {

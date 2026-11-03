@@ -23,12 +23,17 @@ otras ramas generan preview deploys).
   `settings.currency`, `sueldoQuincenal` (monto **por pago**, nombre legado), `frecuenciaIngreso` ('semanal'|'quincenal'|'mensual'),
   `aguinaldo` (anual, no entra al ingreso mensual), `ingresosExtras{ventas,bonos,otros}`, `metas.fondoEmergencia{objetivo,actual}`,
   y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,diaPago,esMSI,mesesRestantes,esPrioridad}`
-  (compra a MSI: `antesDeGuardar` pone tasa 0 y pago = total / mesesRestantes; `tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables|gastosHormiga{nombre,monto}`
+  (compra a MSI: `antesDeGuardar` pone tasa 0 y pago = total / mesesRestantes; `tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos{nombre,monto,diaPago}`, `gastosVariables{nombre,monto}`,
+  `gastosHormiga{nombre,monto,habito?,reto?}` (`habito` = clave de `HABITOS`; `reto{inicio,modo,montoAntes,apartado,hito}`:
+  al empezar, `monto` pasa a lo que gasta ahora y `montoAntes` guarda lo de antes; `ahorroReto()` = días × diferencia)
   (`diaPago` 1-31 o `null`; lo usa `proximosPagos()` para la tarjeta "Próximos pagos" de los siguientes 10 días),
-  `metasPersonalizadas{nombre,objetivo,actual,fechaMeta,aporteQuincenal}` (`fechaMeta` 'YYYY-MM-DD' o `null`;
+  `metasPersonalizadas{nombre,tipo,objetivo,actual,fechaMeta,aporteQuincenal,hito}` (`tipo` = clave de `SUENOS`: f1, casa,
+  auto…; `hito` = último 25/50/75/100% celebrado) (`fechaMeta` 'YYYY-MM-DD' o `null`;
   `planMeta()` calcula el aporte por quincena o la fecha de llegada, quincenas = día 15 y último del mes), `gbm{ticker,shares,target}` (inversiones; el nombre "gbm" es legado).
-- `movimientos{tipo,monto,fecha,nota,deuda?,aplicado?}`: **solo los del mes en curso** (registro rápido, botón "+").
-  `tipo` = gasto|hormiga|deuda|fondo|ingreso; un abono baja `deudas[deuda].total` (guarda `aplicado` para revertirlo al borrar),
+- `racha{quincena:'YYYY-MM-1|2',cuenta}`: quincenas seguidas con ahorro (fondo o sueño); `registrarRacha()` al registrar,
+  `rachaVigente()` la da por rota si pasó más de una quincena. Borrar un movimiento no la reduce.
+- `movimientos{tipo,monto,fecha,nota,deuda?,aplicado?,meta?,reto?}`: **solo los del mes en curso** (registro rápido, botón "+").
+  `tipo` = gasto|hormiga|deuda|fondo|meta|ingreso (`meta` sube `metasPersonalizadas[meta].actual` y, si viene de un reto, `reto.apartado`); un abono baja `deudas[deuda].total` (guarda `aplicado` para revertirlo al borrar),
   `fondo` sube el fondo de emergencia. Al cargar en un mes nuevo, `cerrarMesesAnteriores()` resume los viejos en
   `historial[mes].real` y los borra, para que el documento no crezca sin límite (sin subcolecciones ni cambios de reglas).
 - `historial{'YYYY-MM': {ingresos,gastos,sobrante,deudaTotal,fondo,real{…}}}`: `actualizarFotoDelMes()` la refresca en
@@ -50,6 +55,8 @@ otras ramas generan preview deploys).
   (se fuerza al ocultar/cerrar la pestaña). Firestore tiene caché offline persistente multi-pestaña.
 - Cálculos centralizados en `calcularTotales()` (ingreso mensual = sueldo × `FRECUENCIAS[frecuenciaIngreso]` + extras;
   semanal = 52/12, quincenal = 2, mensual = 1).
+- `guardarEditor` **mezcla** con el item existente (`{...viejo, ...nuevo}`) para no perder campos que el modal no muestra
+  (hábito, reto, hito).
 - Una entrada de `LISTAS` puede tener `antesDeGuardar(item)` para ajustar el item o devolver `[mensaje, idDelCampo]` como error.
 
 ## Asesor
@@ -65,6 +72,18 @@ otras ramas generan preview deploys).
 - **IA opcional** (botón "segunda opinión"): solo se llama si el usuario lo pide; si falla, el diagnóstico sigue ahí.
 - Que cada usuario use "su" Gemini con su login de Google no es viable: el login de Firebase solo da identidad,
   no acceso a la API de Gemini (que requiere API key/proyecto con facturación).
+
+## Sueños, hábitos y motivación
+
+- Bienvenida = cuestionario de 3 pasos (`abrirCuestionario(1)`): sueldo → sueño (crea una meta con `tipo`) → hábitos
+  con gasto semanal (crea/actualiza gastos hormiga con `habito`, mensual = semanal × 52/12). Se reabre desde
+  "Retos y hábitos" en el paso 2 (`abrirCuestionario(2)`). Todo opcional; aviso de privacidad en el paso 3.
+- "Retos y hábitos": cada hábito muestra costo anual y cuántas quincenas antes llegarías a la meta principal
+  (`efectoEnMeta`); el reto (dejar o reducir) cuenta días y dinero no gastado, y "Mandar a mi sueño" abre el registro
+  rápido prellenado. Tono sin juicios: se habla de gasto, no de vicio.
+- Celebraciones (`celebrar()`): hitos 25/50/75/100% de cada meta, días 7/30/90/180/365 de reto, racha de 3/6/12/24
+  quincenas. Hitos alcanzados antes de existir esto se marcan al cargar sin festejar.
+- No hay rankings entre usuarios ni recomendaciones de inversión (datos sensibles / asesoría financiera).
 
 ## IA (`api/gemini.js`)
 
