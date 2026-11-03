@@ -21,7 +21,8 @@ otras ramas generan preview deploys).
 - Proyecto Firebase: `plan-maestro-2026-fea50`. Auth: solo Google (`signInWithPopup`).
 - Firestore: **un documento por usuario** en `usuarios/{uid}` con todo su estado:
   `settings.currency`, `sueldoQuincenal`, `ingresosExtras{ventas,bonos,otros}`, `metas.fondoEmergencia{objetivo,actual}`,
-  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,esPrioridad}`, `gastosFijos|gastosVariables|gastosHormiga{nombre,monto}`,
+  y mapas `{clave: item}`: `deudas{nombre,total,pagoMensual,tasaAnual,esPrioridad}`
+  (`tasaAnual` en % anual; `null`/ausente = el usuario no la ha puesto, distinto de `0` = sin intereses), `gastosFijos|gastosVariables|gastosHormiga{nombre,monto}`,
   `metasPersonalizadas{nombre,objetivo,actual}`, `gbm{ticker,shares,target}` (inversiones; el nombre "gbm" es legado).
 - `normalizar()` en index.html rellena campos faltantes de documentos viejos: **cualquier campo nuevo debe agregarse
   ahí y en `datosPorDefecto()`**, porque ya hay usuarios con datos guardados.
@@ -43,9 +44,11 @@ otras ramas generan preview deploys).
 ## Asesor
 
 - **Principal, sin IA (en index.html)**: `diagnosticoLocal()` da consejos por reglas con los números del usuario
-  (déficit, deudas sin pago, % en deudas, fondo de emergencia, gastos hormiga, tasa de ahorro) y `planDeudas()`
-  calcula un plan bola de nieve (prioridad primero, luego menor saldo; el sobrante va a la primera deuda y los pagos
-  liberados se acumulan). Instantáneo y gratis; los plazos son estimados porque aún no se registran tasas de interés.
+  (déficit, deudas sin pago, % en deudas, fondo de emergencia, gastos hormiga, tasa de ahorro) y `planDeudas(deudas, extra, metodo)`
+  simula mes a mes con intereses (tasa/12): `'nieve'` = menor saldo primero, `'avalancha'` = mayor tasa primero; las
+  marcadas como prioridad van antes en ambos. El sobrante va a la primera deuda y los pagos liberados se acumulan.
+  `pintarPlan()` muestra ambos métodos con meses e intereses y recomienda el de menor interés. Instantáneo y gratis.
+- Campos de lista tipo `'numopt'` en `LISTAS`: vacío se guarda como `null` (desconocido), no como 0.
 - **IA opcional** (botón "segunda opinión"): solo se llama si el usuario lo pide; si falla, el diagnóstico sigue ahí.
 - Que cada usuario use "su" Gemini con su login de Google no es viable: el login de Firebase solo da identidad,
   no acceso a la API de Gemini (que requiere API key/proyecto con facturación).
@@ -78,7 +81,7 @@ confirmación al borrar/cerrar sesión, modo oscuro persistente, editor genéric
 Pendiente (en orden sugerido):
 1. **Universalizar**: frecuencia de ingreso (semanal/quincenal/mensual/variable) y varias fuentes de ingreso;
    más monedas + formato por locale; inversiones genéricas (tipo + valor en dinero) en vez de "GBM/títulos";
-   categorías de gasto personalizables; tasa de interés en deudas (con eso, plan avalancha y plazos reales; la bola de nieve ya existe).
+   categorías de gasto personalizables; ~~tasa de interés + avalancha~~ (hecho).
 2. **Historial**: registrar movimientos o cierres mensuales para ver tendencias (hoy es una foto de un solo mes).
 3. **Cuentas y privacidad**: login con correo, modo invitado, exportar datos (CSV/JSON), borrar cuenta, aviso de privacidad (LFPDPPP).
 4. **Calidad**: Tailwind por CDN no es para producción; límite de IA persistente (firebase-admin o Vercel KV); i18n.
