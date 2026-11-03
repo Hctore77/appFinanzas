@@ -1032,7 +1032,7 @@
         // Devuelve { orden: [{…, mes}], meses, interes } (meses = null si no se termina en 50 años).
         function planDeudas(deudas, extra, metodo = 'nieve', abonos = {}) {
             const lista = Object.values(deudas || {})
-                .map(d => ({ nombre: d.nombre || 'Sin nombre', saldo: num(d.total), minimo: Math.max(0, num(d.pagoMensual)), tasa: Math.max(0, num(d.tasaAnual)), prioridad: !!d.esPrioridad, msi: !!d.esMSI }))
+                .map(d => ({ nombre: d.nombre || 'Sin nombre', saldo: num(d.total), minimo: Math.max(0, num(d.pagoMensual)), tasa: Math.max(0, num(d.tasaAnual)), prioridad: !!d.esPrioridad, msi: !!d.esMSI, sinTasa: d.tasaAnual == null || d.tasaAnual === '' }))
                 .filter(d => d.saldo > 0)
                 // Las compras a MSI van al final: adelantarlas no ahorra intereses.
                 .sort((a, b) => (b.prioridad - a.prioridad) || (a.msi - b.msi) || (metodo === 'avalancha' ? (b.tasa - a.tasa) || (a.saldo - b.saldo) : (a.saldo - b.saldo)));
@@ -1100,6 +1100,21 @@
             return `<p class="text-sm mt-2 rounded-xl bg-amber-50 dark:bg-amber-900/20 p-3">🎁 Si mandas tu aguinaldo (<strong>${formatCurrency(ag)}</strong>) a la deuda cada diciembre, terminas en <strong>${textoMeses(conAg.meses)}</strong>${menos > 0 ? ` (${textoMeses(menos)} antes)` : ''}${ahorro > 1 ? ` y ahorras ${formatCurrency(ahorro)} de intereses` : ''}.</p>`;
         }
 
+        let metodoMostrado = 'nieve'; // el método que el usuario ve en el modal; es el que se manda a la IA
+
+        // Plan en solo números para la IA (sin nombres de deudas).
+        function planParaIA() {
+            const t = calcularTotales();
+            const extra = Math.max(0, t.sobrante);
+            const p = planDeudas(financialData.deudas, extra, metodoMostrado);
+            if (!p.orden.length) return null;
+            const min = planDeudas(financialData.deudas, 0, metodoMostrado);
+            return {
+                metodo: metodoMostrado, meses: p.meses, interes: p.interes, mesesMinimos: min.meses, interesMinimos: min.interes,
+                deudas: p.orden.map(d => ({ saldo: d.saldo, minimo: d.minimo, tasa: d.sinTasa ? null : d.tasa, mes: d.mes, prioridad: d.prioridad, msi: !!d.msi })),
+            };
+        }
+
         // Pinta el plan en el modal del asesor. metodo = null → el que pague menos intereses.
         function pintarPlan(metodo) {
             const cont = $('asesor-plan');
@@ -1116,6 +1131,7 @@
             const hayDiferencia = Math.abs((avalancha.interes ?? 0) - (nieve.interes ?? 0)) > 1 || avalancha.meses !== nieve.meses;
             metodo = metodo || mejor;
             const plan = metodo === 'avalancha' ? avalancha : nieve;
+            metodoMostrado = metodo;
             const soloMinimos = planDeudas(deudas, 0, metodo);
             const ints = (p) => p.interes === null ? 'no se termina' : formatCurrency(p.interes);
 
@@ -1201,7 +1217,9 @@
                     body: JSON.stringify({
                         moneda: financialData.settings.currency,
                         ingresos: t.ingresos, gastos: t.gastos, sobrante: t.sobrante, deudaTotal: t.deudaTotal,
-                        fondoEmergencia: num(fondo.actual), metaFondo: num(fondo.objetivo)
+                        fondoEmergencia: num(fondo.actual), metaFondo: num(fondo.objetivo),
+                        gastosEsenciales: t.fijos + t.variables,
+                        plan: planParaIA()
                     })
                 });
                 const data = await response.json().catch(() => ({}));

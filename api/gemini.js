@@ -51,6 +51,22 @@ function numero(v) {
     return Number.isFinite(n) && Math.abs(n) < 1e12 ? n : null;
 }
 
+// Plan de deudas que ya calculó la app (opcional). Solo números y banderas; las deudas van sin nombre
+// ("Deuda 1", "Deuda 2"…) para que no viaje texto del usuario al modelo.
+function leerPlan(p) {
+    if (!p || typeof p !== 'object') return null;
+    const metodo = p.metodo === 'avalancha' ? 'avalancha' : p.metodo === 'nieve' ? 'nieve' : null;
+    if (!metodo || !Array.isArray(p.deudas) || !p.deudas.length) return null;
+    const entero = (x) => { const n = numero(x); return n === null ? null : Math.max(0, Math.round(n)); };
+    const deudas = p.deudas.slice(0, 12).map(d => ({
+        saldo: numero(d?.saldo), minimo: numero(d?.minimo),
+        tasa: d?.tasa === null ? null : numero(d?.tasa), // null = el usuario no la ha registrado
+        mes: entero(d?.mes), prioridad: d?.prioridad === true, msi: d?.msi === true,
+    }));
+    if (deudas.some(d => d.saldo === null || d.minimo === null)) return null;
+    return { metodo, deudas, meses: entero(p.meses), interes: numero(p.interes), mesesMinimos: entero(p.mesesMinimos), interesMinimos: numero(p.interesMinimos) };
+}
+
 function construirPrompt(body) {
     const moneda = /^[A-Z]{3}$/.test(body.moneda) ? body.moneda : 'MXN';
     const campos = ['ingresos', 'gastos', 'sobrante', 'deudaTotal', 'fondoEmergencia', 'metaFondo'];
@@ -59,19 +75,37 @@ function construirPrompt(body) {
         v[c] = numero(body[c]);
         if (v[c] === null) return null;
     }
+    const esenciales = numero(body.gastosEsenciales); // gastos de vivir un mes sin contar deudas (opcional)
     let fmt;
     try { fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: moneda, maximumFractionDigits: 0 }); }
     catch { fmt = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }); }
     const f = (n) => fmt.format(n);
+    const tiempo = (m) => m === null ? 'más de 50 años' : `${m} meses`;
 
-    return `Actúa como FinAI, asesor financiero personal experto. Analiza este perfil mensual:
+    const plan = leerPlan(body.plan);
+    let bloquePlan = '';
+    if (plan) {
+        const lineas = plan.deudas.map((d, i) => `  ${i + 1}. Deuda ${i + 1}: saldo ${f(d.saldo)}, pago mínimo ${f(d.minimo)}, ` +
+            `${d.tasa === null ? 'tasa NO registrada (se calculó como 0%)' : d.msi ? 'meses sin intereses' : `tasa ${d.tasa}% anual`}` +
+            `${d.prioridad ? ', marcada como prioridad por el usuario' : ''}, se liquida en el mes ${d.mes ?? 'nunca (el pago no alcanza)'}`).join('\n');
+        bloquePlan = `
+
+La app YA calculó este plan de deudas (método ${plan.metodo === 'avalancha' ? 'avalancha: mayor tasa primero' : 'bola de nieve: menor saldo primero'}), mandando el sobrante a la primera deuda de la lista:
+${lineas}
+- Terminaría en ${tiempo(plan.meses)}${plan.interes !== null ? ` pagando ${f(plan.interes)} de intereses` : ''}.
+- Solo con pagos mínimos: ${tiempo(plan.mesesMinimos)}${plan.interesMinimos !== null ? ` y ${f(plan.interesMinimos)} de intereses` : ''}.
+
+Tus consejos COMPLEMENTAN ese plan: no lo contradigas ni propongas otro orden de pago. No inventes tasas: si alguna no está registrada, sugiere registrarla para que el cálculo sea real.`;
+    }
+
+    return `Actúa como FinAI, asesor financiero personal experto para personas en México. Analiza este perfil mensual:
 - Ingresos: ${f(v.ingresos)}
-- Gastos totales (incluye pagos de deuda): ${f(v.gastos)}
+- Gastos totales (incluye pagos de deuda): ${f(v.gastos)}${esenciales !== null ? `\n- Gastos para vivir sin contar deudas: ${f(esenciales)}` : ''}
 - Sobrante: ${f(v.sobrante)}
 - Deuda total: ${f(v.deudaTotal)}
-- Fondo de emergencia: ${f(v.fondoEmergencia)} de una meta de ${f(v.metaFondo)}
+- Fondo de emergencia: ${f(v.fondoEmergencia)} de una meta de ${f(v.metaFondo)}${bloquePlan}
 
-Da exactamente 3 consejos prácticos, concretos y en español, de máximo 2 oraciones cada uno.
+Da exactamente 3 consejos prácticos, concretos y en español, de máximo 2 oraciones cada uno, con cantidades cuando ayuden.
 Responde ÚNICAMENTE con JSON válido con esta forma: {"consejos": ["...", "...", "..."]}
 Sin markdown, sin HTML, sin texto fuera del JSON.`;
 }
@@ -142,6 +176,8 @@ async function llamarGemini(prompt, key) {
     }
     throw ultimoError;
 }
+
+export { construirPrompt }; // para pruebas
 
 export default async function handler(req, res) {
     // Sin cabeceras CORS: solo la propia app (mismo dominio) puede llamar a este endpoint desde un navegador.
