@@ -173,6 +173,14 @@
                 </div>
             </div>
 
+            <!-- Págate primero (día de pago) -->
+            <div id="pagate-primero" class="hidden card mb-6 p-4 border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <p id="pagate-texto" class="text-sm"></p>
+                    <div class="flex gap-2 shrink-0"><button id="pagate-btn" class="px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-black">Apartar ahora</button><button id="pagate-cerrar" class="px-3 py-2 rounded-full text-xs text-slate-500" aria-label="Ocultar aviso de hoy">Hoy no</button></div>
+                </div>
+            </div>
+
             <!-- Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div class="card text-center p-4"><p class="text-xs text-slate-400 uppercase">Ingresos</p><p id="statIngresos" class="text-2xl font-black text-emerald-600">$0</p></div>
@@ -293,8 +301,11 @@
                 <h2 class="text-2xl font-black">🌟 ¿Para qué quieres ahorrar?</h2>
                 <p class="text-slate-500 text-sm">Elige tu sueño. Te digo cuánto apartar por quincena para lograrlo.</p>
                 <div id="cuest-suenos" class="grid grid-cols-3 md:grid-cols-5 gap-2"></div>
+                <button type="button" id="cuest-mas-suenos" class="text-xs font-bold text-frteal underline">➕ Ver más sueños</button>
                 <div id="cuest-sueno-datos" class="hidden space-y-3">
                     <p id="cuest-sueno-guia" class="text-xs text-slate-500"></p>
+                    <div id="cuest-sueno-nombre-box" class="hidden"><label for="cuest-sueno-nombre" class="text-xs font-bold text-slate-400">¿Cuál es tu sueño?</label><input type="text" maxlength="40" id="cuest-sueno-nombre" class="budget-input" placeholder="Ej: Llevar a mi mamá a Cancún"></div>
+                    <div><label for="cuest-sueno-motivo" class="text-xs font-bold text-slate-400">¿Por qué es importante para ti? <span class="font-normal">(opcional, te lo recordaré)</span></label><input type="text" maxlength="80" id="cuest-sueno-motivo" class="budget-input" placeholder="Ej: Se lo prometí a mi papá"></div>
                     <div><label for="cuest-sueno-monto" class="text-xs font-bold text-slate-400">¿Cuánto necesitas?</label><input type="number" min="0" id="cuest-sueno-monto" class="budget-input" placeholder="Ej: 25000"></div>
                     <div><label for="cuest-sueno-fecha" class="text-xs font-bold text-slate-400">¿Para cuándo? (opcional)</label><input type="date" id="cuest-sueno-fecha" class="budget-input"></div>
                 </div>
@@ -302,7 +313,7 @@
             <!-- Paso 3: hábitos -->
             <section data-paso="3" class="space-y-3 hidden">
                 <h2 class="text-2xl font-black">🔍 ¿En qué se te va el dinero sin darte cuenta?</h2>
-                <p class="text-slate-500 text-sm">Marca los que apliquen y cuánto gastas <strong>a la semana</strong>. Sin juicios: es solo para calcular cuánto te acercaría a tu sueño.</p>
+                <p class="text-slate-500 text-sm">Marca los que apliquen, cuánto gastas y cada cuánto. Sin juicios: es solo para calcular cuánto te acercaría a tu sueño.</p>
                 <div id="cuest-habitos" class="space-y-2"></div>
                 <p class="text-[11px] text-slate-400">🔒 Tus respuestas solo se guardan en tu cuenta y se usan para tus cálculos. Puedes saltar cualquier pregunta o borrarlas después.</p>
             </section>
@@ -391,7 +402,7 @@
     <div id="variable-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Variable</h3><input type="hidden" id="edit-variable-key"><input type="text" id="variable-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="variable-amount" class="budget-input mb-6" placeholder="Monto"><button id="variable-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="variable-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('variable-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="hormiga-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">Gasto Hormiga</h3><input type="hidden" id="edit-hormiga-key"><input type="text" id="hormiga-name" class="budget-input mb-3" placeholder="Nombre"><input type="number" id="hormiga-amount" class="budget-input mb-6" placeholder="Monto"><button id="hormiga-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="hormiga-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('hormiga-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="ahorro-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🔋 Fondo</h3><label for="ahorro-meta" class="text-xs text-slate-400">Meta</label><input type="number" min="0" id="ahorro-meta" class="budget-input mb-4" placeholder="Meta"><label for="ahorro-abono" class="text-xs text-slate-400">Abonar (usa un número negativo para retirar)</label><input type="number" id="ahorro-abono" class="budget-input mb-6" placeholder="0"><button id="ahorro-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('ahorro-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
-    <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🌟 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><label for="meta-tipo" class="text-xs text-slate-400">Tipo de sueño</label><select id="meta-tipo" class="budget-input mb-3"></select><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-3" placeholder="Ahorrado"><p class="text-xs text-slate-400 mb-2">Llena uno de los dos y te calculo el otro:</p><label for="meta-date" class="text-xs text-slate-400">¿Para cuándo la quieres?</label><input type="date" id="meta-date" class="budget-input mb-3"><label for="meta-aporte" class="text-xs text-slate-400">o ¿cuánto puedes apartar por quincena?</label><input type="number" min="0" id="meta-aporte" class="budget-input mb-6" placeholder="Ej: 500"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
+    <div id="meta-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">🌟 Meta</h3><input type="hidden" id="edit-meta-key"><input type="text" id="meta-name" class="budget-input mb-3" placeholder="Nombre"><label for="meta-tipo" class="text-xs text-slate-400">Tipo de sueño</label><select id="meta-tipo" class="budget-input mb-3"></select><label for="meta-motivo" class="text-xs text-slate-400">¿Para qué la quieres? (te lo recordaré)</label><input type="text" maxlength="80" id="meta-motivo" class="budget-input mb-3" placeholder="Ej: Se lo prometí a mi papá"><input type="number" id="meta-target" class="budget-input mb-3" placeholder="Objetivo"><input type="number" id="meta-current" class="budget-input mb-3" placeholder="Ahorrado"><p class="text-xs text-slate-400 mb-2">Llena uno de los dos y te calculo el otro:</p><label for="meta-date" class="text-xs text-slate-400">¿Para cuándo la quieres?</label><input type="date" id="meta-date" class="budget-input mb-3"><label for="meta-aporte" class="text-xs text-slate-400">o ¿cuánto puedes apartar por quincena?</label><input type="number" min="0" id="meta-aporte" class="budget-input mb-6" placeholder="Ej: 500"><button id="meta-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button id="meta-delete-btn" class="w-full mt-3 text-red-500 font-bold hidden">Eliminar</button><button onclick="closeModal('meta-modal')" class="w-full mt-2 text-slate-400 py-2">Cancelar</button></div></div>
     <div id="settings-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-black mb-4">⚙️ Configuración</h3><label class="text-xs text-slate-400">Moneda</label><select id="settings-currency" class="budget-input mb-4"><option value="MXN">MXN</option><option value="USD">USD</option></select><button id="settings-save-btn" class="btn-primary w-full py-3 rounded-xl text-white font-black">Guardar</button><button onclick="closeModal('settings-modal')" class="w-full mt-2 text-slate-400 py-2">Cerrar</button></div></div>
 
     <!-- LÓGICA PRINCIPAL -->
@@ -563,19 +574,36 @@
             estudios: { emoji: '🎓', nombre: 'Estudios',            guia: 'Inscripción, colegiaturas y materiales.' },
             gadget:   { emoji: '📱', nombre: 'Celular o compu',     guia: 'Comprarlo de contado te ahorra intereses y meses sin intereses.' },
             negocio:  { emoji: '🏪', nombre: 'Mi negocio',          guia: 'Inversión inicial y unos meses de gastos mientras arranca.' },
-            otro:     { emoji: '⭐', nombre: 'Otro sueño',          guia: '' },
+            depa:     { emoji: '🔑', nombre: 'Mudarme a un depa',   guia: 'Depósito, primer mes de renta, mudanza y lo básico para la casa.', extra: true },
+            moto:     { emoji: '🏍️', nombre: 'Mi moto',             guia: 'Precio, casco y equipo, seguro y placas.', extra: true },
+            concierto:{ emoji: '🎤', nombre: 'Concierto o festival', guia: 'Boletos, transporte y hospedaje si es fuera de tu ciudad.', extra: true },
+            mascota:  { emoji: '🐶', nombre: 'Mi mascota',          guia: 'Adopción o compra, vacunas, esterilización y lo básico.', extra: true },
+            salud:    { emoji: '🦷', nombre: 'Salud (dentista, lentes…)', guia: 'Pide un presupuesto y súmale un margen por si acaso.', extra: true },
+            fiesta:   { emoji: '🎉', nombre: 'Fiesta o XV años',    guia: 'Salón, comida, música y vestuario.', extra: true },
+            regalo:   { emoji: '🎁', nombre: 'Un regalo especial',  guia: 'Para alguien importante, sin pagarlo a meses.', extra: true },
+            retiro:   { emoji: '🌴', nombre: 'Mi retiro',           guia: 'Una meta de largo plazo: lo importante es empezar y ser constante.', extra: true },
+            otro:     { emoji: '⭐', nombre: 'Otro sueño',          guia: 'Ponle nombre: un sueño con nombre propio motiva más.' },
         };
         const HABITOS = {
-            cigarro:   { emoji: '🚬', nombre: 'Cigarros' },
-            alcohol:   { emoji: '🍺', nombre: 'Alcohol' },
-            delivery:  { emoji: '🛵', nombre: 'Comida a domicilio' },
-            cafe:      { emoji: '☕', nombre: 'Café para llevar' },
-            antojos:   { emoji: '🍟', nombre: 'Antojos y refrescos' },
-            transporte:{ emoji: '🚕', nombre: 'Apps de transporte' },
-            apuestas:  { emoji: '🎰', nombre: 'Apuestas' },
-            subs:      { emoji: '📺', nombre: 'Suscripciones' },
+            cigarro:   { emoji: '🚬', nombre: 'Cigarros', periodo: 'dia' },
+            alcohol:   { emoji: '🍺', nombre: 'Alcohol', periodo: 'semana' },
+            delivery:  { emoji: '🛵', nombre: 'Comida a domicilio', periodo: 'semana' },
+            cafe:      { emoji: '☕', nombre: 'Café para llevar', periodo: 'dia' },
+            antojos:   { emoji: '🍟', nombre: 'Antojos y refrescos', periodo: 'dia' },
+            transporte:{ emoji: '🚕', nombre: 'Apps de transporte', periodo: 'semana' },
+            apuestas:  { emoji: '🎰', nombre: 'Apuestas', periodo: 'semana' },
+            subs:      { emoji: '📺', nombre: 'Suscripciones', periodo: 'mes' },
         };
         const SEMANAS_POR_MES = 52 / 12;
+        // Cada cuánto se gasta en un hábito → veces por mes.
+        const PERIODOS_HABITO = { dia: { txt: 'al día', porMes: 365 / 12 }, semana: { txt: 'a la semana', porMes: 52 / 12 }, quincena: { txt: 'a la quincena', porMes: 2 }, mes: { txt: 'al mes', porMes: 1 } };
+        // Horas de trabajo que cuesta un monto: ingreso mensual / horas de una jornada de 48 h/semana (≈ 208 al mes).
+        const HORAS_TRABAJO_MES = 48 * 52 / 12;
+        function horasDeTrabajo(monto) {
+            const ing = calcularTotales().ingresos;
+            return ing > 0 ? monto / (ing / HORAS_TRABAJO_MES) : null;
+        }
+        const textoHoras = (h) => h === null ? '' : h < 1 ? `${Math.max(1, Math.round(h * 60))} minutos de trabajo` : `${Math.round(h)} ${Math.round(h) === 1 ? 'hora' : 'horas'} de trabajo`;
         const DIA_MS = 864e5;
         const sueno = (m) => SUENOS[m?.tipo] || SUENOS.otro;
         function diasDesde(fechaYmd, hoy = new Date()) {
@@ -672,7 +700,9 @@
             primerPasoCuest = desde;
             suenoElegido = null;
             $('cuest-suenos').innerHTML = Object.entries(SUENOS).map(([k, v]) => `
-                <button type="button" data-sueno="${k}" class="cuest-sueno rounded-xl p-2 text-xs font-bold border-2 border-slate-200 dark:border-slate-700"><span class="text-2xl block">${v.emoji}</span>${esc(v.nombre)}</button>`).join('');
+                <button type="button" data-sueno="${k}" class="cuest-sueno rounded-xl p-2 text-xs font-bold border-2 border-slate-200 dark:border-slate-700 ${v.extra ? 'hidden' : ''}"><span class="text-2xl block">${v.emoji}</span>${esc(v.nombre)}</button>`).join('');
+            $('cuest-mas-suenos').classList.remove('hidden');
+            $('cuest-sueno-nombre').value = ''; $('cuest-sueno-motivo').value = '';
             $('cuest-sueno-datos').classList.add('hidden');
             $('cuest-sueno-monto').value = ''; $('cuest-sueno-fecha').value = '';
             const actuales = Object.fromEntries(Object.values(financialData.gastosHormiga).filter(h => h.habito).map(h => [h.habito, h]));
@@ -680,11 +710,17 @@
                 <div class="flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-800">
                     <input type="checkbox" id="hab-${k}" data-habito="${k}" class="w-5 h-5" ${actuales[k] ? 'checked' : ''}>
                     <label for="hab-${k}" class="flex-1 text-sm font-bold">${v.emoji} ${esc(v.nombre)}</label>
-                    <input type="number" min="0" id="hab-${k}-monto" aria-label="Gasto semanal en ${esc(v.nombre)}" class="budget-input !w-28 text-sm" placeholder="$/semana" value="${actuales[k] ? Math.round(num(actuales[k].reto ? actuales[k].reto.montoAntes : actuales[k].monto) / SEMANAS_POR_MES) : ''}">
+                    <input type="number" min="0" id="hab-${k}-monto" aria-label="Cuánto gastas en ${esc(v.nombre)}" class="budget-input !w-24 text-sm" placeholder="$" value="${actuales[k] ? montoEnPeriodo(actuales[k]) : ''}">
+                    <select id="hab-${k}-periodo" aria-label="Cada cuánto gastas en ${esc(v.nombre)}" class="budget-input !w-36 text-sm">${Object.entries(PERIODOS_HABITO).map(([pk, pv]) => `<option value="${pk}" ${(actuales[k] ? (actuales[k].habitoPeriodo || 'semana') : v.periodo) === pk ? 'selected' : ''}>${pv.txt}</option>`).join('')}</select>
                 </div>`).join('');
             $('cuest-cerrar').classList.toggle('hidden', desde === 1);
             irAPaso(desde);
             openModal('welcome-modal');
+        }
+        // Lo que el usuario contestó, en su propio periodo (para precargar el cuestionario).
+        function montoEnPeriodo(h) {
+            const mensual = num(h.reto ? h.reto.montoAntes : h.monto);
+            return Math.round(mensual / (PERIODOS_HABITO[h.habitoPeriodo || 'semana']?.porMes || SEMANAS_POR_MES));
         }
         function irAPaso(n) {
             pasoCuest = n;
@@ -706,22 +742,26 @@
             const monto = Math.max(0, num($('cuest-sueno-monto').value));
             if (suenoElegido && monto > 0) {
                 const fecha = $('cuest-sueno-fecha').value;
-                financialData.metasPersonalizadas[nuevaClave()] = { nombre: SUENOS[suenoElegido].nombre, tipo: suenoElegido, objetivo: monto, actual: 0,
+                const propio = $('cuest-sueno-nombre').value.trim().slice(0, 40);
+                financialData.metasPersonalizadas[nuevaClave()] = { nombre: (suenoElegido === 'otro' && propio) ? propio : SUENOS[suenoElegido].nombre, tipo: suenoElegido,
+                    motivo: $('cuest-sueno-motivo').value.trim().slice(0, 80) || null, objetivo: monto, actual: 0,
                     fechaMeta: /^\d{4}-\d{2}-\d{2}$/.test(fecha) ? fecha : null, aporteQuincenal: null, hito: 0 };
             }
             // Paso 3: hábitos → gastos hormiga (mensuales) ligados al hábito
             const porHabito = Object.fromEntries(Object.entries(financialData.gastosHormiga).filter(([, h]) => h.habito).map(([k, h]) => [h.habito, k]));
             for (const [k, v] of Object.entries(HABITOS)) {
                 const marcado = $(`hab-${k}`)?.checked;
-                const semanal = Math.max(0, num($(`hab-${k}-monto`)?.value));
+                const cantidad = Math.max(0, num($(`hab-${k}-monto`)?.value));
+                const periodo = PERIODOS_HABITO[$(`hab-${k}-periodo`)?.value] ? $(`hab-${k}-periodo`).value : 'semana';
                 const existente = porHabito[k] && financialData.gastosHormiga[porHabito[k]];
-                if (marcado && semanal > 0) {
-                    const mensual = Math.round(semanal * SEMANAS_POR_MES);
+                if (marcado && cantidad > 0) {
+                    const mensual = Math.round(cantidad * PERIODOS_HABITO[periodo].porMes);
                     if (existente) {
                         if (existente.reto) existente.reto.montoAntes = mensual; // en reto: se corrige el "antes", no lo que gasta hoy
                         else existente.monto = mensual;
+                        existente.habitoPeriodo = periodo;
                     } else {
-                        financialData.gastosHormiga[nuevaClave()] = { nombre: v.nombre, monto: mensual, habito: k };
+                        financialData.gastosHormiga[nuevaClave()] = { nombre: v.nombre, monto: mensual, habito: k, habitoPeriodo: periodo };
                     }
                 }
             }
@@ -735,11 +775,15 @@
             if (principal && totalHab > 0) {
                 const ef = efectoEnMeta(totalHab, principal[1]);
                 if (ef) celebrar(sueno(principal[1]).emoji, 'Tu plan está listo',
-                    `Tus hábitos marcados suman ${formatCurrency(totalHab)} al mes (${formatCurrency(totalHab * 12)} al año). ` +
+                    `Tus hábitos marcados suman ${formatCurrency(totalHab)} al mes (${formatCurrency(totalHab * 12)} al año)${horasDeTrabajo(totalHab) !== null ? `: son ${textoHoras(horasDeTrabajo(totalHab))} cada mes` : ''}. ` +
                     (ef.tipo === 'antes' ? `Mandarlos a "${principal[1].nombre}" te haría llegar ${ef.quincenas} quincenas antes.` : `Solo con eso llegarías a "${principal[1].nombre}" en ${ef.quincenas} quincenas.`) +
                     ' Empieza un reto en "Retos y hábitos".');
             }
         }
+        $('cuest-mas-suenos').addEventListener('click', () => {
+            document.querySelectorAll('.cuest-sueno').forEach(b => b.classList.remove('hidden'));
+            $('cuest-mas-suenos').classList.add('hidden');
+        });
         $('cuest-suenos').addEventListener('click', (e) => {
             const b = e.target.closest('[data-sueno]');
             if (!b) return;
@@ -747,7 +791,8 @@
             document.querySelectorAll('.cuest-sueno').forEach(x => x.classList.toggle('border-frteal', x === b));
             $('cuest-sueno-guia').textContent = SUENOS[suenoElegido].guia;
             $('cuest-sueno-datos').classList.remove('hidden');
-            $('cuest-sueno-monto').focus();
+            $('cuest-sueno-nombre-box').classList.toggle('hidden', suenoElegido !== 'otro');
+            (suenoElegido === 'otro' ? $('cuest-sueno-nombre') : $('cuest-sueno-monto')).focus();
         });
         $('cuest-siguiente').addEventListener('click', () => pasoCuest < 3 ? irAPaso(pasoCuest + 1) : terminarCuestionario());
         $('cuest-atras').addEventListener('click', () => irAPaso(Math.max(primerPasoCuest, pasoCuest - 1)));
@@ -756,6 +801,37 @@
             else { document.querySelectorAll('#cuest-habitos [data-habito]').forEach(c => { c.checked = false; }); terminarCuestionario(); }
         });
         $('cuest-cerrar').addEventListener('click', () => closeModal('welcome-modal'));
+
+        // ----- Págate primero: el día de pago, apartar antes de gastar -----
+        // Días de pago según la frecuencia: quincenal = 15 y último del mes; mensual = último; semanal = viernes.
+        function esDiaDePago(hoy = new Date()) {
+            const ultimo = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+            const f = financialData.frecuenciaIngreso;
+            if (f === 'semanal') return hoy.getDay() === 5;
+            if (f === 'mensual') return hoy.getDate() === ultimo;
+            return hoy.getDate() === 15 || hoy.getDate() === ultimo;
+        }
+        function renderizarPagatePrimero() {
+            const caja = $('pagate-primero');
+            let oculto = false;
+            try { oculto = localStorage.getItem('fr4-pagate-oculto') === ymd(new Date()); } catch { /* sin storage: se muestra */ }
+            const hoyTxt = ymd(new Date());
+            const yaAparto = Object.values(financialData.movimientos).some(m => m.fecha === hoyTxt && (m.tipo === 'meta' || m.tipo === 'fondo'));
+            if (oculto || yaAparto || !esDiaDePago()) { caja.classList.add('hidden'); return; }
+            const principal = metaPrincipal();
+            const plan = principal ? planMeta(principal[1]) : null;
+            const aporte = plan?.aporte ? Math.ceil(plan.aporte) : Math.round(Math.max(0, calcularTotales().sobrante) / (FRECUENCIAS[financialData.frecuenciaIngreso] || 2) * 0.1);
+            if (!(aporte > 0)) { caja.classList.add('hidden'); return; }
+            const destino = principal ? `${sueno(principal[1]).emoji} ${principal[1].nombre}` : '🔋 tu fondo de emergencia';
+            $('pagate-texto').innerHTML = `💸 <strong>Hoy cobras.</strong> Antes de gastar, aparta <strong>${formatCurrency(aporte)}</strong> para <span data-destino></span>. Lo que se aparta primero no se gasta.`;
+            $('pagate-texto').querySelector('[data-destino]').textContent = destino;
+            $('pagate-btn').onclick = () => principal ? abrirMovimiento('meta', { monto: aporte, meta: principal[0], nota: 'Págate primero' }) : abrirMovimiento('fondo', { monto: aporte, nota: 'Págate primero' });
+            caja.classList.remove('hidden');
+        }
+        $('pagate-cerrar').addEventListener('click', () => {
+            try { localStorage.setItem('fr4-pagate-oculto', ymd(new Date())); } catch { /* nada */ }
+            $('pagate-primero').classList.add('hidden');
+        });
 
         // ----- Retos -----
         let modoReto = 'dejar';
@@ -837,6 +913,7 @@
                 return `<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
                     <p class="font-black text-sm">${hb.emoji} ${esc(h.nombre)}</p>
                     <p class="text-xs text-slate-500 mt-1">${formatCurrency(h.monto)} al mes · <strong>${formatCurrency(num(h.monto) * 12)} al año</strong></p>
+                    ${horasDeTrabajo(num(h.monto)) !== null ? `<p class="text-xs text-slate-500">⏱️ Te cuesta ${textoHoras(horasDeTrabajo(num(h.monto)))} al mes</p>` : ''}
                     ${efecto ? `<p class="text-xs mt-1">${efecto}</p>` : ''}
                     <button data-reto-empezar="${esc(k)}" class="mt-2 w-full py-2 rounded-lg bg-frteal text-white text-xs font-black">💪 Empezar reto</button>
                 </div>`;
@@ -1080,7 +1157,7 @@
             fixed:    { coleccion: 'gastosFijos',         campos: { nombre: ['fixed-name', 'text'], monto: ['fixed-amount', 'num'], diaPago: ['fixed-day', 'dia'] } },
             variable: { coleccion: 'gastosVariables',     campos: { nombre: ['variable-name', 'text'], monto: ['variable-amount', 'num'] } },
             hormiga:  { coleccion: 'gastosHormiga',       campos: { nombre: ['hormiga-name', 'text'], monto: ['hormiga-amount', 'num'] } },
-            meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], tipo: ['meta-tipo', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'], fechaMeta: ['meta-date', 'fecha'], aporteQuincenal: ['meta-aporte', 'numopt'] } },
+            meta:     { coleccion: 'metasPersonalizadas', campos: { nombre: ['meta-name', 'text'], tipo: ['meta-tipo', 'text'], motivo: ['meta-motivo', 'text'], objetivo: ['meta-target', 'num'], actual: ['meta-current', 'num'], fechaMeta: ['meta-date', 'fecha'], aporteQuincenal: ['meta-aporte', 'numopt'] } },
             gbm:      { coleccion: 'gbm',                 campos: { ticker: ['gbm-ticker', 'upper'], shares: ['gbm-shares', 'num'], target: ['gbm-target', 'num'] } },
         };
 
@@ -1184,6 +1261,7 @@
             renderizarMes();
             renderizarHistorial();
             renderizarRetos();
+            renderizarPagatePrimero();
             calcularYActualizarTodo();
         }
 
@@ -1302,10 +1380,15 @@
                     : plan.aporte ? `Aparta <strong>${formatCurrency(Math.ceil(plan.aporte))}</strong>/quincena → ${fechaCorta(plan.fecha)}`
                     : 'Ponle fecha o aporte para calcular tu plan';
                 const pctTxt = num(m.objetivo) > 0 ? ` · ${Math.min(100, Math.round(p))}%` : '';
+                // Efecto meta cercana: cuando falta poco, se dice en quincenas o en lo que falta.
+                const cerca = !plan.cumplida && !plan.vencida && ((plan.quincenas && plan.quincenas <= 4) || p >= 75)
+                    ? `🔥 ${plan.quincenas && plan.quincenas <= 4 ? `¡Solo te ${plan.quincenas === 1 ? 'falta 1 quincena' : `faltan ${plan.quincenas} quincenas`}!` : `¡Ya casi! Te faltan ${formatCurrency(plan.falta)}`}` : '';
                 return `
                 <div data-editar="meta" data-key="${esc(k)}" role="button" tabindex="0" class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer">
                     <div class="flex justify-between text-xs mb-1"><span class="font-bold">${sueno(m).emoji} ${esc(m.nombre)}</span><span class="text-slate-500">${formatCurrency(m.actual)} / ${formatCurrency(m.objetivo)}${pctTxt}</span></div>
                     <div class="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-frteal" style="width:${Math.min(100, p)}%"></div></div>
+                    ${m.motivo ? `<p class="text-[11px] italic text-slate-600 dark:text-slate-300 mt-1">“${esc(m.motivo)}”</p>` : ''}
+                    ${cerca ? `<p class="text-[11px] font-bold text-orange-600 mt-1">${cerca}</p>` : ''}
                     <p class="text-[11px] text-slate-500 mt-1">${nota}</p>
                 </div>`;
             }).join('');
