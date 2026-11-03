@@ -62,6 +62,9 @@ otras ramas generan preview deploys).
   (se fuerza al ocultar/cerrar la pestaña). Firestore tiene caché offline persistente multi-pestaña.
 - Cálculos centralizados en `calcularTotales()` (ingreso mensual = sueldo × `FRECUENCIAS[frecuenciaIngreso]` + extras;
   semanal = 52/12, quincenal = 2, mensual = 1).
+- "¿En qué se va tu dinero?" (`renderizarFlujo()`): barra segmentada delgada en orden fijo por categoría + lista de mayor a
+  menor con monto y % del ingreso (sin dona). Colores por rol en CSS (`--flujo-*`), paleta categórica validada para
+  daltonismo en claro y oscuro; Chart.js solo se usa para la gráfica de historial.
 - `guardarEditor` **mezcla** con el item existente (`{...viejo, ...nuevo}`) para no perder campos que el modal no muestra
   (hábito, reto, hito).
 - El modal de deuda muestra solo los campos de su tipo (`[data-debt-tipo]`, `actualizarModalDeuda()`); `antesDeGuardar` limpia
